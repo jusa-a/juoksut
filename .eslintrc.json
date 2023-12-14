@@ -1,0 +1,49 @@
+{
+    "root": true,
+    "env": {
+        "browser": true,
+        "node": true,
+        "es2021": true
+    },
+    "extends": [
+        "@nuxt/eslint-config",
+        "eslint:recommended",
+        "prettier" // Make sure this is the last
+    ],
+    "overrides": [
+        {
+            "files": ["*.vue"],
+            "rules": { "indent": "off" }
+        }
+    ],
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+        "parser": "@babel/eslint-parser",
+        "sourceType": "module",
+        "requireConfigFile": false
+    },
+    "plugins": [],
+    "rules": {
+        "no-undef": "off",
+        "no-unused-vars": "warn",
+        "quotes": ["error", "single"],
+        "semi": ["error", "never"],
+        "eqeqeq": "error",
+
+        "indent": ["error", 4],
+        "vue/script-indent": ["error", 4, { "baseIndent": 1 }],
+        "vue/html-indent": ["error", 4],
+        "vue/require-default-prop": "off",
+        "vue/multi-word-component-names": "off",
+        "vue/require-prop-types": "off",
+        "vue/no-multiple-template-root": "off"
+
+        /*
+        "linebreak-style": ["error", "unix"],
+        "no-trailing-spaces": "error",
+        "object-curly-spacing": ["error", "always"],
+        "arrow-spacing": ["error", { "before": true, "after": true }],
+        "no-console": 0,
+        */
+    }
+}
