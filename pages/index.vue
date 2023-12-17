@@ -1,19 +1,16 @@
 <template>
-    <nav
-        class="flex justify-between sticky top-0 z-99 border-b p-1 border-pink h-[15vh] bg-white">
-        <img src="/logo.svg" alt="JUOKSUT RUN CLUB" />
-
-        <div class="flex flex-col justify-between text-right text-pink">
-            <NuxtLink class="" to="">HOME</NuxtLink>
-            <NuxtLink to="">JOIN</NuxtLink>
-            <NuxtLink to="">ARCHIVE</NuxtLink>
+    <div class="flex justify-center sticky top-[13vh] -z-10">
+        <div class="">
+            <video
+                ref="video"
+                class="object-cover object-center w-[100vw] h-[100vh-13vh]"
+                autoplay
+                playsinline
+                loop
+                muted>
+                <source src="/juoksut.mp4" type="video/mp4" />
+            </video>
         </div>
-    </nav>
-
-    <div class="flex justify-center w-[100vw] sticky top-[15vh] -z-10">
-        <video ref="video" class="w-[100%]" autoplay playsinline loop muted>
-            <source src="/juoksut.mp4" type="video/mp4" />
-        </video>
 
         <!-- prettier-ignore -->
         <div class="values">
@@ -43,47 +40,28 @@
         </div>
     </div>
 
-    <div class="border-y border-pink bg-white sticky top-[calc(15vh-1px)] p-3">
-        <p class="">
-            Lorem ipsum dolor sit amet consectetur. Integer cras mi condimentum
-            gravida elementum fermentum sed mattis. Aliquet ipsum eget eleifend
-            adipiscing arcu nulla. Aliquet ipsum eget eleifend adipiscing arcu
-            nulla.
+    <section
+        class="border-y border-pink bg-white sticky top-[calc(13vh-1px)] p-3">
+        <p>
+            Juoksut💖💖 is a running club for everyone, chasing the ultimate
+            feeling of being invincible that speed gives us. Running every
+            Tuesday and some special Sundays. Join us by showing up and bring
+            your friends too💖💖💖
         </p>
-        <br />
-        <p class="">
-            Lorem ipsum dolor sit amet consectetur. Integer cras mi condimentum
-            gravida elementum fermentum sed mattis. Aliquet ipsum eget eleifend
-            adipiscing arcu nulla. Aliquet ipsum eget eleifend adipiscing arcu
-            nulla.
-        </p>
-    </div>
+    </section>
 
-    <div class="h-[50vh]"></div>
-
-    <footer class="text-pink bg-white">
-        <div class="flex justify-center border-t border-pink bg-white p-5">
-            <img src="/img/livingthelightspeedlifestyle.svg" alt="" />
-        </div>
-
-        <div class="flex justify-between px-3 border-y border-pink">
-            <a href="https://www.strava.com/clubs/juoksut">STRAVA</a>
-            <a href="https://www.instagram.com/juoksut/">INSTAGRAM</a>
-        </div>
-
-        <div class="flex justify-center">© JUOKSUT RY 2023</div>
-    </footer>
+    <div class="h-[80vh]"></div>
 </template>
 
 <script setup></script>
 
 <style scoped>
     .values {
-        @apply font-serif text-center whitespace-nowrap text-pink uppercase leading-loose absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+        @apply font-serif text-center whitespace-nowrap text-pink uppercase leading-loose absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2;
     }
 
     .values > div {
-        font-size: 6.2vw;
+        font-size: clamp(10px, 6.3vw, 200px);
     }
 
     .values > div > span {
