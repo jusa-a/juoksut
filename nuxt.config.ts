@@ -3,7 +3,7 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     modules: ['@nuxtjs/tailwindcss'],
     app: {
-        baseURL: '/juoksut/',
+        // baseURL: '/juoksut/',
         head: {
             title: 'Juoksut Run Club',
             meta: [
@@ -44,7 +44,7 @@ export default defineNuxtConfig({
                 {
                     hid: 'og:url',
                     property: 'og:url',
-                    content: ''
+                    content: 'https://www.juoksut.run'
                 }
             ],
             htmlAttrs: {
