@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        cursor: crosshair;
+    }
+
+    :root {
+        --nav-height: 6em;
+    }
+
+    body {
+        @apply text-pink;
+
+        font-size: clamp(18px, 3vw, 35px);
+        line-height: 1.6em;
+    }
+
+    a {
+        transition: 0.15s;
+    }
+
+    a::before {
+        display: block;
+        content: attr(title);
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    @media (hover: hover) {
+        a:hover {
+            transform: skewX(-10deg);
+            opacity: 70%;
+        }
+    }
+}
+
+@layer components {
+    .divider-t {
+        @apply border-pink border-t-[0.1em];
+    }
+
+    .divider-b {
+        @apply border-pink border-b-[0.1em];
+    }
+}

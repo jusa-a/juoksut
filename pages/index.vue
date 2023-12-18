@@ -1,9 +1,9 @@
 <template>
-    <div class="flex justify-center sticky top-[13vh] -z-10">
+    <div class="flex justify-center sticky top-[var(--nav-height)] -z-10">
         <div class="">
             <video
                 ref="video"
-                class="object-cover object-center w-[100vw] h-[100vh-13vh]"
+                class="object-cover object-center w-[100vw] h-[100vh-var(--nav-height)]"
                 autoplay
                 playsinline
                 loop
@@ -14,7 +14,7 @@
 
         <!-- prettier-ignore -->
         <div class="values">
-            <div class="text-xl">
+            <div>
                 <span>U</span>nity in
                 <span>R</span>unning
             </div>
@@ -41,12 +41,14 @@
     </div>
 
     <section
-        class="border-y border-pink bg-white sticky top-[calc(13vh-1px)] p-3">
+        class="bg-white sticky top-[calc(var(--nav-height)-0.1em)] p-3 divider-t divider-b">
         <p>
-            Juoksut💖💖 is a running club for everyone, chasing the ultimate
-            feeling of being invincible that speed gives us. Running every
-            Tuesday and some special Sundays. Join us by showing up and bring
-            your friends too💖💖💖
+            Juoksut💖💖 is a running club for everyone chasing the ultimate
+            feeling of being invincible that speed gives us.
+            <br />
+            Running every Tuesday and some special Sundays.
+            <br />
+            Join us by showing up and bring your friends too💖💖💖
         </p>
     </section>
 
@@ -57,7 +59,7 @@
 
 <style scoped>
     .values {
-        @apply font-serif text-center whitespace-nowrap text-pink uppercase leading-loose absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2;
+        @apply font-serif text-center whitespace-nowrap  uppercase leading-loose absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2;
     }
 
     .values > div {
