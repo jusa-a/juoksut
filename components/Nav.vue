@@ -1,6 +1,6 @@
 <template>
     <nav
-        class="flex justify-between sticky top-0 z-99 p-1 h-[var(--nav-height)] divider-b mix-blend-exclusion">
+        class="flex justify-between sticky top-0 z-99 p-1 h-[var(--nav-height)] divider-b">
         <img src="/logo.svg" alt="JUOKSUT RUN CLUB" />
 
         <div class="flex flex-col justify-between text-right">
