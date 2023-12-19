@@ -1,17 +1,5 @@
 <template>
-    <div class="flex justify-center sticky top-[var(--nav-height)] -z-10">
-        <div class="">
-            <video
-                ref="video"
-                class="object-cover object-center w-[100vw] h-[100vh-var(--nav-height)]"
-                autoplay
-                playsinline
-                loop
-                muted>
-                <source src="/juoksut.mp4" type="video/mp4" />
-            </video>
-        </div>
-
+    <div class="wrapper">
         <!-- prettier-ignore -->
         <div class="values">
             <div>
@@ -40,8 +28,21 @@
         </div>
     </div>
 
+    <div
+        class="sticky top-[var(--nav-height)] -z-10 h-[calc(100vh-var(--nav-height))]">
+        <video
+            ref="video"
+            class="object-cover object-center w-[100%] h-[100%] absolute"
+            autoplay
+            playsinline
+            loop
+            muted>
+            <source src="/juoksut.mp4" type="video/mp4" />
+        </video>
+    </div>
+
     <section
-        class="bg-white sticky top-[calc(var(--nav-height)-0.1em)] p-3 divider-t divider-b">
+        class="sticky top-[calc(var(--nav-height)-0.1em)] p-3 divider-t divider-b flex bg-white">
         <p>
             Juoksut💖💖 is a running club for everyone chasing the ultimate
             feeling of being invincible that speed gives us.
@@ -52,18 +53,29 @@
         </p>
     </section>
 
-    <div class="h-[80vh]"></div>
+    <div class="h-[calc(100vh-var(--nav-height))]"></div>
 </template>
 
 <script setup></script>
 
 <style scoped>
+    .wrapper {
+        position: sticky;
+        top: calc(50vh - 50vw);
+        width: 100%;
+        z-index: -1;
+        float: left;
+        /* display: flex;
+        align-items: center;
+        justify-content: center; */
+        /* shape-outside: linear-gradient(transparent, transparent); */
+    }
     .values {
-        @apply font-serif text-center whitespace-nowrap  uppercase leading-loose absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2;
+        @apply font-serif text-center whitespace-nowrap uppercase leading-loose;
     }
 
     .values > div {
-        font-size: clamp(10px, 6.3vw, 200px);
+        font-size: 6.25vw;
     }
 
     .values > div > span {

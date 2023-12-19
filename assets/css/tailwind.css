@@ -8,11 +8,14 @@
     }
 
     :root {
-        --nav-height: 6em;
+        --nav-height: 5.5em;
     }
 
     body {
         @apply text-pink;
+
+        overflow-y: scroll;
+        overflow-x: hidden;
 
         font-size: clamp(18px, 3vw, 35px);
         line-height: 1.6em;
