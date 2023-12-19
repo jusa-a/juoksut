@@ -42,6 +42,11 @@
 }
 
 @layer components {
+    .sectionContent {
+        margin: auto;
+        width: clamp(70%, 500px, 100%);
+    }
+
     .divider-t {
         @apply border-pink border-t-[0.1em];
     }

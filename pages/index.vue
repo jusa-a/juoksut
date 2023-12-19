@@ -43,14 +43,16 @@
 
     <section
         class="sticky top-[calc(var(--nav-height)-0.1em)] p-3 divider-t divider-b flex bg-white">
-        <p>
-            Juoksut💖💖 is a running club for everyone chasing the ultimate
-            feeling of being invincible that speed gives us.
-            <br />
-            Running every Tuesday and some special Sundays.
-            <br />
-            Join us by showing up and bring your friends too💖💖💖
-        </p>
+        <div class="sectionContent">
+            <p>
+                Juoksut💖💖 is a running club for everyone chasing the ultimate
+                feeling of being invincible that speed gives us.
+                <br />
+                Running every Tuesday and some special Sundays.
+                <br />
+                Join us by showing up and bring your friends too💖💖💖
+            </p>
+        </div>
     </section>
 
     <div class="h-[calc(100vh-var(--nav-height))]"></div>
@@ -61,7 +63,7 @@
 <style scoped>
     .wrapper {
         position: sticky;
-        top: calc(50vh - 50vw);
+        top: calc(36vh - 31vw);
         width: 100%;
         z-index: -1;
         float: left;
