@@ -14,6 +14,11 @@
 <script setup></script>
 
 <style scoped>
+    nav {
+        mix-blend-mode: multiply;
+        /* filter: invert(100%); */
+    }
+
     .router-link-active {
         transform: skewX(-10deg);
         text-decoration: underline;
