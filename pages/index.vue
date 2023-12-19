@@ -63,7 +63,7 @@
 <style scoped>
     .wrapper {
         position: sticky;
-        top: calc(36vh - 31vw);
+        top: calc(46vh - 50vw);
         width: 100%;
         z-index: -1;
         float: left;
