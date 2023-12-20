@@ -12,7 +12,7 @@
             <a href="https://www.instagram.com/juoksut/">INSTAGRAM</a>
         </div>
 
-        <div class="flex justify-center text-[0.7em] pt-1">
+        <div class="flex justify-center text-[0.5em] font-light">
             © JUOKSUT RY 2023
         </div>
     </footer>
