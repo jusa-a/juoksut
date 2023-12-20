@@ -5,7 +5,7 @@
     "printWidth": 80,
     "proseWrap": "always",
     "bracketSameLine": true,
-    "htmlWhitespaceSensitivity": "ignore",
+    "htmlWhitespaceSensitivity": "strict",
     "trailingComma": "none",
     "arrowParens": "avoid",
     "vueIndentScriptAndStyle": true

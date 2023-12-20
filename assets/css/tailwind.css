@@ -21,11 +21,20 @@
         line-height: 1.6em;
     }
 
+    p {
+        font-weight: lighter;
+        margin-top: 0.5em;
+    }
+
     a {
         transition: 0.15s;
     }
 
-    a::before {
+    p a {
+        text-decoration: underline;
+    }
+
+    nav a::before {
         display: block;
         content: attr(title);
         height: 0;
@@ -45,13 +54,14 @@
     .sectionContent {
         margin: auto;
         width: clamp(70%, 500px, 100%);
+        padding: 0 1em;
     }
 
     .divider-t {
-        @apply border-pink border-t-[0.1em];
+        @apply border-pink border-t-[0.08em];
     }
 
     .divider-b {
-        @apply border-pink border-b-[0.1em];
+        @apply border-pink border-b-[0.08em];
     }
 }

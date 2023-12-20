@@ -1,30 +1,15 @@
 <template>
     <div class="wrapper">
-        <!-- prettier-ignore -->
         <div class="values">
-            <div>
-                <span>U</span>nity in
-                <span>R</span>unning
-            </div>
+            <div><span>U</span>nity in <span>R</span>unning</div>
             <br />
-            <div>
-                <span>R</span>espect for the
-                <span>I</span>ndividual
-            </div>
+            <div><span>R</span>espect for the <span>I</span>ndividual</div>
             <br />
-            <div>
-                <span>A</span>chievement
-            </div>
+            <div><span>A</span>chievement</div>
             <br />
-            <div>
-                <span>E</span>ternal
-                <span>E</span>ndurance
-            </div>
+            <div><span>E</span>ternal <span>E</span>ndurance</div>
             <br />
-            <div>
-                <span>L</span>ifelong
-                <span>W</span>ellness
-            </div>
+            <div><span>L</span>ifelong <span>W</span>ellness</div>
         </div>
     </div>
 
@@ -42,16 +27,14 @@
     </div>
 
     <section
-        class="sticky top-[calc(var(--nav-height)-0.1em)] p-3 divider-t divider-b flex bg-white">
+        class="sticky top-[calc(var(--nav-height)-0.1em)] divider-t divider-b pb-[0.5em] flex bg-white">
         <div class="sectionContent">
             <p>
                 Juoksut💖💖 is a running club for everyone chasing the ultimate
                 feeling of being invincible that speed gives us.
-                <br />
-                Running every Tuesday and some special Sundays.
-                <br />
-                Join us by showing up and bring your friends too💖💖💖
             </p>
+            <p>Running every Tuesday and some special Sundays.</p>
+            <p>Join us by showing up and bring your friends too💖💖💖</p>
         </div>
     </section>
 
