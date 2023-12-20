@@ -27,7 +27,7 @@
     </div>
 
     <section
-        class="sticky top-[calc(var(--nav-height)-0.1em)] divider-t divider-b pb-[0.5em] flex bg-white">
+        class="sticky top-[calc(var(--nav-height)-0.1em)] divider-t divider-b p-3 pb-5 flex bg-white">
         <div class="sectionContent">
             <p>
                 Juoksut💖💖 is a running club for everyone chasing the ultimate
