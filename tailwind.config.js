@@ -5,7 +5,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Helvetica', 'sans-serif'],
-                serif: ['Georgia', 'serif']
+                serif: ['"Garamond Condensed"', 'Georgia', 'serif']
             },
             colors: {
                 pink: '#FF639A'

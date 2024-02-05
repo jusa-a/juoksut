@@ -3,6 +3,22 @@
 @tailwind utilities;
 
 @layer base {
+    @font-face {
+        font-family: 'Garamond Condensed';
+        src: url('../fonts/garamond-condensed-regular.woff2') format('woff2');
+        font-weight: 400;
+        font-display: swap;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'Garamond Condensed';
+        src: url('../fonts/garamond-condensed-medium.woff2') format('woff2');
+        font-weight: 500;
+        font-display: swap;
+        font-style: normal;
+    }
+
     * {
         cursor: crosshair;
     }
@@ -21,7 +37,24 @@
         line-height: 1.6em;
     }
 
+    h1 {
+        @apply font-sans;
+        font-size: 1.2em;
+    }
+
+    h2 {
+        @apply font-sans;
+        font-size: 1.1em;
+    }
+
+    h3 {
+        @apply font-sans;
+        font-size: 1em;
+    }
+
     p {
+        /* @apply font-serif font-normal;
+        letter-spacing: -0.03em; */
         font-weight: lighter;
         margin-top: 0.5em;
     }

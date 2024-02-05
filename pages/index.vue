@@ -56,7 +56,7 @@
         /* shape-outside: linear-gradient(transparent, transparent); */
     }
     .values {
-        @apply font-serif text-center whitespace-nowrap uppercase leading-loose;
+        @apply font-serif font-[500] text-center whitespace-nowrap uppercase leading-loose;
     }
 
     .values > div {
