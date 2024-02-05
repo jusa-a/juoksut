@@ -12,8 +12,9 @@
             <a href="https://www.instagram.com/juoksut/">INSTAGRAM</a>
         </div>
 
-        <div class="flex justify-center text-[0.5em] font-light">
-            © JUOKSUT RY 2023
+        <div class="flex justify-between text-[0.5em] font-light px-3 pt-3">
+            <div> © JUOKSUT RY 2023 </div>
+            <div><a href="mailto:crew@juoksut.run">crew@juoksut.run</a></div>
         </div>
     </footer>
 </template>
