@@ -28,16 +28,20 @@
                 the Lightspeed together with SRC x Marski.
             </p>
 
-            <iframe name="hiddenConfirm" class="hidden"></iframe>
+            <iframe
+                id="hiddenConfirm"
+                name="hiddenConfirm"
+                class="hidden"
+                @load="loadFrame">
+            </iframe>
 
             <div
                 class="mt-[1.5em] px-[1.8em] py-[1.6em] border-[0.08em] border-pink text-center">
                 <form
                     v-show="showForm"
                     action="https://docs.google.com/forms/d/e/1FAIpQLSc_4wHttF9L8HoPGSzlVitJI0sRdwqkMnjtqbQ3BrsxqNMYtw/formResponse"
-                    method="POST"
                     target="hiddenConfirm"
-                    @submit="showForm = !showForm">
+                    method="POST">
                     <h3 class="pb-[1.3em] uppercase">
                         Fill your details below to sign up!
                     </h3>
@@ -45,6 +49,7 @@
                     <div class="mb-10">
                         <label for="entry.2137368180" class="">Name: </label>
                         <input
+                            v-model="name"
                             type="text"
                             name="entry.2137368180"
                             placeholder="Your full name"
@@ -54,10 +59,17 @@
                     <div class="mb-10 pb-[0.5em]">
                         <label for="entry.610705567" class="">Email: </label>
                         <input
+                            v-model="email"
                             type="email"
                             name="entry.610705567"
                             placeholder="Your email address"
                             class="w-[75%] border-pink border-[0.08em] px-[0.4em] placeholder-pink placeholder-opacity-75" />
+                    </div>
+
+                    <div
+                        v-show="showError"
+                        class="bg-pink text-white mb-[1.3em]">
+                        <h3>!!! name or email missing !!!</h3>
                     </div>
 
                     <button
@@ -69,7 +81,7 @@
 
                 <div v-show="!showForm">
                     <h1 class="pb-[0.5em] uppercase">
-                        Thank You for Signing up!
+                        Thank you {{ name }} for signing up!
                     </h1>
                     <h3>
                         Keep an eye on your inbox, we’ll send a confirmation
@@ -98,22 +110,55 @@
         layout: 'landing'
     })
 
-    const showForm = ref(true)
+    const name = ref('')
+    const email = ref('')
 
-    /* async function onSubmit(event) {
-        const { data, error } = await $fetch(
+    const showForm = ref(true)
+    const showError = ref(false)
+
+    function loadFrame() {
+        if (!email.value || !name.value) {
+            console.log('form values missing')
+            showError.value = true
+        } else {
+            console.log('form sent')
+            showForm.value = !showForm
+        }
+    }
+
+    /* function onSubmit(event) {
+        $fetch(
             'https://docs.google.com/forms/d/e/1FAIpQLSc_4wHttF9L8HoPGSzlVitJI0sRdwqkMnjtqbQ3BrsxqNMYtw/formResponse',
             {
                 method: 'POST',
                 body: new FormData(event.target)
             }
         )
-        console.log(data)
-        console.log(error)
-        alert('submitted')
+            .then(response => {
+                if (response.ok) {
+                    response.json().then(json => {
+                        console.log(json)
+                    })
+                }
+            })
+            .then(data => {
+                console.log('OK:', data)
+            })
+            .catch(e => {
+                console.log(e.response)
+            })
 
-        console.log('form submitted')
-        console.log(new FormData(event.target))
+        //console.log('error', error)
+
+        //console.log('form submitted')
+        //console.log('data')
+        //console.log(response.data, response.error)
+        //console.log('error')
+        //console.log(response.error)
+
+        //showForm.value = false
+
+        //console.log(new FormData(event.target))
     } */
 </script>
 
