@@ -126,6 +126,11 @@
         }
     }
 
+    useHead({
+        title: 'Live Love Lightspeed',
+        meta: [{ name: 'description', content: 'Juoksut Run Club' }]
+    })
+
     /* function onSubmit(event) {
         $fetch(
             'https://docs.google.com/forms/d/e/1FAIpQLSc_4wHttF9L8HoPGSzlVitJI0sRdwqkMnjtqbQ3BrsxqNMYtw/formResponse',
