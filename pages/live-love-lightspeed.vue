@@ -38,7 +38,7 @@
             <div
                 class="mt-[1.5em] px-[1.8em] py-[1.6em] border-[0.08em] border-pink text-center">
                 <form
-                    v-show="showForm"
+                    v-show="!showForm"
                     action="https://docs.google.com/forms/d/e/1FAIpQLSc_4wHttF9L8HoPGSzlVitJI0sRdwqkMnjtqbQ3BrsxqNMYtw/formResponse"
                     target="hiddenConfirm"
                     method="POST">
@@ -87,6 +87,14 @@
                         Keep an eye on your inbox, we’ll send a confirmation
                         through email since we have limited spots.
                     </h3>
+                </div>
+
+                <div>
+                    <h1 class="pb-[0.5em] uppercase"> Sign-up Closed! </h1>
+                    <h3>
+                        Thank you everyone who signed up and stay tuned for more
+                        awesomeness!</h3
+                    >
                 </div>
             </div>
         </div>
