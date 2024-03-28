@@ -24,6 +24,7 @@
 <style scoped>
     nav {
         mix-blend-mode: multiply;
+        overflow: hidden;
         /* filter: invert(100%); */
     }
 
@@ -34,7 +35,7 @@
 
     #juoksut {
         @apply font-serif font-medium;
-        font-size: 4em;
+        font-size: min(17.3vw, 4em);
         line-height: 0.7em;
 
         /* transition: 0.15s; */
