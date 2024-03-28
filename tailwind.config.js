@@ -4,8 +4,8 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Helvetica', 'sans-serif'],
-                serif: ['"Garamond Condensed"', 'Georgia', 'serif']
+                sans: ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
+                serif: ['"JUOKSUT Garamond"', 'Georgia', 'serif']
             },
             colors: {
                 pink: '#FF639A'
