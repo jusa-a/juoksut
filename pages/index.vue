@@ -46,7 +46,7 @@
 <style scoped>
     .wrapper {
         position: sticky;
-        top: calc(46vh - 50vw);
+        top: calc(45vh - 50vw);
         width: 100%;
         z-index: -1;
         float: left;
@@ -60,7 +60,7 @@
     }
 
     .values > div {
-        font-size: 6.25vw;
+        font-size: 7vw;
     }
 
     .values > div > span {
