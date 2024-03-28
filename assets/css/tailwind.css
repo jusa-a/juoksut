@@ -77,8 +77,8 @@
 
     p {
         /* @apply font-serif font-normal;
-        letter-spacing: -0.03em; */
-        font-weight: 300;
+        letter-spacing: -0.03em; 
+        font-weight: 400; */
         line-height: normal;
         margin-top: 0.5em;
     }
