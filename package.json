@@ -23,8 +23,5 @@
         "vue": "^3.3.10",
         "vue-eslint-parser": "^9.3.2",
         "vue-router": "^4.2.5"
-    },
-    "dependencies": {
-        "@nuxt/image": "^1.4.0"
     }
 }
