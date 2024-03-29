@@ -1,7 +1,12 @@
 <template>
     <section class="itemsContainer flex flex-col m-auto">
         <NuxtLink to="" class="shopItem mb-[2em]">
-            <div class="thumb"><img src="" alt="" /></div>
+            <div class="thumb">
+                <NuxtImg
+                    src="/img/longsleeve.jpeg"
+                    alt=""
+                    class="object-cover w-[100%] h-[100%]" />
+            </div>
             <div class="text-center">
                 <p class="font-medium">Lightspeed Lifestyle Long Sleeve</p>
                 <p class="font-light">35€</p>
