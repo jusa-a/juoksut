@@ -1,5 +1,19 @@
 <template>
     <section class="itemsContainer flex flex-col m-auto">
+        <div class="my-[1em]">
+            <h2 class="font-medium uppercase">Shop under construction...</h2>
+            <p>
+                Meanwhile, we try to have shirts available to try on and
+                purchase every Tuesday during our runs!
+            </p>
+            <p>
+                You can also get your shirt by reaching out to us at
+                <a href="mailto:crew@juoksut.run">crew@juoksut.run</a> and we
+                can bring you a shirt on on our weekly runs or try to arrange
+                delivery to you in another way!
+            </p>
+        </div>
+
         <NuxtLink to="" class="shopItem mb-[2em]">
             <div class="thumb">
                 <NuxtImg
@@ -7,14 +21,6 @@
                     alt=""
                     class="object-cover w-[100%] h-[100%]" />
             </div>
-            <div class="text-center">
-                <p class="font-medium">Lightspeed Lifestyle Long Sleeve</p>
-                <p class="font-light">35€</p>
-            </div>
-        </NuxtLink>
-
-        <NuxtLink to="" class="shopItem mb-[2em]">
-            <div class="thumb"><img src="" alt="" /></div>
             <div class="text-center">
                 <p class="font-medium">Lightspeed Lifestyle Long Sleeve</p>
                 <p class="font-light">35€</p>
