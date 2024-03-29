@@ -8,6 +8,8 @@
             </p>
             <p>
                 You can also get your shirt by reaching out to us at
+                <a href="https://www.instagram.com/juoksut/">instagram</a> or
+                email us
                 <a href="mailto:crew@juoksut.run">crew@juoksut.run</a> and we
                 can bring you a shirt on on our weekly runs or try to arrange
                 delivery to you in another way!
