@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/eslint'],
+  modules: ['@nuxt/image', '@nuxt/eslint', '@nuxtjs/tailwindcss'],
   devtools: { enabled: true },
 
   app: {
@@ -18,7 +18,7 @@ export default defineNuxtConfig({
           content: 'width=device-width, initial-scale=1, viewport-fit=cover',
         },
         {
-          name: 'apple-mobile-web-app-capable',
+          name: 'mobile-web-app-capable',
           content: 'yes',
         },
         {
@@ -82,6 +82,10 @@ export default defineNuxtConfig({
   },
 
   image: {
+    // Options
+  },
+
+  tailwindcss: {
     // Options
   },
 })
