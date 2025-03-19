@@ -5,6 +5,7 @@ export default defineNuxtConfig({
 
   app: {
     // baseURL: '/juoksut/',
+
     head: {
       title: 'Juoksut Run Club',
       meta: [
@@ -74,12 +75,6 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-03-08',
-
-  eslint: {
-    config: {
-      stylistic: true,
-    },
-  },
 
   image: {
     // Options
