@@ -56,23 +56,24 @@
         overflow-y: scroll;
         overflow-x: hidden;
 
-        font-size: clamp(1em, 2vw, 1.25em);
+        /* font-size: clamp(1em, 2vw, 1.25em); */
+        font-size: calc(0.875em + 0.390625vw);
         line-height: 1.6em;
     }
 
     h1 {
-        font-size: 1.2em;
         @apply font-sans;
+        font-size: 1.5em;
     }
 
     h2 {
         @apply font-sans;
-        font-size: 1.1em;
+        font-size: 1.3em;
     }
 
     h3 {
         @apply font-sans;
-        font-size: 1em;
+        font-size: 1.1em;
     }
 
     p {

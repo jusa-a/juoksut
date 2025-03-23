@@ -8,10 +8,10 @@
         alt="JUOKSUT RUN CLUB LOGO" />
     </div>
     <nav class="flex flex-wrap justify-between items-end flex-1">
-      <div
+      <h1
         class="home flex self-center pl-[0.6em] pb-[0.28em] pt-[0.9em] translate-x-[0.3em]">
         <NuxtLink to="/">JUOKSUT</NuxtLink>
-      </div>
+      </h1>
 
       <div
         class="navLinks flex gap-[4em] flex-1 grow justify-between ml-[auto] text-right pl-[0.5vw] pr-[0.5em]">
@@ -50,6 +50,7 @@
 }
 
 .home {
+  font-size: inherit;
   line-height: 0;
   overflow: hidden;
 }
