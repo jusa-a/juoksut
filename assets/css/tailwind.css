@@ -47,7 +47,7 @@
     }
 
     :root {
-        --nav-height: 6em;
+        --nav-height: min(26.6vw, 6em);
     }
 
     body {
@@ -56,13 +56,13 @@
         overflow-y: scroll;
         overflow-x: hidden;
 
-        font-size: clamp(17px, 3vw, 35px);
+        font-size: clamp(1em, 2vw, 1.25em);
         line-height: 1.6em;
     }
 
     h1 {
-        @apply font-sans;
         font-size: 1.2em;
+        @apply font-sans;
     }
 
     h2 {

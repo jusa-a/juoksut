@@ -1,66 +1,88 @@
 <template>
-    <div
-        class="navContainer flex sticky top-0 z-99 p-1 h-[var(--nav-height)] divider-b">
-        <img src="/logo.svg" alt="JUOKSUT RUN CLUB LEGS LOGO" />
-
-        <nav class="flex flex-wrap justify-between items-end grow">
-            <div
-                class="home flex self-center pl-[0.6em] pb-[0.28em] pt-[0.9em]">
-                <NuxtLink to="/">JUOKSUT</NuxtLink>
-            </div>
-
-            <div
-                class="navLinks flex grow justify-between gap-[2em] justify-self-end text-right pl-[0.5vw] pr-[0.5vw]">
-                <NuxtLink to="/join">JOIN</NuxtLink>
-                <NuxtLink to="/archive">ARCHIVE</NuxtLink>
-                <NuxtLink to="/shop">SHOP</NuxtLink>
-            </div>
-        </nav>
+  <div
+    class="navContainer flex sticky top-0 z-99 p-[0.15em] h-[var(--nav-height)] divider-b">
+    <div class="spin-container self-center min-w-[calc(var(--nav-height)-1em)] mx-[0.2em] overflow-hidden">
+      <img
+        class="logo py-[0.4em] px-[0.1em]"
+        src="/logo.svg"
+        alt="JUOKSUT RUN CLUB LOGO" />
     </div>
+    <nav class="flex flex-wrap justify-between items-end flex-1">
+      <div
+        class="home flex self-center pl-[0.6em] pb-[0.28em] pt-[0.9em] translate-x-[0.3em]">
+        <NuxtLink to="/">JUOKSUT</NuxtLink>
+      </div>
+
+      <div
+        class="navLinks flex gap-[4em] flex-1 grow justify-between ml-[auto] text-right pl-[0.5vw] pr-[0.5em]">
+        <NuxtLink to="/join">JOIN</NuxtLink>
+        <NuxtLink to="/shop">SHOP</NuxtLink>
+        <NuxtLink to="">CART</NuxtLink>
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script setup></script>
 
 <style scoped>
-    .navContainer {
-        mix-blend-mode: multiply;
-        overflow: hidden;
-    }
+@keyframes spin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-360deg);
+  }
+}
 
-    .home {
-        line-height: 0;
-        overflow: hidden;
-    }
+.spin-container {
+  perspective: 1000px;
+}
 
-    .home a {
-        @apply font-serif font-medium;
-        font-size: min(17.3vw, 4em);
-        line-height: 0.7em;
-        padding-right: 0.1em;
+.logo {
+  animation: spin 5s infinite linear;
+  transform-origin: center;
+}
 
-        transition: 0.15s;
-        transform: skewX(-8deg);
-    }
+.navContainer {
+  mix-blend-mode: multiply;
+  overflow: hidden;
+}
 
-    .navLinks {
-        max-width: 16.5em;
-    }
+.home {
+  line-height: 0;
+  overflow: hidden;
+}
 
-    .navLinks a {
-        padding-top: 0.4em;
-        line-height: 1em;
-    }
+.home a {
+  @apply font-serif font-medium tracking-[-0.03em];
+  font-size: min(18.5vw, 4.6em);
+  line-height: 0.7em;
+  padding-right: 0.1em;
 
-    a::before {
-        display: block;
-        content: attr(title);
-        height: 0;
-        overflow: hidden;
-        visibility: hidden;
-    }
+  transition: 0.15s;
+  transform: skewX(-8deg);
+}
 
-    .navLinks > .router-link-active {
-        transform: skewX(-10deg);
-        text-decoration: underline;
-    }
+.navLinks {
+  max-width: 18em;
+}
+
+.navLinks a {
+  padding-top: 0.2em;
+  line-height: 1em;
+}
+
+a::before {
+  display: block;
+  content: attr(title);
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.navLinks > .router-link-active {
+  transform: skewX(-10deg);
+  text-decoration: underline;
+}
 </style>
