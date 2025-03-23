@@ -69,19 +69,21 @@
     h2 {
         @apply font-sans;
         font-size: 1.3em;
+        font-weight: 500
     }
 
     h3 {
-        @apply font-sans;
-        font-size: 1.1em;
+        @apply font-sans pt-[1em];
+        font-size: 1em;
+        font-weight: 500
     }
 
     p {
         /* @apply font-serif font-normal;
-        letter-spacing: -0.03em; 
-        font-weight: 400; */
+        letter-spacing: -0.03em; */
+        font-weight: 400; 
         line-height: normal;
-        margin-top: 0.5em;
+        margin-top: 0.7em;
     }
 
     a {
@@ -98,15 +100,15 @@
             opacity: 70%;
         }
     }
+
+    section {
+        @apply flex flex-col mx-auto my-[1em];
+        width: clamp(60%, 500px, 100%);
+        padding: 0 1em;
+    }
 }
 
 @layer components {
-    .sectionContent {
-        margin: auto;
-        width: clamp(70%, 500px, 100%);
-        padding: 0 1em;
-    }
-
     .divider-t {
         @apply border-pink border-t-[0.08em];
     }

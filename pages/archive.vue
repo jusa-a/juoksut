@@ -1,18 +1,10 @@
 <template>
-    <div>ARCHIVE</div>
-    <div class="h-[65vh]"></div>
+  <section>
+    <h2>ARCHIVE</h2>
+    <div class=""></div>
+  </section>
 
-    <section class="divider-t">
-        <video
-            ref="video"
-            class="object-cover object-center w-[100%] h-[12em]"
-            autoplay
-            playsinline
-            loop
-            muted>
-            <source src="/juoksut.mp4" type="video/mp4" />
-        </video>
-    </section>
+  <FooterVideo />
 </template>
 
 <script setup></script>

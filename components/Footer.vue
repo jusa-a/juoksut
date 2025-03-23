@@ -18,7 +18,7 @@
     </div>
 
     <div class="self-center">
-      <p class="font-serif text-[1.3em] tracking-[-0.03em] mt-0">
+      <p class="font-serif font-medium text-[1.3em] tracking-[-0.03em] mt-0">
         Living the Lightspeed Lifestyle
       </p>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <section class="divider-t mt-auto">
+  <div class="divider-t mt-auto">
     <video
       ref="video"
       class="object-cover object-center w-[100%] h-[12em]"
@@ -11,7 +11,7 @@
         src="/juoksut.mp4"
         type="video/mp4" />
     </video>
-  </section>
+  </div>
 </template>
 
 <script setup></script>
