@@ -1,5 +1,6 @@
 <template>
-  <footer class="bg-white divider-t flex flex-col px-[0.5em] p justify-around pt-[0.6em]">
+  <Divider />
+  <footer class="bg-white flex flex-col px-[0.5em] p justify-around pt-[0.6em]">
     <div class="flex justify-between items-center">
       <div class="flex flex-col self-stretch justify-between flex-1">
         <a href="https://www.strava.com/clubs/juoksut">STRAVA</a>
@@ -7,7 +8,7 @@
       </div>
 
       <img
-        class="w-[3.5em]"
+        class="w-[3.9em]"
         src="/logo-outline.svg"
         alt="JUOKSUT OUTLINE LOGO" />
 

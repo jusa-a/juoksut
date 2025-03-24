@@ -1,5 +1,6 @@
 <template>
-  <div class="divider-t mt-auto">
+  <div class="mt-auto">
+    <Divider />
     <video
       ref="video"
       class="object-cover object-center w-[100%] h-[12em]"

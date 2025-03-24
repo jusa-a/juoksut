@@ -86,8 +86,9 @@
         margin-top: 0.7em;
     }
 
-    a {
+    a, button {
         transition: 0.15s;
+        cursor: cell;
     }
 
     p a {
@@ -96,7 +97,6 @@
 
     @media (hover: hover) {
         a:hover {
-            transform: skewX(-10deg);
             opacity: 70%;
         }
     }
@@ -109,11 +109,4 @@
 }
 
 @layer components {
-    .divider-t {
-        @apply border-pink border-t-[0.08em];
-    }
-
-    .divider-b {
-        @apply border-pink border-b-[0.08em];
-    }
 }

@@ -17,7 +17,7 @@
     </p>
   </section>
 
-  <div class="divider-t sticky top-[calc(var(--nav-height)-0.08em)] pt-[0.5em] mt-[1em]"></div>
+  <Divider sticky class="my-[1em]" />
 
   <section>
     <h2>WEEKLY RUNS</h2>
@@ -30,7 +30,7 @@
         <div class="flex flex-col items-end">
           <div>
             18:30 @
-            <a href="https://maps.app.goo.gl/vMkCqSCvomdDX1xf9" target="_blank">Tokoinranta</a>
+            <a href="https://maps.app.goo.gl/vMkCqSCvomdDX1xf9" target="_blank" class="underline">Tokoinranta</a>
           </div>
           <div class="text-[1.2em]">
             Social Run. 3 Pace Groups
@@ -60,7 +60,7 @@
     </p>
   </section>
 
-  <div class="divider-t sticky top-[calc(var(--nav-height)-0.08em)] pt-[1em] mt-[1em]"></div>
+  <Divider sticky class="my-[1em]" />
 
   <section>
     <h2>SAFER SPACE</h2>
@@ -70,7 +70,7 @@
     <p>
       We have established the following guidelines to ensure that everyone feels safe. It is absolutely essential that these guidelines are followed!
     </p>
-    <div class="max-w-[40em] mx-auto text-center text-[0.75em] border-pink border-[0.08em] mt-[1em] pb-[1em] px-[1em]">
+    <div class="max-w-[40em] mx-auto text-center text-[0.75em] border-pink border-[1px] mt-[1em] pb-[1em] px-[1em]">
       <p>
         <strong>BE CONSIDERATE AND RESPECTFUL</strong>
         <br>
@@ -109,9 +109,9 @@
       <p class="pb-[0.5em]">
         please don't hesitate to tell our pacers, or use this anonymous link to inform us.
       </p>
-      <div class="text-pink mx-auto rounded-md border-[0.08em] border-pink my-[1em] px-[2em] py-[0.3em] hover:bg-pink hover:text-white active:opacity-50">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfEXw0XS7aHmmV5wV9eRk1KxI9RvnP9OgDka_lpDvVyxNJ4Xw/viewform?fbclid=PAZXh0bgNhZW0CMTEAAaZMurDuaAKJinxI0v4NkcB-oQrfGU5lakZB_MOSWFfyVl_LDHu59SVQ8EU_aem_FKp8daadnB7-PR0AWyH7nA" target="_blank">LINK TO THE FORM</a>
-      </div>
+
+      <a class="mx-auto my-[1em] px-[5em] text-white uppercase bg-pink text-center border-[1px] border-pink py-[0.3em] hover:bg-white hover:text-pink active:opacity-50" href="https://docs.google.com/forms/d/e/1FAIpQLSfEXw0XS7aHmmV5wV9eRk1KxI9RvnP9OgDka_lpDvVyxNJ4Xw/viewform?fbclid=PAZXh0bgNhZW0CMTEAAaZMurDuaAKJinxI0v4NkcB-oQrfGU5lakZB_MOSWFfyVl_LDHu59SVQ8EU_aem_FKp8daadnB7-PR0AWyH7nA" target="_blank">LINK TO THE FORM</a>
+
       <p class="text-[0.8em]">
         If you have any questions or concerns, please reach out to us. We are here to help and make sure that everyone feels safe and welcome at Juoksut!
       </p>

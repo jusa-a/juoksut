@@ -32,9 +32,10 @@
     </div>
 
     <div
-      class="sticky top-[calc(var(--nav-height)-0.08em)] divider-t divider-b bg-white flex px-[0.1em] pb-[0.5em]">
+      class="sticky z-[0] top-[calc(var(--nav-height)-1px)] bg-white flex flex-col w-full">
+      <Divider />
       <section>
-        <p>
+        <p class="m-0">
           JUOKSUT is a running club for everyone chasing the ultimate
           feeling of being invincible.
         </p>
@@ -45,6 +46,7 @@
           Join us by showing up and bring your friends too!
         </p>
       </section>
+      <Divider />
     </div>
 
     <div class="h-[calc(100vh-var(--nav-height))]"></div>
