@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true }, // Home page, prerendered at build time
-    '/about': { prerender: true }, // About page, prerendered at build time
+    '/join': { prerender: true }, // About page, prerendered at build time
     '/shop': { prerender: true }, // Shop page, prerendered at build time
     '/shop/**': { prerender: true }, // Products pages, prerendered at build time
   },
