@@ -3,9 +3,14 @@ export default defineNuxtConfig({
   modules: ['@nuxt/image', '@nuxt/eslint', '@nuxtjs/tailwindcss'],
   devtools: { enabled: true },
 
-  app: {
-    // baseURL: '/juoksut/',
+  routeRules: {
+    '/': { prerender: true }, // Home page, prerendered at build time
+    '/about': { prerender: true }, // About page, prerendered at build time
+    '/shop': { prerender: true }, // Shop page, prerendered at build time
+    '/shop/**': { prerender: true }, // Products pages, prerendered at build time
+  },
 
+  app: {
     head: {
       title: 'Juoksut Run Club',
       meta: [
