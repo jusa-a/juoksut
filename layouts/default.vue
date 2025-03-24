@@ -18,4 +18,24 @@ function toggleCart() {
   // Prevent scrolling when cart is open
   document.body.style.overflow = isCartOpen.value ? 'hidden' : 'auto'
 }
+
+// Close cart and prevent navigation when cart is open
+const router = useRouter()
+
+// Use router navigation guard to handle back navigation
+onMounted(() => {
+  router.beforeEach((to, from, next) => {
+    // If the cart is open, prevent navigation
+    if (isCartOpen.value) {
+      // Close the cart
+      isCartOpen.value = false
+      // Prevent the navigation from happening
+      next(false)
+    }
+    else {
+      // Allow navigation if the cart is not open
+      next()
+    }
+  })
+})
 </script>

@@ -24,7 +24,7 @@
       </nav>
     </div>
   </div>
-  <Divider sticky class="z-[1001]" />
+  <Divider sticky class="mix-blend-multiply z-[800]" />
 </template>
 
 <script setup>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full bg-pink h-[1px]"
+    class="w-full bg-pink h-[1px] z-[801]"
     :class="{ 'sticky top-[calc(var(--nav-height))]': sticky }">
   </div>
 </template>

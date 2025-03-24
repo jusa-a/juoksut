@@ -1,10 +1,12 @@
 <template>
-  <section>
-    <h2>ARCHIVE</h2>
-    <div class=""></div>
-  </section>
+  <div>
+    <section>
+      <h2>ARCHIVE</h2>
+      <div class=""></div>
+    </section>
 
-  <FooterVideo />
+    <FooterVideo />
+  </div>
 </template>
 
 <script setup></script>

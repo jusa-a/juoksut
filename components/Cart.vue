@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <div class="navOverlay h-[var(--nav-height)] bg-white"></div>
+      <div class="navOverlay"></div>
 
       <div class="dimOverlay" @click="toggleCart"></div>
     </div>
@@ -54,6 +54,9 @@ defineProps({
   isCartOpen: Boolean,
   toggleCart: Function,
 })
+
+// Wait 1 second
+// await new Promise(resolve => setTimeout(resolve, 1000))
 
 const cartItems = ref([
   { name: 'Product 1', price: 25, quantity: 1, size: 'M' },
@@ -86,9 +89,12 @@ async function createStripeCheckoutSession() {
 </script>
 
 <style scoped>
-.cart-enter-active,
+.cart-enter-active {
+  transition: opacity 0.25s ease-out;
+}
+
 .cart-leave-active {
-  transition: opacity 0s ease;
+  transition: opacity 0.2s ease-in;
   opacity: 1;
 }
 
@@ -101,9 +107,9 @@ async function createStripeCheckoutSession() {
   position: fixed;
   z-index: 1000;
   right: 0;
-  top: var(--nav-height);
+  top: calc(var(--nav-height) + 1px);
   width: clamp(50%, 500px, 100%);
-  height: calc(100% - var(--nav-height));
+  height: calc(100% - var(--nav-height) - 1px);
 }
 
 .navOverlay {
@@ -111,9 +117,9 @@ async function createStripeCheckoutSession() {
   top: 0;
   left: 0;
   width: 100%;
-  height: var(--nav-height);
+  height: calc(var(--nav-height) + 1px);
   background-color: white;
-  z-index: 999;
+  z-index: 800;
 }
 
 .dimOverlay {
@@ -123,6 +129,6 @@ async function createStripeCheckoutSession() {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2); /* Dim background */
-  z-index: 995;
+  z-index: 799;
 }
 </style>

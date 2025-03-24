@@ -50,10 +50,14 @@
         --nav-height: min(26.6vw, 6em);
     }
 
+    /* html, body {
+        overscroll-behavior: none;
+    } */
+
     body {
         @apply text-pink;
 
-        overflow-y: scroll;
+        overflow-y: hidden;
         overflow-x: hidden;
 
         /* font-size: clamp(1em, 2vw, 1.25em); */
