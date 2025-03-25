@@ -19,7 +19,9 @@
           class="navLinks flex gap-[4em] flex-1 grow justify-between ml-[auto] text-right pl-[0.5vw] pr-[0.5em]">
           <NuxtLink to="/join">JOIN</NuxtLink>
           <NuxtLink to="/shop">SHOP</NuxtLink>
-          <button :class="{ cartActive: isCartOpen }" @click="toggleCart">CART</button>
+          <button :class="{ cartActive: isCartOpen }" @click="toggleCart">
+            CART({{ cartItems.length }})
+          </button>
         </div>
       </nav>
     </div>
@@ -31,6 +33,7 @@
 defineProps({
   isCartOpen: Boolean,
   toggleCart: Function,
+  cartItems: Array,
 })
 </script>
 
