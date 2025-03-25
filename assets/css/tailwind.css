@@ -42,7 +42,7 @@
         font-style: italic;
     }
 
-    * {
+    body {
         cursor: crosshair;
     }
 
