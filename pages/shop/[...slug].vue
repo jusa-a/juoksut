@@ -106,6 +106,13 @@ const { data: product } = await useAsyncData(route.path, () => {
   return queryCollection('shop').path(route.path).first()
 })
 
+if (!product.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found'
+  })
+}
+
 const selectedSize = ref('')
 const showSelectSizeMessage = ref(false)
 
