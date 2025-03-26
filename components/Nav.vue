@@ -1,7 +1,7 @@
 <template>
   <div
     class="navContainer flex flex-col sticky top-0 mix-blend-multiply z-[1001] h-[var(--nav-height)]"
-    v-on="isCartOpen ? { click: toggleCart } : {}">
+    v-on="cart.isCartOpen ? { click: cart.toggleCart } : {}">
     <div class=" flex p-[0.15em] overflow-hidden h-full">
       <div class="spin-container self-center min-w-[calc(var(--nav-height)-1em)] mx-[0.2em] overflow-hidden">
         <img
@@ -19,8 +19,8 @@
           class="navLinks flex gap-[4em] flex-1 grow justify-between ml-[auto] text-right pl-[0.5vw] pr-[0.5em]">
           <NuxtLink to="/join">JOIN</NuxtLink>
           <NuxtLink to="/shop">SHOP</NuxtLink>
-          <button :class="{ cartActive: isCartOpen }" @click="toggleCart">
-            CART({{ cartItems.length }})
+          <button :class="{ cartActive: cart.isCartOpen }" @click="cart.toggleCart">
+            CART({{ cart.totalItems }})
           </button>
         </div>
       </nav>
@@ -30,11 +30,9 @@
 </template>
 
 <script setup>
-defineProps({
-  isCartOpen: Boolean,
-  toggleCart: Function,
-  cartItems: Array,
-})
+import { useCartStore } from '~/stores/cart'
+
+const cart = useCartStore()
 </script>
 
 <style scoped>

@@ -1,37 +1,52 @@
 <template>
   <Transition name="cart">
-    <div v-show="isCartOpen" class="fixed top-0 w-full z-[802]">
+    <div v-show="cart.isCartOpen" class="fixed top-0 w-full h-full z-[802]">
       <div class="navOverlay h-[var(--nav-height)] w-full bg-white" />
       <Divider />
 
-      <div class="cartContainer w-full flex flex-wrap h-[calc(100vh-var(--nav-height)-1px)]">
-        <div class="dimOverlay flex-1 min-w-[200px] -z-10 bg-black bg-opacity-20" @click="toggleCart" />
+      <div class="cartContainer w-full flex flex-wrap h-[calc(100%-var(--nav-height)-1px)]">
+        <div
+          class="dimOverlay flex-1 min-w-[200px] bg-black bg-opacity-20"
+          @click="cart.toggleCart"
+        />
 
         <div class="cart h-full flex-1 min-w-[300px] flex flex-col bg-white border-pink border-l-[1px]">
-          <div class="flex-1 overflow-y-scroll text-[0.8em]/[1.3em]">
-            <div
-              v-for="(item, index) in cartItems"
-              :key="index">
-              <div class="flex p-[1.5em]">
-                <div class="self-center w-[10em] mx-[0.2em] blur-md">
-                  <img
-                    src="/logo.svg"
-                    alt="JUOKSUT RUN CLUB LOGO" />
+          <div class="flex-1 overflow-y-scroll text-[0.8em]/[1.3em] flex flex-col">
+            <template v-if="cart.items.length === 0">
+              <p class="m-auto">Your cart is empty.</p>
+            </template>
+
+            <template v-else>
+              <div
+                v-for="(item, index) in cart.items"
+                :key="index">
+                <div class="flex p-[1.5em]">
+                  <div class="self-center w-[10em] mx-[0.2em]">
+                    <NuxtLink :to="item.path">
+                      <NuxtImg
+                        :src="`/${item.img}`"
+                        :alt="item.title"
+                        height="250"
+                        width="200"
+                      />
+                    </NuxtLink>
+                  </div>
+
+                  <div class="grow">
+                    <div>{{ item.title }}</div>
+                    <div>Size: {{ item.size }}</div>
+                    <div>Quantity: {{ item.quantity }}</div>
+                    <button class="opacity-70 pt-[0.5em] hover:underline" @click="cart.removeItem(item.id, item.size)">Remove</button>
+                  </div>
+
+                  <div>
+                    <div>€{{ item.price * item.quantity }}</div>
+                  </div>
                 </div>
 
-                <div class="grow">
-                  <div>{{ item.name }}</div>
-                  <div>Size: {{ item.size }}</div>
-                  <div>Quantity: {{ item.quantity }}</div>
-                </div>
-
-                <div>
-                  <div>€{{ item.price * item.quantity }}</div>
-                </div>
+                <Divider class="opacity-30" />
               </div>
-
-              <Divider class="opacity-30" />
-            </div>
+            </template>
           </div>
 
           <div>
@@ -39,12 +54,26 @@
             <div class="p-[1.5em] flex flex-col justify-center items-center bg-white">
               <div class="flex justify-between w-full pb-[1.5em] text-[0.8em]/[1.3em]">
                 <span>Subtotal</span>
-                <span>€{{ cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) }}</span>
+                <span>€{{ cart.totalPrice }}</span>
               </div>
 
-              <button class="self-stretch text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink active:opacity-50" @click="handleCheckout">
-                Checkout
-              </button>
+              <template v-if="cart.totalItems === 0">
+                <NuxtLink
+                  to="/shop"
+                  class="self-stretch text-pink uppercase bg-white text-center border-[1px] border-pink py-[1em] hover:bg-pink hover:text-white active:opacity-50"
+                >
+                  Shop
+                </NuxtLink>
+              </template>
+              <template v-else>
+                <button
+                  class="self-stretch text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink active:opacity-50"
+                  :class="{ 'pointer-events-none': cart.isHoverDisabled }"
+                  @click="handleCheckout"
+                >
+                  {{ cart.isLoading ? 'Updating...' : 'Checkout' }}
+                </button>
+              </template>
             </div>
           </div>
         </div>
@@ -54,40 +83,50 @@
 </template>
 
 <script setup>
-defineProps({
-  isCartOpen: Boolean,
-  toggleCart: Function,
-  cartItems: Array,
-})
+import { useCartStore } from '~/stores/cart'
 
-// Wait 1 second
-// await new Promise(resolve => setTimeout(resolve, 1000))
+const cart = useCartStore()
 
-// Handle checkout button click (redirect to Stripe Checkout)
+// Handle checkout --> redirect to Stripe Checkout
+// Call server to create a Stripe checkout session
 async function handleCheckout() {
-  const checkoutSession = await createStripeCheckoutSession()
-  // Redirect the user to the Stripe Checkout page
-  window.location.href = checkoutSession.url
-}
+  try {
+    const { data, error } = await useFetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: cart.items.map(item => ({
+          priceId: item.priceId,
+          quantity: item.quantity,
+        })),
+      }),
+    })
 
-// Function to call your server to create a Stripe checkout session
-async function createStripeCheckoutSession() {
-  const response = await fetch('/api/checkout', {
-    method: 'POST',
-    body: JSON.stringify({ items: cartItems.value }),
-  })
-  const session = await response.json()
-  return session // This session contains the redirect URL
+    if (error.value) {
+      console.error('Error during checkout:', error.value)
+      return
+    }
+
+    if (data.value?.url) {
+      window.location.href = data.value.url // Redirect to Stripe Checkout
+    }
+    else {
+      console.error('Failed to create Stripe session')
+    }
+  }
+  catch (error) {
+    console.error('Unexpected error:', error)
+  }
 }
 </script>
 
 <style scoped>
 .cart-enter-active {
-  transition: opacity 0.25s ease-out;
+  transition: opacity 0.35s ease-out;
 }
 
 .cart-leave-active {
-  transition: opacity 0.2s ease-in;
+  transition: opacity 0.25s ease-in;
   opacity: 1;
 }
 

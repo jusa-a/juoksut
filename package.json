@@ -13,16 +13,22 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@nuxt/image": "^1.9.0"
+    "@nuxt/content": "^3.4.0",
+    "@nuxt/image": "^1.9.0",
+    "@stripe/stripe-js": "^6.1.0",
+    "@vueuse/core": "^13.0.0",
+    "stripe": "^17.7.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.10.1",
     "@nuxt/devtools": "^2.2.1",
     "@nuxt/eslint": "1.1.0",
     "@nuxtjs/tailwindcss": "6.13.1",
+    "@pinia/nuxt": "0.10.1",
     "eslint": "^9.22.0",
     "eslint-plugin-format": "^1.0.1",
     "nuxt": "^3.16.0",
+    "pinia": "^3.0.1",
     "typescript": "^5.8.2",
     "vue": "^3.5.13",
     "vue-eslint-parser": "^9.4.3",

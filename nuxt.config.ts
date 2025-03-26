@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/image', '@nuxt/eslint', '@nuxtjs/tailwindcss'],
+  modules: [
+    '@nuxt/image',
+    '@nuxt/eslint',
+    '@nuxtjs/tailwindcss',
+    '@nuxt/content',
+    '@pinia/nuxt',
+  ],
   devtools: { enabled: true },
 
   routeRules: {

@@ -6,6 +6,9 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { useCartStore } from '~/stores/cart'
+
 const isVisible = ref(true) // Force visible on reload
 const pageReload = ref(true) // // Ref for page reload detection
 
@@ -33,6 +36,13 @@ watch(isLoading, (newVal) => {
       document.body.style.overflow = 'auto'
     }, 200)
   }
+})
+
+const router = useRouter()
+const cart = useCartStore()
+
+router.beforeEach(() => {
+  cart.closeCart() // Close cart when navigating to a new page
 })
 </script>
 
