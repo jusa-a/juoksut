@@ -6,7 +6,7 @@
 
       <div class="cartContainer w-full flex flex-wrap h-[calc(100%-var(--nav-height)-1px)]">
         <div
-          class="dimOverlay flex-1 min-w-[200px] bg-black bg-opacity-20"
+          class="dimOverlay flex-1 min-w-[200px] bg-black bg-opacity-25"
           @click="cart.toggleCart"
         />
 
@@ -20,7 +20,7 @@
               <div
                 v-for="(item, index) in cart.items"
                 :key="index">
-                <div class="flex p-[1.5em]">
+                <div class="flex p-[1.5em] gap-[0.5em]">
                   <div class="self-center w-[10em] mx-[0.2em]">
                     <NuxtLink :to="item.path">
                       <NuxtImg
@@ -32,11 +32,11 @@
                     </NuxtLink>
                   </div>
 
-                  <div class="grow">
+                  <div class="flex-1 flex flex-col">
                     <div>{{ item.title }}</div>
                     <div>Size: {{ item.size }}</div>
                     <div>Quantity: {{ item.quantity }}</div>
-                    <button class="opacity-70 pt-[0.5em] hover:underline" @click="cart.removeItem(item.id, item.size)">Remove</button>
+                    <button class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" @click="cart.removeItem(item.id, item.size)">Remove</button>
                   </div>
 
                   <div>
