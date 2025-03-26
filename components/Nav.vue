@@ -61,13 +61,16 @@ const cart = useCartStore()
 }
 
 .home a {
-  @apply font-serif font-medium tracking-[-0.03em];
+  @apply font-serif font-medium tracking-[-0.04em];
   font-size: min(18.5vw, 4.6em);
   line-height: 0.7em;
   padding-right: 0.1em;
 
   transition: 0.15s;
   transform: skewX(-8deg);
+
+  -webkit-text-stroke-width: 0.01em;
+  -webkit-text-stroke-color: #ff639a;
 }
 
 .navLinks {

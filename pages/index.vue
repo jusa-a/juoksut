@@ -3,7 +3,7 @@
     <img class="fixed selectDisable w-[calc(var(--nav-height)+75vh)] px-[1em] z-50 top-[calc(var(--nav-height)+30vh)] left-1/2 -translate-x-1/2 -translate-y-1/3  mix-blend-plus-lighter blur-[0.5em] opacity-50" src="/logo.svg" alt="transparent blurred logo overlay">
 
     <div>
-      <div class="wrapper selectDisable tracking-[-0.03em]">
+      <div class="wrapper selectDisable">
         <div class="values">
           <div><span>U</span>nity in <span>R</span>unning</div>
           <br />
@@ -70,7 +70,10 @@
   /* shape-outside: linear-gradient(transparent, transparent); */
 }
 .values {
-  @apply font-serif font-[500] text-center whitespace-nowrap uppercase leading-loose;
+  @apply font-serif font-medium text-center whitespace-nowrap uppercase leading-loose tracking-[-0.04em];
+
+  -webkit-text-stroke-width: 0.01em;
+  -webkit-text-stroke-color: #ff639a;
 }
 
 .values > div {
