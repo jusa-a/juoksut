@@ -1480,7 +1480,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/kit@npm:^3.16.1, @nuxt/kit@npm:^3.9.0":
+"@nuxt/kit@npm:^3.14.1592, @nuxt/kit@npm:^3.16.1, @nuxt/kit@npm:^3.9.0":
   version: 3.16.1
   resolution: "@nuxt/kit@npm:3.16.1"
   dependencies:
@@ -2556,13 +2556,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/web-bluetooth@npm:^0.0.21":
-  version: 0.0.21
-  resolution: "@types/web-bluetooth@npm:0.0.21"
-  checksum: 10c0/5f47c5ec452ca31e6a9b44c8aaa54b66c4f57d4aca00166c45902a3883139580e14b254b774172ff982ba4458cc444b5aa59bb4573c2fd34562cfa599721f8e4
-  languageName: node
-  linkType: hard
-
 "@typescript-eslint/eslint-plugin@npm:^8.24.1":
   version: 8.26.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.26.0"
@@ -3143,35 +3136,6 @@ __metadata:
   version: 3.5.13
   resolution: "@vue/shared@npm:3.5.13"
   checksum: 10c0/2c940ef907116f1c2583ca1d7733984e5705983ab07054c4e72f1d95eb0f7bdf4d01efbdaee1776c2008f79595963f44e98fced057f5957d86d57b70028f5025
-  languageName: node
-  linkType: hard
-
-"@vueuse/core@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "@vueuse/core@npm:13.0.0"
-  dependencies:
-    "@types/web-bluetooth": "npm:^0.0.21"
-    "@vueuse/metadata": "npm:13.0.0"
-    "@vueuse/shared": "npm:13.0.0"
-  peerDependencies:
-    vue: ^3.5.0
-  checksum: 10c0/1ec663fb17870b43d176180f114b46a235564276ca38e87b487685c6e44f6d1a5cec5569ca73f0641b8e5aa2acb874e36f5ad0e8c241a1505e9b5d79d83629ec
-  languageName: node
-  linkType: hard
-
-"@vueuse/metadata@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@vueuse/metadata@npm:13.0.0"
-  checksum: 10c0/335d09b15088b47c52487a74316f4298dc5323c261d9d17aba30cf5e21a3cb8b623134cf10fa538cf29952bb77dcdc4a25b6ed92db1633218125eb6c7b64a053
-  languageName: node
-  linkType: hard
-
-"@vueuse/shared@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@vueuse/shared@npm:13.0.0"
-  peerDependencies:
-    vue: ^3.5.0
-  checksum: 10c0/d7730ed05f90a421763f9b5e6e5ac64f0e085fade6090724f09990018106bca8dd63ed6070f2f471a472b84eaf98e0fc8307c282ec0ecb798eaf4035cb195cee
   languageName: node
   linkType: hard
 
@@ -4524,6 +4488,13 @@ __metadata:
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
   checksum: 10c0/7f0ee496e0dff14a573dc6127f14c95061b448b87b995fc96c017ce0a1e66af1675e73f1d6064407975bc4ea6ab679497a29fff7b5b9c4e99cb10797c1ad0b4c
+  languageName: node
+  linkType: hard
+
+"deep-pick-omit@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "deep-pick-omit@npm:1.2.1"
+  checksum: 10c0/6010abbf022e3dd857c140847cd51be6c55e9470f421bb39b6def3984232656668460bc0f0e522f40ae413f6406e13228fda0a88970c13b251d903c864cc1cde
   languageName: node
   linkType: hard
 
@@ -8893,11 +8864,11 @@ __metadata:
     "@nuxtjs/tailwindcss": "npm:6.13.1"
     "@pinia/nuxt": "npm:0.10.1"
     "@stripe/stripe-js": "npm:^6.1.0"
-    "@vueuse/core": "npm:^13.0.0"
     eslint: "npm:^9.22.0"
     eslint-plugin-format: "npm:^1.0.1"
     nuxt: "npm:^3.16.0"
     pinia: "npm:^3.0.1"
+    pinia-plugin-persistedstate: "npm:^4.2.0"
     stripe: "npm:^17.7.0"
     typescript: "npm:^5.8.2"
     vue: "npm:^3.5.13"
@@ -9529,6 +9500,26 @@ __metadata:
   version: 2.3.0
   resolution: "pify@npm:2.3.0"
   checksum: 10c0/551ff8ab830b1052633f59cb8adc9ae8407a436e06b4a9718bcb27dc5844b83d535c3a8512b388b6062af65a98c49bdc0dd523d8b2617b188f7c8fee457158dc
+  languageName: node
+  linkType: hard
+
+"pinia-plugin-persistedstate@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "pinia-plugin-persistedstate@npm:4.2.0"
+  dependencies:
+    "@nuxt/kit": "npm:^3.14.1592"
+    deep-pick-omit: "npm:^1.2.1"
+    defu: "npm:^6.1.4"
+    destr: "npm:^2.0.3"
+  peerDependencies:
+    "@pinia/nuxt": ">=0.9.0"
+    pinia: ">=2.3.0"
+  peerDependenciesMeta:
+    "@pinia/nuxt":
+      optional: true
+    pinia:
+      optional: true
+  checksum: 10c0/33b2ec965de56ee9f6b9c20576f68d2b86dd4ab2f17348de0b8943b5ebcfc95b6ccb9b26cad6fe791f6c822e85e8ff991345fbe0ea08cd0d1c2b942eb0c804b6
   languageName: node
   linkType: hard
 

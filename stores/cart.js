@@ -1,9 +1,8 @@
-import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
-    items: useLocalStorage('cart', []), // Persistent storage
+    items: [],
     isCartOpen: false,
     isLoading: false,
     isHoverDisabled: false,
@@ -67,6 +66,11 @@ export const useCartStore = defineStore('cart', {
 
     clearCart() {
       this.items = []
+      localStorage.removeItem('cart') // Clear the cart data from localStorage
     },
+  },
+
+  persist: {
+    storage: piniaPluginPersistedstate.localStorage(),
   },
 })
