@@ -1,7 +1,7 @@
 <template>
   <Transition name="fade">
     <div
-      v-if="true"
+      v-if="isVisible"
       class="fixed left-0 top-0 w-full h-[100vh] z-[802] bg-white flex flex-col justify-between items-center"
       :class="{ fullScreen: pageReload }"
     >
