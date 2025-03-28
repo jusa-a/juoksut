@@ -2,12 +2,16 @@
   <Transition name="fade">
     <div
       v-if="isVisible"
-      class="fixed left-0 top-0 z-[1005] flex flex-col w-full h-[100vh]">
+      class="fixed left-0 top-0 flex flex-col w-full h-[100vh] z-[802] bg-white"
+      :class="{ fullScreen: pageReload }"
+    >
       <div
-        :class="{ fullScreen: pageReload }"
-        class="h-[calc(var(--nav-height)+1px)]"
-      />
-      <div class="h-[calc(100vh-var(--nav-height)-1px)] flex justify-center bg-white items-end pb-[48vh]">
+        class="h-[calc(var(--nav-height)+1px)]  flex"
+      >
+        <Divider class="mt-auto" :class="{ fullScreen: pageReload }" />
+      </div>
+
+      <div class="h-[calc(100vh-var(--nav-height)-1px)] flex justify-center items-end pb-[48vh] ">
         <img src="/logo-circle.svg" alt="loading spinner logo" class="spinner w-[7em]" />
       </div>
       <div class="grow" />
@@ -24,11 +28,12 @@ defineProps({
 
 <style scoped>
 .fullScreen {
-  background-color: white;
+  z-index: 1005;
+  background-color: white !important;
 }
 
 .fade-enter-active {
-  transition: opacity 0.18s ease-out;
+  transition: opacity 0.2s ease-out;
 }
 
 .fade-leave-active {
