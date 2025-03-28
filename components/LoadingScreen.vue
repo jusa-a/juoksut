@@ -1,20 +1,17 @@
 <template>
   <Transition name="fade">
     <div
-      v-if="isVisible"
-      class="fixed left-0 top-0 flex flex-col w-full h-[100vh] z-[802] bg-white"
+      v-if="true"
+      class="fixed left-0 top-0 w-full h-[100vh] z-[802] bg-white flex flex-col justify-between items-center"
       :class="{ fullScreen: pageReload }"
     >
-      <div
-        class="h-[calc(var(--nav-height)+1px)]  flex"
-      >
-        <Divider class="mt-auto" :class="{ fullScreen: pageReload }" />
-      </div>
+      <Divider class="mt-[var(--nav-height)]" :class="{ fullScreen: pageReload }" />
 
-      <div class="h-[calc(100vh-var(--nav-height)-1px)] flex justify-center items-end pb-[48vh] ">
+      <div class="flex justify-center items-end z-[9999]">
         <img src="/logo-circle.svg" alt="loading spinner logo" class="spinner w-[7em]" />
       </div>
-      <div class="grow" />
+
+      <div class="h-[var(--nav-height)] w-full" />
     </div>
   </Transition>
 </template>
