@@ -6,8 +6,7 @@ export default defineContentConfig({
       source: 'shop/*.md',
       type: 'page',
       schema: z.object({
-        price: z.number(),
-        priceId: z.string(), // Stripe price id
+        slug: z.string(),
         img: z.string(),
         images: z.array(z.string()),
         sizes: z.array(z.string()),

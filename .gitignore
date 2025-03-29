@@ -25,3 +25,8 @@ logs
 
 
 .yarn/*
+
+
+.dev.vars
+.wrangler
+wrangler.toml

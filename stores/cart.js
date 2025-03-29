@@ -18,7 +18,7 @@ export const useCartStore = defineStore('cart', {
       this.isLoading = true
       this.isHoverDisabled = true
 
-      const existing = this.items.find(item => item.id === product.id && item.size === product.size)
+      const existing = this.items.find(item => item.id === product.slug && item.size === product.size)
       if (existing) {
         existing.quantity++
       }

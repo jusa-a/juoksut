@@ -7,14 +7,15 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
+    'nitro-cloudflare-dev',
   ],
   devtools: { enabled: true },
 
   routeRules: {
     '/': { prerender: true }, // Home page, prerendered at build time
     '/join': { prerender: true }, // About page, prerendered at build time
-    '/shop': { prerender: true }, // Shop page, prerendered at build time
-    '/shop/**': { prerender: true }, // Products pages, prerendered at build time
+    '/shop': { ssr: true }, // Shop page, prerendered at build time
+    '/shop/**': { ssr: true }, // Products pages, prerendered at build time
   },
 
   app: {

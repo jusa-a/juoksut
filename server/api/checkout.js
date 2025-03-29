@@ -17,6 +17,10 @@ export default defineEventHandler(async (event) => {
       line_items: body.items.map(item => ({
         price: item.priceId, // Stripe Price ID
         quantity: item.quantity,
+        metadata: {
+          id: item.id, // Pass the product ID from the frontend
+          size: item.size, // Pass the size from the frontend
+        },
       })),
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,

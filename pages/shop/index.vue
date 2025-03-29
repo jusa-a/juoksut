@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col">
     <section class="flex flex-row flex-wrap justify-around items-center w-full p-[0.8em] gap-[0.8em] m-0 mb-auto">
-      <template v-for="product in products" :key="product.id">
+      <template v-for="product in productStore.products" :key="product.slug">
         <NuxtLink
           :to="product.path"
           class="min-w-[290px] max-w-[26em] flex-1">
@@ -17,7 +17,11 @@
 
             <div class=" whitespace-nowrap text-[0.95em] py-[0.8em] px-[0.5em]">
               <div>{{ product.title }}</div>
-              <div>€{{ product.price }}</div>
+              <div>
+                {{ productStore.isOutOfStock(product.slug)
+                  ? 'Out of stock'
+                  : `€${product.price}` }}
+              </div>
             </div>
           </div>
         </NuxtLink>
@@ -28,12 +32,23 @@
   </div>
 </template>
 
-<script setup lang="ts">
-const { data: products } = await useAsyncData('shop', () => queryCollection('shop').all())
+<script setup>
+import { useProductStore } from '~/stores/products'
+
+const productStore = useProductStore()
+
+// Use callOnce to fetch products and update the store
+await callOnce(async () => {
+  const { data: products } = await useAsyncData('shop', () => queryCollection('shop').all())
+  productStore.setProducts(products.value)
+  await productStore.fetchStockAndPrices(products.value)
+})
 </script>
 
 <style scoped>
-a,
+a {
+  cursor: cell;
+}
 a:hover {
   transition: 0s;
   opacity: 1;

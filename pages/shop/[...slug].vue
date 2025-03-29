@@ -26,21 +26,36 @@
             <h2 class="">
               {{ product.title }}
             </h2>
-            <div class="pt-[1em] pb-[0.7em]">
-              €{{ product.price }}
+            <div class="pt-[1em] pb-[0.7em] uppercase">
+              {{ inStock ? `€${product.price}` : 'Out of stock' }}
             </div>
 
             <!-- Size selector -->
-            <div class="mx-[1em] flex-1 flex justify-around">
-              <button
-                v-for="(size, index) in product.sizes"
-                :key="index"
-                class="py-[1em] uppercase"
-                :class="[{ underline: selectedSize === size }]"
-                @click="selectedSize = size"
-              >
-                {{ size }}
-              </button>
+            <div
+              v-if="inStock"
+              class="flex-1 flex flex-col mx-[1em] mb-[1em]"
+            >
+              <!-- Stock info -->
+              <div class="h-[0.8em] mb-[0.2em] self-end">
+                <div v-if="selectedSize" class="text-[0.8em]/[1.3em] px-[1em] opacity-80">
+                  <span v-if="stock[selectedSize] > 9">In stock</span>
+                  <span v-else-if="stock[selectedSize] > 0">Only {{ stock[selectedSize] }} left</span>
+                  <span v-else class="opacity-60">Out of stock</span>
+                </div>
+              </div>
+
+              <!-- Select size -->
+              <div class="flex justify-between">
+                <button
+                  v-for="(size, index) in Object.keys(stock)"
+                  :key="index"
+                  class="px-[1em] uppercase"
+                  :class="[{ underline: selectedSize === size }]"
+                  @click="selectSize(size)"
+                >
+                  {{ size }}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -60,24 +75,9 @@
             </div>
 
             <!-- Sizing info -->
-            <div class="mt-[1em] table-auto">
+            <div v-if="product.sizing" class="mt-[1em] table-auto">
               <h3 class="">Sizing</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Size</th>
-                    <th>Width (cm)</th>
-                    <th>Length (cm)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(sizeInfo, index) in product.sizing" :key="index">
-                    <td>{{ sizeInfo.size }}</td>
-                    <td>{{ sizeInfo.width }}</td>
-                    <td>{{ sizeInfo.length }}</td>
-                  </tr>
-                </tbody>
-              </table>
+              {{ product.sizing }}
             </div>
           </div>
         </div>
@@ -85,10 +85,21 @@
         <div class="w-full sticky bottom-0 p-[1.5em] z-10">
           <button
             class="w-full text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink"
-            :class="{ 'pointer-events-none': cart.isHoverDisabled }"
+            :class="{
+              'pointer-events-none': cart.isHoverDisabled || stock[selectedSize] === 0 || !inStock,
+              '!bg-white !text-pink': stock[selectedSize] === 0 || !inStock,
+            }"
             @click="addToCart"
           >
-            {{ cart.isLoading ? `Adding... €${product.price}` : (showSelectSizeMessage ? 'Please select a size' : `Add to cart €${product.price}`) }}
+            {{
+              !inStock || stock[selectedSize] === 0
+                ? 'Out of stock'
+                : cart.isLoading
+                  ? `Adding... €${product.price}`
+                  : (showSelectSizeMessage
+                    ? 'Please select a size'
+                    : `Add to cart €${product.price}`)
+            }}
           </button>
         </div>
       </div>
@@ -97,11 +108,15 @@
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router'
 import { useCartStore } from '~/stores/cart'
+import { useProductStore } from '~/stores/products'
 
 const cart = useCartStore()
 const route = useRoute()
+const productStore = useProductStore()
 
+// Fetch product details from nuxt/content
 const { data: product } = await useAsyncData(route.path, () => {
   return queryCollection('shop').path(route.path).first()
 })
@@ -109,16 +124,30 @@ const { data: product } = await useAsyncData(route.path, () => {
 if (!product.value) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Page Not Found'
+    statusMessage: 'Page Not Found',
   })
 }
 
-const selectedSize = ref('')
+// Fetch stock and price data for the current product
+await productStore.fetchSingleProductData(product.value.slug)
+
+// Use stock and price from the store
+const stock = ref(productStore.getStock(product.value.slug))
+const inStock = ref(!productStore.isOutOfStock(product.value.slug))
+product.value.price = product.value.price || productStore.stripePrices[product.value.slug]?.price
+
+const selectedSize = ref(null)
+
+function selectSize(size) {
+  selectedSize.value = size
+}
+
 const showSelectSizeMessage = ref(false)
 
 function addToCart() {
   if (!selectedSize.value) {
     showSelectSizeMessage.value = true
+
     setTimeout(() => {
       showSelectSizeMessage.value = false
     }, 1000)

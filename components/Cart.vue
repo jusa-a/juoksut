@@ -98,6 +98,7 @@ async function handleCheckout() {
         items: cart.items.map(item => ({
           priceId: item.priceId,
           quantity: item.quantity,
+          size: item.size,
         })),
       }),
     })
