@@ -11,10 +11,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   routeRules: {
-    '/': { prerender: true }, // Home page, prerendered at build time
-    '/join': { prerender: true }, // About page, prerendered at build time
-    '/shop': { prerender: false }, // Shop page, prerendered at build time
-    '/shop/**': { prerender: false },
+    '/': { prerender: true },
+    '/join': { prerender: true },
+    '/shop': { ssr: false },
+    '/shop/**': { ssr: false },
   },
 
   app: {
