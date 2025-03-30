@@ -3,16 +3,14 @@
     <section class="productContainer flex flex-row flex-wrap w-full p-0 m-0 mx-auto">
       <div class="prodImages flex-1 min-w-[200px]">
         <NuxtImg
-          :src="`/${product.img}`"
+          :src="product.img"
           :alt="product.title"
           height="1280"
           width="1024"
         />
-        <template
-          v-for="(image, n) in product.images"
-          :key="n">
+        <template v-for="(image, n) in product.images" :key="n">
           <NuxtImg
-            :src="`/${image}`"
+            :src="image"
             :alt="product.title"
             height="1280"
             width="1024"
@@ -21,11 +19,9 @@
       </div>
 
       <div class="prodInfo flex-1 min-w-[300px] flex flex-col ">
-        <div class=" flex-1 flex flex-col p-[1.5em] pb-[8em]">
+        <div class="flex-1 flex flex-col p-[1.5em] pb-[8em]">
           <div class="flex flex-col">
-            <h2 class="">
-              {{ product.title }}
-            </h2>
+            <h2>{{ product.title }}</h2>
             <div class="pt-[1em] pb-[0.7em] uppercase">
               {{ inStock ? `€${product.price}` : 'Out of stock' }}
             </div>
@@ -60,15 +56,12 @@
           </div>
 
           <!-- Product Info -->
-          <div
-            class="overflow-y-scroll flex-1">
-            <div class="m-0">
-              <ContentRenderer :value="product" />
-            </div>
+          <div class="flex-1">
+            <div class="m-0" v-html="product.description"></div> <!-- Use v-html -->
 
             <!-- Material -->
             <div class="mt-[1em]">
-              <h3 class="">Material</h3>
+              <h3>Material</h3>
               <ul>
                 <li v-for="(material, index) in product.material" :key="index">{{ material }}</li>
               </ul>
@@ -76,7 +69,7 @@
 
             <!-- Sizing info -->
             <div v-if="product.sizing" class="mt-[1em] table-auto">
-              <h3 class="">Sizing</h3>
+              <h3>Sizing</h3>
               {{ product.sizing }}
             </div>
           </div>
@@ -112,37 +105,35 @@ import { useRoute } from 'vue-router'
 import { useCartStore } from '~/stores/cart'
 import { useProductStore } from '~/stores/products'
 
-const cart = useCartStore()
 const route = useRoute()
 const productStore = useProductStore()
 
-// Fetch product details from nuxt/content
-const { data: product } = await useAsyncData(route.path, () => {
-  return queryCollection('shop').path(route.path).first()
-})
+// Use useAsyncData to fetch the product during SSR and reuse it on the client
+// const { data } = await useAsyncData(`product-${route.params.slug[0]}`, async () => productStore.fetchSingleProduct(route.params.slug[0]))
 
-if (!product.value) {
+const product = await productStore.fetchSingleProduct(route.params.slug[0])
+
+if (!product) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Page Not Found',
+    statusMessage: `Page not found: /${route.params.slug}`,
   })
 }
 
-// Fetch stock and price data for the current product
-await productStore.fetchSingleProductData(product.value.slug)
+// Convert stock array to an object for easier access
+const stock = Object.fromEntries(
+  product.stock.map(({ size, quantity }) => [size, quantity]),
+)
 
-// Use stock and price from the store
-const stock = ref(productStore.getStock(product.value.slug))
-const inStock = ref(!productStore.isOutOfStock(product.value.slug))
-product.value.price = product.value.price || productStore.stripePrices[product.value.slug]?.price
-
+// Determine if the product is in stock
+const inStock = product.totalStock > 0
 const selectedSize = ref(null)
+const showSelectSizeMessage = ref(false)
+const cart = useCartStore()
 
 function selectSize(size) {
   selectedSize.value = size
 }
-
-const showSelectSizeMessage = ref(false)
 
 function addToCart() {
   if (!selectedSize.value) {
@@ -153,12 +144,18 @@ function addToCart() {
     }, 1000)
     return
   }
-  cart.addItem({ ...product.value, size: selectedSize.value })
+  cart.addItem({ ...product, size: selectedSize.value })
 }
 </script>
 
 <style scoped>
 th {
   @apply font-normal;
+}
+
+br {
+  content: ' ';
+  margin: 2em;
+  display: block;
 }
 </style>

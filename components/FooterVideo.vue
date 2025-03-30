@@ -9,7 +9,7 @@
       loop
       muted>
       <source
-        src="/juoksut.mp4"
+        src="https://cdn.juoksut.run/juoksut.mp4"
         type="video/mp4" />
     </video>
   </div>

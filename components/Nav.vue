@@ -20,7 +20,9 @@
           <NuxtLink to="/join">JOIN</NuxtLink>
           <NuxtLink to="/shop">SHOP</NuxtLink>
           <button :class="{ cartActive: cart.isCartOpen }" @click="cart.toggleCart">
-            CART({{ cart.totalItems }})
+            <ClientOnly fallback="CART(0)">
+              CART({{ cart.totalItems }})
+            </ClientOnly>
           </button>
         </div>
       </nav>

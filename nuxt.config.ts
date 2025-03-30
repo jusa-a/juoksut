@@ -4,7 +4,6 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',
-    '@nuxt/content',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     'nitro-cloudflare-dev',
@@ -14,8 +13,8 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true }, // Home page, prerendered at build time
     '/join': { prerender: true }, // About page, prerendered at build time
-    '/shop': { ssr: true }, // Shop page, prerendered at build time
-    '/shop/**': { ssr: true }, // Products pages, prerendered at build time
+    '/shop': { prerender: false }, // Shop page, prerendered at build time
+    '/shop/**': { prerender: false },
   },
 
   app: {
@@ -91,7 +90,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-03-08',
 
   image: {
-    // Options
+    domains: ['cdn.juoksut.run'],
   },
 
   tailwindcss: {

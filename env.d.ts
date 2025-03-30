@@ -1,7 +1,7 @@
 import type {
   CfProperties,
+  D1Database,
   ExecutionContext,
-  KVNamespace,
   Request,
 } from '@cloudflare/workers-types'
 
@@ -11,7 +11,7 @@ declare module 'h3' {
     cloudflare: {
       request: Request
       env: {
-        KV: KVNamespace
+        D1: D1Database
       }
       context: ExecutionContext
     }

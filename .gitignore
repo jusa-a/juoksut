@@ -30,3 +30,5 @@ logs
 .dev.vars
 .wrangler
 wrangler.toml
+
+d1

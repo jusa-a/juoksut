@@ -12,17 +12,17 @@
 
         <div class="cart h-full flex-1 min-w-[300px] flex flex-col bg-white border-pink border-l-[1px]">
           <div class="flex-1 overflow-y-scroll text-[0.8em]/[1.3em] flex flex-col">
-            <template v-if="cart.items.length === 0">
-              <p class="m-auto">Your cart is empty.</p>
-            </template>
+            <ClientOnly fallback-tag="p" fallback="Loading cart...">
+              <template v-if="cart.totalItems === 0">
+                <p class="m-auto">Your cart is empty.</p>
+              </template>
 
-            <template v-else>
-              <div
-                v-for="(item, index) in cart.items"
-                :key="index">
-                <div class="flex p-[1.5em] gap-[0.5em]">
-                  <div class="self-center w-[10em] mx-[0.2em]">
-                    <NuxtLink :to="item.path">
+              <template v-else>
+                <div
+                  v-for="(item, index) in cart.items"
+                  :key="index">
+                  <div class="flex p-[1.5em] gap-[0.5em]">
+                    <NuxtLink :to="`/shop/${item.slug}`" class="self-center w-[10em] mx-[0.2em]">
                       <NuxtImg
                         :src="`/${item.img}`"
                         :alt="item.title"
@@ -30,23 +30,23 @@
                         width="200"
                       />
                     </NuxtLink>
+
+                    <div class="flex-1 flex flex-col">
+                      <div>{{ item.title }}</div>
+                      <div>Size: {{ item.size }}</div>
+                      <div>Quantity: {{ item.quantity }}</div>
+                      <button class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" @click="cart.removeItem(item.slug, item.size)">Remove</button>
+                    </div>
+
+                    <div>
+                      <div>€{{ item.price * item.quantity }}</div>
+                    </div>
                   </div>
 
-                  <div class="flex-1 flex flex-col">
-                    <div>{{ item.title }}</div>
-                    <div>Size: {{ item.size }}</div>
-                    <div>Quantity: {{ item.quantity }}</div>
-                    <button class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" @click="cart.removeItem(item.id, item.size)">Remove</button>
-                  </div>
-
-                  <div>
-                    <div>€{{ item.price * item.quantity }}</div>
-                  </div>
+                  <Divider class="opacity-30" />
                 </div>
-
-                <Divider class="opacity-30" />
-              </div>
-            </template>
+              </template>
+            </ClientOnly>
           </div>
 
           <div>
@@ -54,26 +54,30 @@
             <div class="p-[1.5em] flex flex-col justify-center items-center bg-white">
               <div class="flex justify-between w-full pb-[1.5em] text-[0.8em]/[1.3em]">
                 <span>Subtotal</span>
-                <span>€{{ cart.totalPrice }}</span>
+                <ClientOnly fallback-tag="span" fallback="Loading...">
+                  <span>€{{ cart.totalPrice }}</span>
+                </ClientOnly>
               </div>
 
-              <template v-if="cart.totalItems === 0">
-                <NuxtLink
-                  to="/shop"
-                  class="self-stretch text-pink uppercase bg-white text-center border-[1px] border-pink py-[1em] hover:bg-pink hover:text-white active:opacity-50"
-                >
-                  Shop
-                </NuxtLink>
-              </template>
-              <template v-else>
-                <button
-                  class="self-stretch text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink active:opacity-50"
-                  :class="{ 'pointer-events-none': cart.isHoverDisabled }"
-                  @click="handleCheckout"
-                >
-                  {{ cart.isLoading ? 'Updating...' : 'Checkout' }}
-                </button>
-              </template>
+              <ClientOnly fallback-tag="span" fallback="Loading...">
+                <template v-if="cart.totalItems === 0">
+                  <NuxtLink
+                    to="/shop"
+                    class="self-stretch text-pink uppercase bg-white text-center border-[1px] border-pink py-[1em] hover:bg-pink hover:text-white active:opacity-50"
+                  >
+                    Shop
+                  </NuxtLink>
+                </template>
+                <template v-else>
+                  <button
+                    class="self-stretch text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink active:opacity-50"
+                    :class="{ 'pointer-events-none': cart.isHoverDisabled }"
+                    @click="handleCheckout"
+                  >
+                    {{ cart.isLoading ? 'Updating...' : 'Checkout' }}
+                  </button>
+                </template>
+              </ClientOnly>
             </div>
           </div>
         </div>
@@ -96,7 +100,7 @@ async function handleCheckout() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         items: cart.items.map(item => ({
-          priceId: item.priceId,
+          priceId: item.priceId, // Use predefined priceId
           quantity: item.quantity,
           size: item.size,
         })),

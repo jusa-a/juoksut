@@ -18,7 +18,7 @@ export const useCartStore = defineStore('cart', {
       this.isLoading = true
       this.isHoverDisabled = true
 
-      const existing = this.items.find(item => item.id === product.slug && item.size === product.size)
+      const existing = this.items.find(item => item.slug === product.slug && item.size === product.size)
       if (existing) {
         existing.quantity++
       }
@@ -38,11 +38,11 @@ export const useCartStore = defineStore('cart', {
       }, 600) // Initial delay before opening cart
     },
 
-    removeItem(id, size) {
+    removeItem(slug, size) {
       this.isLoading = true
 
       setTimeout(() => {
-        this.items = this.items.filter(item => !(item.id === id && item.size === size))
+        this.items = this.items.filter(item => !(item.slug === slug && item.size === size))
         this.isLoading = false
       }, 500) // Delay before removing item
     },
@@ -58,7 +58,7 @@ export const useCartStore = defineStore('cart', {
     },
 
     updateQuantity(id, size, quantity) {
-      const item = this.items.find(item => item.id === id && item.size === size)
+      const item = this.items.find(item => item.slug === id && item.size === size)
       if (item) {
         item.quantity = quantity
       }
@@ -71,6 +71,7 @@ export const useCartStore = defineStore('cart', {
   },
 
   persist: {
+    pick: ['items'],
     storage: piniaPluginPersistedstate.localStorage(),
   },
 })
