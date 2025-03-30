@@ -24,7 +24,7 @@
                   <div class="flex p-[1.5em] gap-[0.5em]">
                     <NuxtLink :to="`/shop/${item.slug}`" class="self-center w-[10em] mx-[0.2em]">
                       <NuxtImg
-                        :src="`/${item.img}`"
+                        :src="item.img"
                         :alt="item.title"
                         height="250"
                         width="200"
