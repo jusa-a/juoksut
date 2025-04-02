@@ -4,7 +4,8 @@
       <template v-for="product in products" :key="product.slug">
         <NuxtLink
           :to="`/shop/${product.slug}`"
-          class="min-w-[290px] max-w-[26em] flex-1">
+          class="min-w-[290px] max-w-[26em] flex-1"
+        >
           <div class="shopItem border-[1px] border-transparent hover:border-pink">
             <div class="aspect-[4/5] flex items-center justify-center">
               <NuxtImg
@@ -43,10 +44,8 @@ await callOnce(async () => {
   await productStore.fetchProducts()
 } /* { mode: 'navigation' } */)
 
-// await productStore.fetchProducts()
-
-// Sort products by id in ascending order
-const products = productStore.products.slice().sort((a, b) => b.id - a.id)
+// Convert the products object to an array and sort by id in descending order
+const products = Object.values(productStore.products).sort((a, b) => b.id - a.id)
 </script>
 
 <style scoped>

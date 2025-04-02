@@ -2,62 +2,70 @@ import { defineStore } from 'pinia'
 
 export const useProductStore = defineStore('products', {
   state: () => ({
-    products: [],
+    products: {}, // Normalize state: store products as an object with slugs as keys
+    loading: false,
+    error: null,
   }),
 
   getters: {
     isOutOfStock: state => (slug) => {
-      const product = state.products.find(p => p.slug === slug)
+      const product = state.products[slug]
       return product ? product.totalStock === 0 : true
     },
+    getProduct: state => slug => state.products[slug] || null,
   },
 
   actions: {
     async fetchProducts() {
+      if (this.loading)
+        return // Prevent duplicate fetches
+      this.loading = true
+      this.error = null
+
       try {
         const products = await $fetch('/api/products')
         products.forEach((product) => {
-          const existingProduct = this.products.find(p => p.slug === product.slug)
-          if (existingProduct) {
-            // Update only missing fields
-            Object.keys(product).forEach((key) => {
-              if (existingProduct[key] === undefined) {
-                existingProduct[key] = product[key]
-              }
-            })
-          }
-          else {
-            this.products.push(product)
-          }
+          this.products[product.slug] = product // Store products by slug
         })
       }
       catch (error) {
         console.error('Error fetching products:', error)
+        this.error = 'Failed to fetch products'
+      }
+      finally {
+        this.loading = false
       }
     },
 
     async fetchSingleProduct(slug) {
+      const existingProduct = this.products[slug]
+      if (existingProduct) {
+        // If images already exist, return the product without fetching images
+        if (existingProduct.images)
+          return existingProduct
+      }
+
+      this.loading = true
+      this.error = null
+
       try {
-        // Find the product in the state
-        let product = this.products.find(p => p.slug === slug)
+        const product = existingProduct || await $fetch(`/api/products/${slug}`)
+        this.products[slug] = product // Add or update the product in the state
 
-        if (!product) {
-          product = await $fetch(`/api/products/${slug}`)
-          this.products.push(product)
-        }
-
+        // Fetch images only if they don't already exist
         if (!product.images) {
-          // Fetch and update images
           const { images } = await $fetch(`/api/products/${slug}/images`)
-          // Update the product object directly for better reactivity
-          product.images = images
+          this.products[slug].images = images // Update the product with images
         }
 
-        return product
+        return this.products[slug]
       }
       catch (error) {
         console.error(`Error fetching product with slug ${slug}:`, error)
-        // throw error // Re-throw the error to handle it in the calling code
+        this.error = `Failed to fetch product: ${slug}`
+      }
+      finally {
+        this.loading = false
       }
     },
   },

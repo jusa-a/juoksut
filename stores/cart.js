@@ -23,7 +23,15 @@ export const useCartStore = defineStore('cart', {
         existing.quantity++
       }
       else {
-        this.items.push({ ...product, quantity: 1 })
+        // Save only necessary fields
+        this.items.push({
+          slug: product.slug,
+          size: product.size,
+          price: product.price,
+          title: product.title,
+          img: product.img,
+          quantity: 1,
+        })
       }
 
       // Delay before opening the cart
