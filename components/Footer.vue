@@ -18,13 +18,13 @@
       </div>
     </div>
 
-    <div class="self-center">
+    <div class="self-center mt-[0.4em]">
       <p class="font-serif font-medium text-[1.3em] tracking-[-0.03em] mt-0">
         Living the Lightspeed Lifestyle
       </p>
     </div>
 
-    <div class="flex justify-between text-[0.5em] font-light">
+    <div class="mt-[2em] mb-[1em] flex justify-between text-[0.6em] font-light">
       <div> © JUOKSUT RY 2025 </div>
       <NuxtLink to="/privacy-policy">privacy policy</NuxtLink>
       <div><a href="mailto:crew@juoksut.run">crew@juoksut.run</a></div>
