@@ -26,6 +26,7 @@
 
     <div class="flex justify-between text-[0.5em] font-light">
       <div> © JUOKSUT RY 2025 </div>
+      <NuxtLink to="/privacy-policy">privacy policy</NuxtLink>
       <div><a href="mailto:crew@juoksut.run">crew@juoksut.run</a></div>
     </div>
   </footer>
