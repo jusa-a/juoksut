@@ -10,8 +10,8 @@
               <NuxtImg
                 :src="product.img"
                 :alt="product.title"
-                height="1280"
-                width="1024"
+                height="1875"
+                width="1500"
               />
             </div>
 
@@ -27,6 +27,8 @@
         </NuxtLink>
       </template>
     </section>
+
+    <div class="h-[4em]" />
 
     <FooterVideo />
   </div>

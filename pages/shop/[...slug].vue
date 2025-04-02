@@ -3,17 +3,19 @@
     <section class="productContainer flex flex-row flex-wrap w-full p-0 m-0 mx-auto">
       <div class="prodImages flex-1 min-w-[200px]">
         <NuxtImg
+          class="mx-auto"
           :src="product.img"
           :alt="product.title"
-          height="1280"
-          width="1024"
+          height="1875"
+          width="1500"
         />
         <template v-for="(image, n) in product.images" :key="n">
           <NuxtImg
+            class="mx-auto"
             :src="image"
             :alt="product.title"
-            height="1280"
-            width="1024"
+            height="1875"
+            width="1500"
           />
         </template>
       </div>
