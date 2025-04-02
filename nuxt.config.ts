@@ -63,6 +63,13 @@ export default defineNuxtConfig({
       ],
       link: [
         {
+          rel: 'preload',
+          href: 'https://cdn.juoksut.run/juoksut.mp4',
+          as: 'video',
+          type: 'video/mp4',
+          fetchpriority: 'high',
+        },
+        {
           rel: 'apple-touch-icon',
           sizes: '180x180',
           href: '/apple-touch-icon.png',
