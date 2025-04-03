@@ -62,7 +62,7 @@
             <div class="m-0" v-html="product.description"></div> <!-- Use v-html -->
 
             <!-- Material -->
-            <div class="mt-[1em]">
+            <div v-if="!product.material.length === 0" class="mt-[1em]">
               <h3>Material</h3>
               <ul>
                 <li v-for="(material, index) in product.material" :key="index">{{ material }}</li>
@@ -146,6 +146,7 @@ function addToCart() {
     }, 1000)
     return
   }
+
   cart.addItem({ ...product, size: selectedSize.value })
 }
 </script>
