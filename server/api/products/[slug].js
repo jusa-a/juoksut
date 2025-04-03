@@ -1,5 +1,5 @@
 import { defineEventHandler } from 'h3'
-import { fetchProductData, fetchStripePrices, transformProductData } from '../../utils/productUtils'
+import { fetchProductData, transformProductData } from '../../utils/productUtils'
 
 export default defineEventHandler(async (event) => {
   const { slug } = event.context.params
@@ -10,8 +10,7 @@ export default defineEventHandler(async (event) => {
     if (!queryResult)
       throw createError({ statusCode: 404, message: 'Product not found' })
 
-    const priceMap = await fetchStripePrices()
-    return transformProductData(queryResult, priceMap)
+    return transformProductData(queryResult)
   }
   catch (error) {
     console.error(`Error fetching product with slug ${slug}:`, error)

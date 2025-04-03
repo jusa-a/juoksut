@@ -1,10 +1,8 @@
-import Stripe from 'stripe'
-
 export const cdnBaseUrl = 'https://cdn.juoksut.run/products'
 
 export async function fetchProductData(D1, slug = null) {
   const query = `
-    SELECT p.id, p.slug, p.title, p.material, p.sizing, p.size_chart, p.description,
+    SELECT p.id, p.slug, p.title, p.material, p.sizing, p.size_chart, p.description, p.price,
            COALESCE(SUM(s.quantity), 0) AS totalStock,
            JSON_GROUP_ARRAY(
              JSON_OBJECT('size', s.size, 'quantity', s.quantity)
@@ -30,29 +28,13 @@ export async function fetchProductData(D1, slug = null) {
   return slug ? stmt.first() : (await stmt.all()).results
 }
 
-export async function fetchStripePrices() {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-  const stripePrices = await stripe.prices.list({ expand: ['data.product'], active: true })
-  return stripePrices.data.reduce((acc, price) => {
-    const slug = price.product.metadata.slug
-    if (slug) {
-      acc[slug] = {
-        priceId: price.product.default_price,
-        price: price.unit_amount / 100, // Convert to euros
-      }
-    }
-    return acc
-  }, {})
-}
-
-export function transformProductData(product, priceMap) {
+export function transformProductData(product) {
   return {
     ...product,
     material: JSON.parse(product.material || '[]'),
     sizeChart: JSON.parse(product.size_chart || '[]'),
-    stock: JSON.parse(product.stock || '[]'),
-    price: priceMap[product.slug]?.price || null,
-    priceId: priceMap[product.slug]?.priceId || null,
+    stock: JSON.parse(product.stock || '[]'), // Parse stock JSON string into an array
+    price: product.price / 100, // Convert price from cents to euros
     img: `${cdnBaseUrl}/${product.slug}/1.png`, // Fetch only the first image
     description: product.description.split('\\n').map(paragraph => `<p>${paragraph}</p>`).join(''), // Wrap paragraphs in <p> tags
   }
