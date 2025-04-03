@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     '/join': { prerender: true },
     '/shop': { ssr: false },
     '/shop/**': { ssr: false },
+    '/success': { ssr: false },
   },
 
   app: {
