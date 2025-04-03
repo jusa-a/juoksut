@@ -35,7 +35,9 @@
                       <div>{{ item.title }}</div>
                       <div>Size: {{ item.size }}</div>
                       <div>Quantity: {{ item.quantity }}</div>
-                      <button class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" @click="cart.removeItem(item.slug, item.size)">Remove</button>
+                      <button class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" @click="cart.removeItem(item.slug, item.size)">
+                        Remove
+                      </button>
                     </div>
 
                     <div>
@@ -50,6 +52,18 @@
           </div>
 
           <div>
+            <div v-if="checkoutError" class="text-red-500 text-[0.8em]/[1.3em] p-[0.5em] border border-t-red-500 flex justify-between items-center">
+              {{ checkoutError }}
+              <div class="text-center">
+                <button
+                  class="text-white bg-red-500 px-2 py-1 hover:bg-red-600"
+                  @click="clearCartAndReload"
+                >
+                  Refresh Cart
+                </button>
+              </div>
+            </div>
+
             <Divider />
             <div class="p-[1.5em] flex flex-col justify-center items-center bg-white">
               <div class="flex justify-between w-full pb-[1.5em] text-[0.8em]/[1.3em]">
@@ -90,25 +104,21 @@
 import { useCartStore } from '~/stores/cart'
 
 const cart = useCartStore()
+const checkoutError = ref('') // State to store the error message
 
 // Handle checkout --> redirect to Stripe Checkout
 // Call server to create a Stripe checkout session
 async function handleCheckout() {
   try {
+    checkoutError.value = '' // Clear any previous error
     const { data, error } = await useFetch('/api/checkout', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        items: cart.items.map(item => ({
-          priceId: item.priceId, // Use predefined priceId
-          quantity: item.quantity,
-          size: item.size,
-        })),
-      }),
+      body: JSON.stringify({ items: cart.items }),
     })
 
     if (error.value) {
       console.error('Error during checkout:', error.value)
+      checkoutError.value = error.value.data.message || 'An error occurred during checkout'
       return
     }
 
@@ -117,11 +127,19 @@ async function handleCheckout() {
     }
     else {
       console.error('Failed to create Stripe session')
+      checkoutError.value = 'Failed to create checkout session'
     }
   }
   catch (error) {
     console.error('Unexpected error:', error)
+    checkoutError.value = 'Unexpected error occurred during checkout'
   }
+}
+
+// Clear the cart and reload the page
+function clearCartAndReload() {
+  cart.clearCart()
+  window.location.reload()
 }
 </script>
 
