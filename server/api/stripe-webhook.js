@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   if (endpointSecret) {
     const signature = event.node.req.headers['stripe-signature']
     try {
-      const stripeEvent = stripe.webhooks.constructEvent(rawBody, signature, endpointSecret)
+      const stripeEvent = await stripe.webhooks.constructEventAsync(rawBody, signature, endpointSecret)
       // console.log('⚡️  Webhook verified:', stripeEvent.type)
 
       // Handle the event
