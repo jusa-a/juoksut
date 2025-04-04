@@ -2,7 +2,7 @@
   <section>
     <h2 class="uppercase">Payment Successful!</h2>
     <p>
-      Thank you for your order {{ orderDetails ? orderDetails.customer_details.name : '' }}!
+      Thank you for your order {{ orderDetails ? orderDetails.customer_details.name : '' }} &lt;3
     </p>
     <p>
       You will receive a receipt to {{ orderDetails?.customer_details.email || '' }}.
@@ -16,17 +16,15 @@
             <div>{{ item.description }}</div>
             <div>Quantity: {{ item.quantity }}</div>
           </div>
-          <div>€{{ (item.amount_total / 100).toFixed(2) }}</div>
+          <div class="self-end">€{{ (item.amount_total / 100).toFixed(2) }}</div>
         </div>
       </div>
-      <div class="text-right font-[600]">
+      <div class="text-right font-[500] mt-[0.5em]">
         Total: €{{ (orderDetails.amount_total / 100).toFixed(2) }}
       </div>
     </div>
 
-    <div v-else class="mt-4">Loading order details...</div>
-
-    <div>
+    <div class="mb-[1em]">
       <p>
         We will be in touch with you soon about the pickup details.
       </p>
@@ -35,10 +33,8 @@
       </p>
     </div>
 
-    <NuxtLink to="/">
-      <div class="my-[1.5em] mx-[1em] text-white uppercase bg-pink text-center border border-pink py-[0.6em] hover:bg-white hover:text-pink active:opacity-50">
-        Go back home
-      </div>
+    <NuxtLink to="/" class="mx-auto my-[1em] px-[5em] text-white uppercase bg-pink text-center border border-pink py-[0.6em] hover:bg-white hover:text-pink active:opacity-50">
+      Go back home
     </NuxtLink>
   </section>
 </template>
