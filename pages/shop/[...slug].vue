@@ -36,9 +36,10 @@
               <!-- Stock info -->
               <div class="h-[0.8em] mb-[0.2em] self-end">
                 <div v-if="selectedSize" class="text-[0.8em]/[1.3em] px-[1em] opacity-80">
-                  <span v-if="stock[selectedSize] > 9">In stock</span>
-                  <span v-else-if="stock[selectedSize] > 0">Only {{ stock[selectedSize] }} left</span>
-                  <span v-else class="opacity-60">Out of stock</span>
+                  <span v-if="stock[selectedSize] > 100">preorder</span>
+                  <span v-else-if="stock[selectedSize] > 9">in stock</span>
+                  <span v-else-if="stock[selectedSize] > 0">only {{ stock[selectedSize] }} left</span>
+                  <span v-else class="opacity-60">out of stock</span>
                 </div>
               </div>
 
@@ -59,7 +60,7 @@
 
           <!-- Product Info -->
           <div class="flex-1">
-            <div class="m-0" v-html="product.description"></div> <!-- Use v-html -->
+            <div class="m-0" v-html="product.description"></div>
 
             <!-- Material -->
             <div v-if="!product.material.length === 0" class="mt-[1em]">
