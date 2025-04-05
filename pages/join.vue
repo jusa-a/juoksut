@@ -3,18 +3,10 @@
     <section>
       <h2>ABOUT</h2>
       <p>
-        JUOKSUT is a running club in Helsinki for everyone, from beginners to advanced runners, who want to challenge themselves and have a blast at the same time.
+        JUOKSUT is a running club in Helsinki for everyone, from beginners to advanced runners who want to run together, challenge themselves and have a blast at the same time.
       </p>
       <p>
-        We run on Tuesdays and Sundays with varying paces and distances.
-      </p>
-      <p>
-        Join us by showing up and bring your friends too! You will be welcomed by our fun, friendly, and fast team.
-      </p>
-      <p>
-        We post details about our weekly runs on our
-        <a href="https://www.strava.com/clubs/juoksut">Strava</a> and
-        <a href="https://www.instagram.com/juoksut/">Instagram</a>.
+        We run on Tuesdays and Sundays with varying paces and distances. Join us by showing up and bring your friends too! You will be welcomed by our fun, friendly, and fast team.
       </p>
     </section>
 
@@ -53,11 +45,8 @@
           </div>
         </div>
       </div>
-      <p class="text-center text-[0.9em] px-[1em] pt-[0.5em]">
-        We also host special events every once in a while. Make sure to follow us on
-        <a href="https://www.strava.com/clubs/juoksut">Strava</a> and
-        <a href="https://www.instagram.com/juoksut/">Instagram</a>
-        to keep updated!
+      <p>
+        We post more details about the weekly runs and other events on our social media. Make sure to follow us on <a href="https://www.strava.com/clubs/juoksut">Strava</a> and <a href="https://www.instagram.com/juoksut/">Instagram</a> to keep updated!
       </p>
     </section>
 
@@ -66,12 +55,12 @@
     <section>
       <h2>SAFER SPACE</h2>
       <p>
-        We're exhilarated by the ever-growing Lightspeed energy you spread each run! Since we are so many, it's crucial to ensure that our runs create a positive, respectful, and safe environment for everyone. Juoksut is for everyone, regardless of your background.
+        Since there are so so many people joining our weekly runs, it's crucial to ensure that we create a positive, respectful, and safe environment for everyone. Juoksut is for everyone, regardless of your background.
       </p>
       <p>
-        We have established the following guidelines to ensure that everyone feels safe. It is absolutely essential that these guidelines are followed!
+        We have established the following guidelines to ensure that everyone feels safe. It is absolutely essential that these are followed!
       </p>
-      <div class="max-w-[40em] mx-auto text-center text-[0.75em] border-pink border-[1px] mt-[1em] pb-[1em] px-[1em]">
+      <div class="max-w-[37em] mx-auto text-center text-[0.75em] border-pink border-[1px] my-[2em] pt-[0.5em] pb-[1.5em] px-[1.5em]">
         <p>
           <strong>BE CONSIDERATE AND RESPECTFUL</strong>
           <br>
@@ -104,22 +93,21 @@
         </p>
       </div>
       <div class="text-center flex flex-col items-center">
-        <h3>
+        <p class="m-0">
           IF YOU ENCOUNTER UNWANTED BEHAVIOR,
-        </h3>
-        <p class="pb-[0.5em]">
+          <br>
           please don't hesitate to tell our pacers, or use this anonymous link to inform us.
         </p>
 
-        <a class="mx-auto my-[1em] px-[5em] text-white uppercase bg-pink text-center border-[1px] border-pink py-[0.3em] hover:bg-white hover:text-pink active:opacity-50" href="https://docs.google.com/forms/d/e/1FAIpQLSfEXw0XS7aHmmV5wV9eRk1KxI9RvnP9OgDka_lpDvVyxNJ4Xw/viewform?fbclid=PAZXh0bgNhZW0CMTEAAaZMurDuaAKJinxI0v4NkcB-oQrfGU5lakZB_MOSWFfyVl_LDHu59SVQ8EU_aem_FKp8daadnB7-PR0AWyH7nA" target="_blank">LINK TO THE FORM</a>
+        <a class="mx-auto my-[1.5em] px-[5em] text-white uppercase bg-pink text-center border-[1px] border-pink py-[0.3em] hover:bg-white hover:text-pink active:opacity-50" href="https://docs.google.com/forms/d/e/1FAIpQLSfEXw0XS7aHmmV5wV9eRk1KxI9RvnP9OgDka_lpDvVyxNJ4Xw/viewform?fbclid=PAZXh0bgNhZW0CMTEAAaZMurDuaAKJinxI0v4NkcB-oQrfGU5lakZB_MOSWFfyVl_LDHu59SVQ8EU_aem_FKp8daadnB7-PR0AWyH7nA" target="_blank">LINK TO THE FORM</a>
 
-        <p class="text-[0.8em]">
-          If you have any questions or concerns, please reach out to us. We are here to help and make sure that everyone feels safe and welcome at Juoksut!
+        <p class="text-[0.8em] m-0">
+          If you have any other questions or concerns, please reach out to us. We are here to help and make sure that everyone feels safe and welcome at Juoksut! &lt;3
         </p>
       </div>
     </section>
 
-    <div class="h-[4em]" />
+    <div class="h-[3em]" />
 
     <FooterVideo />
   </div>
