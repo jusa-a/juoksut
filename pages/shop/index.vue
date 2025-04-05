@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col">
-    <section class="flex flex-row flex-wrap justify-around items-center w-full p-[0.8em] gap-[0.8em] m-0 mb-auto">
+    <section class="flex flex-row flex-wrap justify-around items-center w-full p-[1em] gap-[1em] m-0 mb-auto">
       <template v-for="product in products" :key="product.slug">
         <NuxtLink
           :to="`/shop/${product.slug}`"
@@ -16,7 +16,7 @@
               />
             </div>
 
-            <div class="whitespace-nowrap text-[0.95em] py-[0.8em] px-[0.5em]">
+            <div class="whitespace-nowrap text-[0.95em] py-[0.5em] px-[0.5em]">
               <div>{{ product.title }}</div>
               <div class="uppercase">
                 {{ !product.totalStock > 0
@@ -29,7 +29,7 @@
       </template>
     </section>
 
-    <div class="h-[4em]" />
+    <div class="h-[3em]" />
 
     <FooterVideo />
   </div>

@@ -6,11 +6,11 @@
 
       <div class="cartContainer w-full flex flex-wrap h-[calc(100%-var(--nav-height)-1px)]">
         <div
-          class="dimOverlay flex-1 min-w-[200px] bg-black bg-opacity-25"
+          class="dimOverlay flex-1 min-w-[200px] bg-black bg-opacity-25 border-pink border-r-[1px]"
           @click="cart.toggleCart"
         />
 
-        <div class="cart h-full flex-1 min-w-[300px] flex flex-col bg-white border-pink border-l-[1px]">
+        <div class="cart h-full flex-1 min-w-[300px] flex flex-col bg-white">
           <div class="flex-1 overflow-y-scroll text-[0.8em]/[1.3em] flex flex-col">
             <ClientOnly fallback-tag="p" fallback="Loading cart...">
               <template v-if="cart.totalItems === 0">
@@ -21,8 +21,8 @@
                 <div
                   v-for="(item, index) in cart.items"
                   :key="index">
-                  <div class="flex p-[1.5em] gap-[0.5em]">
-                    <NuxtLink :to="`/shop/${item.slug}`" class="self-center w-[10em] mx-[0.2em]">
+                  <div class="flex p-[1.3em] gap-[0.6em]">
+                    <NuxtLink :to="`/shop/${item.slug}`" class="self-center w-[10em]">
                       <NuxtImg
                         :src="item.img"
                         :alt="item.title"
@@ -65,8 +65,8 @@
             </div>
 
             <Divider />
-            <div class="p-[1.5em] flex flex-col justify-center items-center bg-white">
-              <div class="flex justify-between w-full pb-[1.5em] text-[0.8em]/[1.3em]">
+            <div class="px-[1em] py-[1.4em] flex flex-col justify-center items-center bg-white">
+              <div class="flex justify-between w-full pb-[1.6em] text-[0.8em]/[1.3em]">
                 <span>Subtotal</span>
                 <ClientOnly fallback-tag="span" fallback="Loading...">
                   <span>€{{ cart.totalPrice }}</span>

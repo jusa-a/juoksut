@@ -93,7 +93,7 @@
         letter-spacing: -0.03em; */
         font-weight: 400; 
         line-height: normal;
-        margin-top: 0.7em;
+        margin-top: 0.9em;
     }
 
     a, button {
@@ -112,9 +112,8 @@
     }
 
     section {
-        @apply flex flex-col mx-auto my-[1em];
-        width: clamp(60%, 500px, 100%);
-        padding: 0 1em;
+        @apply flex flex-col mx-auto mt-[1.5em] mb-[2em] px-[1em];
+        width: clamp(50%, 500px, 100%);
     }
 }
 

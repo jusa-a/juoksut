@@ -21,7 +21,7 @@
       </div>
 
       <div class="prodInfo flex-1 min-w-[300px] flex flex-col ">
-        <div class="flex-1 flex flex-col p-[1.5em] pb-[8em]">
+        <div class="flex-1 flex flex-col px-[1em] py-[1.4em] pb-[8em]">
           <div class="flex flex-col">
             <h2>{{ product.title }}</h2>
             <div class="pt-[1em] pb-[0.7em] uppercase">
@@ -78,7 +78,7 @@
           </div>
         </div>
 
-        <div class="w-full sticky bottom-0 p-[1.5em] z-10">
+        <div class="w-full sticky bottom-0 pb-[1.4em] px-[1em] z-10">
           <button
             class="w-full text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink"
             :class="{
