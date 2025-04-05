@@ -2,10 +2,10 @@
   <div>
     <section>
       <h2>PRIVACY POLICY</h2>
-      <p class="font-[500]">Last updated: 02.04.2025</p>
+      <p class="font-[500]">Last updated: 05.04.2025</p>
 
       <h3>INTRODUCTION</h3>
-      <p>This Privacy Policy outlines how Juoksut ry (“Juoksut”, “we,” “our,” or “us”) handle your data when you use our website and webshop juoksut.run.</p>
+      <p>This Privacy Policy outlines how Juoksut ry (“Juoksut”, “we,” “our,” or “us”) handles your data when you use our website and webshop <a href="https://juoksut.run">juoksut.run</a>.</p>
 
       <h3>DATA COLLECTED AND PROCESSED BY THIRD-PARTY SERVICES</h3>
       <p>We do not collect or store personal data on our own servers. We use the following third-party services to operate the website and webshop:</p>
@@ -18,7 +18,7 @@
       <h3>COOKIES AND LOCALSTORAGE</h3>
       <ul>
         <li>We do not use tracking cookies.</li>
-        <li><strong>Shopping Cart Data:</strong> Your cart items are stored locally in your browser (LocalStorage) and are not sent to our servers.</li>
+        <li><strong>Shopping cart data:</strong> Your cart items are stored locally in your browser (LocalStorage) and are not sent to our servers.</li>
       </ul>
 
       <h3>CHANGES TO THIS POLICY</h3>

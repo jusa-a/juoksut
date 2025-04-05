@@ -8,13 +8,13 @@
           We currently offer two types of products:
           <ul>
             <li>Merch from our previous batches, available for immediate purchase.</li>
-            <li>Pre-order merch, which will be made based on the number of orders received during the pre-order period.</li>
+            <li>Preorder merch, which will be made based on the number of orders received during the preorder period.</li>
           </ul>
         </div>
 
-        <h3>2. Pre-order Process</h3>
+        <h3>2. Preorder Process</h3>
         <p>
-          Pre-orders allow us to make the exact number of products needed. Once the pre-order period ends, we will finalize the production schedule. Details about the timeline will be updated to the customers as they are confirmed.
+          Preorders allow us to make the exact number of products needed. Once the preorder period ends, we will finalize the production schedule. Details about the timeline will be updated to the customers as they are confirmed.
         </p>
 
         <h3>3. Delivery & Pickup</h3>
@@ -27,17 +27,17 @@
 
         <h3>4. Returns & Refunds</h3>
         <p>
-          Pre-orders are non-refundable once processing begins. If your product arrives damaged or is lost during local delivery, please contact us at <a href="mailto:crew@juoksut.run">crew@juoksut.run</a> within 14 days from delivery or pickup.
+          Preorders are non-refundable once processing begins. If your product arrives damaged or is lost during local delivery, please contact us at <a href="mailto:crew@juoksut.run">crew@juoksut.run</a> within 14 days from delivery or pickup.
         </p>
 
         <h3>5. Disclaimer for Delays</h3>
         <p>
-          We try to meet estimated timelines. However, pre-orders may experience delays due to unforeseen circumstances. If there are any changes to your order status, we will inform you promptly.
+          We try to meet estimated timelines. However, preorders may experience delays due to unforeseen circumstances. If there are any changes to your order status, we will inform you promptly.
         </p>
 
         <h3>6. Contact</h3>
         <p>
-          If you have any questions regarding an item, pre-order, pickup, or any other issues, please reach out to us at <a href="mailto:crew@juoksut.run">crew@juoksut.run</a>
+          If you have any questions regarding an item, preorder, pickup, or any other issues, please reach out to us at <a href="mailto:crew@juoksut.run">crew@juoksut.run</a>
         </p>
       </div>
     </section>
