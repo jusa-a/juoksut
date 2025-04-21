@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     '/shop': { ssr: false },
     '/shop/**': { ssr: false },
     '/success': { ssr: false },
+    '/nb-order-form': { ssr: false },
   },
 
   app: {
