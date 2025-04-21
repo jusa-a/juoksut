@@ -3,14 +3,20 @@
   <footer class="bg-white flex flex-col px-[0.5em] p justify-around pt-[0.6em]">
     <div class="flex justify-between items-center">
       <div class="flex flex-col self-stretch justify-between flex-1">
-        <a href="https://www.strava.com/clubs/juoksut">STRAVA</a>
-        <a href="https://www.instagram.com/juoksut/">INSTAGRAM</a>
+        <div>
+          <a href="https://www.instagram.com/juoksut/" target="_blank">INSTAGRAM</a>
+        </div>
+        <div>
+          <a href="https://www.strava.com/clubs/juoksut" target="_blank">STRAVA</a>
+        </div>
       </div>
 
-      <img
-        class="w-[3.9em]"
-        src="/logo-outline.svg"
-        alt="JUOKSUT OUTLINE LOGO" />
+      <NuxtLink to="/">
+        <img
+          class="w-[3.9em]"
+          src="/logo-outline.svg"
+          alt="JUOKSUT OUTLINE LOGO" />
+      </NuxtLink>
 
       <div class="flex flex-col items-end self-stretch justify-between flex-1">
         <NuxtLink to="/orders">ORDERING INFO</NuxtLink>
