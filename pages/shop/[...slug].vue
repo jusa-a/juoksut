@@ -21,7 +21,7 @@
       </div>
 
       <div class="prodInfo flex-1 min-w-[300px] flex flex-col ">
-        <div class="flex-1 flex flex-col px-[1em] py-[1.4em] pb-[8em]">
+        <div class="flex-1 flex flex-col px-[1em] py-[1.4em] pb-[2em]">
           <div class="flex flex-col">
             <h2>{{ product.title }}</h2>
             <div class="pt-[1em] pb-[0.7em] uppercase">
