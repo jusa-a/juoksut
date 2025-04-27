@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Fetch available images dynamically and validate them
-    const maxImages = 6 // Maximum number of images to check
+    const maxImages = 7 // Maximum number of images to check
     const imageFormat = 'png' // Default format, can be 'jpg' or 'png'
     const images = []
 
