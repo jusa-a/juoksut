@@ -25,7 +25,10 @@
           <div class="flex flex-col">
             <h2>{{ product.title }}</h2>
             <div class="pt-[1em] pb-[0.7em] uppercase">
-              {{ inStock ? `€${product.price}` : 'Out of stock' }}
+              {{
+                product.totalStock < 0 ? 'Coming soon...'
+                : (inStock ? `€${product.price}` : 'Out of stock')
+              }}
             </div>
 
             <!-- Size selector -->
@@ -59,21 +62,57 @@
           </div>
 
           <!-- Product Info -->
-          <div class="flex-1">
+          <div class="flex-1 flex flex-col gap-[0.4em]">
             <div class="m-0" v-html="product.description"></div>
 
             <!-- Material -->
-            <div v-if="!product.material.length === 0" class="mt-[1em]">
-              <h3>Material</h3>
+            <div v-if="product.material.length > 0">
+              <h3 class="uppercase">Material</h3>
               <ul>
                 <li v-for="(material, index) in product.material" :key="index">{{ material }}</li>
               </ul>
             </div>
 
             <!-- Sizing info -->
-            <div v-if="product.sizing" class="mt-[1em] table-auto">
-              <h3>Sizing</h3>
-              {{ product.sizing }}
+            <div v-if="product.sizing">
+              <h3 class="uppercase ">Sizing</h3>
+              <ul>
+                <li v-for="(line, index) in product.sizing" :key="index">{{ line }}</li>
+              </ul>
+
+              <div v-if="product.sizeChart.length > 0" class=" text-[0.8em]">
+                <!-- Toggle Button -->
+                <button
+                  class="opacity-70 hover:underline"
+                  @click="isSizingTableVisible = !isSizingTableVisible"
+                >
+                  {{ isSizingTableVisible ? 'Hide Size Chart' : 'Size Chart' }}
+                </button>
+
+                <!-- Collapsible Size Chart -->
+                <div v-if="isSizingTableVisible" class="text-[0.8em]">
+                  <table class="table-fixed w-full text-left">
+                    <thead class="bg-pink text-white">
+                      <tr>
+                        <th>SIZE</th>
+                        <th>CHEST (cm)</th>
+                        <th>LENGHT (cm)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(size, index) in product.sizeChart"
+                        :key="index"
+                        class="border-b-[1px] border-pink border-opacity-50"
+                      >
+                        <td>{{ size.size }}</td>
+                        <td>{{ size.width }}</td>
+                        <td>{{ size.length }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -110,6 +149,8 @@ import { useProductStore } from '~/stores/products'
 
 const route = useRoute()
 const productStore = useProductStore()
+
+const isSizingTableVisible = ref(false)
 
 // Use useAsyncData to fetch the product during SSR and reuse it on the client
 // const { data } = await useAsyncData(`product-${route.params.slug[0]}`, async () => productStore.fetchSingleProduct(route.params.slug[0]))
@@ -161,5 +202,10 @@ br {
   content: ' ';
   margin: 2em;
   display: block;
+}
+
+th,
+td {
+  @apply px-[1em];
 }
 </style>

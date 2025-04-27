@@ -19,9 +19,10 @@
             <div class="whitespace-nowrap text-[0.95em] py-[0.5em] px-[0.5em]">
               <div>{{ product.title }}</div>
               <div class="uppercase">
-                {{ !product.totalStock > 0
-                  ? 'Out of stock'
-                  : `€${product.price}` }}
+                {{
+                  product.totalStock < 0 ? 'Coming soon...'
+                  : (product.totalStock > 0 ? `€${product.price}` : 'Out of stock')
+                }}
               </div>
             </div>
           </div>

@@ -32,6 +32,7 @@ export function transformProductData(product) {
   return {
     ...product,
     material: JSON.parse(product.material || '[]'),
+    sizing: JSON.parse(product.sizing || '[]'),
     sizeChart: JSON.parse(product.size_chart || '[]'),
     stock: JSON.parse(product.stock || '[]'), // Parse stock JSON string into an array
     price: product.price / 100, // Convert price from cents to euros
