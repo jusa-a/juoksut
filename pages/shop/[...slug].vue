@@ -65,6 +65,10 @@
           <div class="flex-1 flex flex-col gap-[0.4em]">
             <div class="m-0" v-html="product.description"></div>
 
+            <div>
+              <NuxtLink to="/orders" class="text-[0.8em] opacity-70 hover:underline">Ordering Info</NuxtLink>
+            </div>
+
             <!-- Material -->
             <div v-if="product.material.length > 0">
               <h3 class="uppercase">Material</h3>
@@ -75,7 +79,7 @@
 
             <!-- Sizing info -->
             <div v-if="product.sizing">
-              <h3 class="uppercase ">Sizing</h3>
+              <h3 class="uppercase">Sizing</h3>
               <ul>
                 <li v-for="(line, index) in product.sizing" :key="index">{{ line }}</li>
               </ul>
