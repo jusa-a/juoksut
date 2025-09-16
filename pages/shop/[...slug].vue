@@ -47,7 +47,12 @@
               </div>
 
               <!-- Select size -->
-              <div class="flex justify-between">
+              <div
+                :class="{
+                  'flex justify-center': Object.keys(stock).length === 1,
+                  'flex justify-between': Object.keys(stock).length > 1,
+                }"
+              >
                 <button
                   v-for="(size, index) in Object.keys(stock)"
                   :key="index"
@@ -78,7 +83,7 @@
             </div>
 
             <!-- Sizing info -->
-            <div v-if="product.sizing">
+            <div v-if="product.sizing.length > 0">
               <h3 class="uppercase">Sizing</h3>
               <ul>
                 <li v-for="(line, index) in product.sizing" :key="index">{{ line }}</li>
