@@ -10,7 +10,10 @@
     "preview": "yarn build && wrangler pages dev",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "db:reset:local": "wrangler d1 execute --local juoksut-products --file ./d1/schema.sql && wrangler d1 execute --local juoksut-products --file ./d1/seed.sql",
+    "db:seed:local": "wrangler d1 execute --local juoksut-products --file ./d1/seed.sql",
+    "dev:fresh": "yarn db:reset:local && nuxt dev"
   },
   "dependencies": {
     "@nuxt/image": "^1.9.0",

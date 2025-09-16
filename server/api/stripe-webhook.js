@@ -28,15 +28,24 @@ export default defineEventHandler(async (event) => {
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
             expand: ['data.price.product'],
           })
+          
 
           // Prepare batch queries
           const queries = lineItems.data.map((item) => {
-            const productSlug = item.price.product.metadata.slug
-            const size = item.price.product.metadata.size
+            const productMeta = item.price.product?.metadata || {}
+            const priceMeta = item.price.metadata || {}
+
+            const productSlug = productMeta.slug || priceMeta.slug
+            let size = productMeta.size || priceMeta.size
+
+            // Fallback: if no size provided (e.g. one-size product), assume 'ONE-SIZE'
+            if (!size)
+              size = 'ONE-SIZE'
+
             const quantity = item.quantity
 
-            if (!productSlug || !size) {
-              throw new Error(`Missing metadata for product ${item.price.product.id}`)
+            if (!productSlug) {
+              throw new Error(`Missing slug metadata for product/price ${item.price.product.id}`)
             }
 
             return D1.prepare(
