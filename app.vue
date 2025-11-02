@@ -6,6 +6,15 @@
 </template>
 
 <script setup lang="ts">
+useSeoMeta({
+  title: 'Juoksut Run Club',
+  ogTitle: 'Juoksut Run Club',
+  description: 'Juoksut Run Club is a running club for everyone chasing the ultimate feeling of being invincible.',
+  ogDescription: 'Juoksut Run Club is a running club for everyone chasing the ultimate feeling of being invincible.',
+  ogUrl: 'https://juoksut.run',
+  ogImage: 'https://juoksut.run/logo.svg',
+})
+
 import { useRouter } from 'vue-router'
 import { useCartStore } from '~/stores/cart'
 

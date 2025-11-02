@@ -224,6 +224,13 @@ onBeforeUnmount(() => {
 useHead({
   title: 'FASTLANE FRIDAY',
 })
+
+useSeoMeta({
+  title: 'FASTLANE FRIDAY',
+  ogTitle: 'FASTLANE FRIDAY',
+  ogUrl: 'https://juoksut.run/fastlane-friday',
+  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg'
+})
 </script>
 
 <style>
