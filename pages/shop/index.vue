@@ -47,6 +47,10 @@ await callOnce(async () => {
 
 // Convert the products object to an array and sort by id in descending order
 const products = Object.values(productStore.products).sort((a, b) => b.id - a.id)
+
+useSeoMeta({
+  title: 'Shop',
+})
 </script>
 
 <style scoped>

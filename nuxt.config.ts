@@ -7,6 +7,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     'nitro-cloudflare-dev',
+    // SEO
+    '@nuxtjs/robots',
+    '@nuxtjs/sitemap',
   ],
   devtools: { enabled: true },
 
@@ -30,6 +33,7 @@ export default defineNuxtConfig({
           name: 'description',
           content: 'Juoksut Run Club',
         },
+        { name: 'theme-color', content: '#ffffff' },
       ],
       link: [
         {
@@ -72,5 +76,42 @@ export default defineNuxtConfig({
 
   tailwindcss: {
     // Options
+  },
+
+  runtimeConfig: {
+    public: {
+      // Used for canonical URLs, sitemap and social tags
+      siteUrl: 'https://juoksut.run',
+      siteName: 'JUOKSUT',
+      siteDescription: 'Juoksut Run Club',
+      siteImage: 'https://juoksut.run/logo.svg',
+    },
+  },
+
+  // Robots.txt configuration
+  robots: {
+    groups: [
+      {
+        userAgent: '*',
+        allow: '/',
+      },
+    ],
+    sitemap: ['/sitemap.xml'],
+  },
+
+  // Sitemap configuration
+  sitemap: {
+    strictNuxtContentPaths: false,
+    sources: [
+      // Let the module crawl your routes automatically
+    ],
+    xsl: false,
+    autoLastmod: true,
+    defaults: {
+      changefreq: 'weekly',
+      priority: 0.7,
+    },
+    // Exclude utility pages
+    exclude: ['/success', '/cancel', '/nb-order-form'],
   },
 })

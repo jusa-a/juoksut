@@ -200,6 +200,26 @@ function addToCart() {
 
   cart.addItem({ ...product, size: selectedSize.value })
 }
+
+// SEO: Set per-product meta tags
+const runtimeConfig = useRuntimeConfig()
+const siteUrl = String((runtimeConfig.public && runtimeConfig.public.siteUrl) || 'https://juoksut.run')
+const pageUrl = new URL(route.fullPath || '/', siteUrl).toString()
+
+const stripHtml = (html) => html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
+const description = stripHtml(product.description).slice(0, 180)
+const ogImage = product.img || `${siteUrl}/logo.svg`
+
+useSeoMeta({
+  title: `${product.title} · Shop`,
+  description,
+  ogTitle: `${product.title} · Shop`,
+  ogDescription: description,
+  ogImage,
+  ogType: 'product',
+  ogUrl: pageUrl,
+  twitterCard: 'summary_large_image',
+})
 </script>
 
 <style scoped>

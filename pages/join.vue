@@ -113,7 +113,12 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+useSeoMeta({
+  title: 'Join',
+  description: 'Join JUOKSUT weekly runs! All welcome.'
+})
+</script>
 
 <style scoped>
 strong {

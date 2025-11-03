@@ -6,13 +6,17 @@
 </template>
 
 <script setup lang="ts">
+// Global SEO setup
+useHead({
+  titleTemplate: (title?: string) => (title ? `${title} · JUOKSUT` : 'JUOKSUT'),
+})
+
 useSeoMeta({
-  title: 'Juoksut Run Club',
-  ogTitle: 'Juoksut Run Club',
-  description: 'Juoksut Run Club is a running club for everyone chasing the ultimate feeling of being invincible.',
-  ogDescription: 'Juoksut Run Club is a running club for everyone chasing the ultimate feeling of being invincible.',
-  ogUrl: 'https://juoksut.run',
+  description: 'Juoksut Run Club',
+  ogTitle: 'JUOKSUT',
+  ogDescription: 'Juoksut Run Club',
   ogImage: 'https://juoksut.run/logo.svg',
+  twitterCard: 'summary_large_image',
 })
 
 import { useRouter } from 'vue-router'
