@@ -8,7 +8,7 @@
 <script setup lang="ts">
 // Global SEO setup
 useHead({
-  titleTemplate: (title?: string) => (title ? `${title} · JUOKSUT` : 'JUOKSUT'),
+  titleTemplate: (title?: string) => (title ? `${title} · JUOKSUT` : 'Juoksut Run Club'),
 })
 
 useSeoMeta({
