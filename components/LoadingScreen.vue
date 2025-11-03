@@ -1,17 +1,17 @@
 <template>
   <Transition name="fade">
-    <div
-      v-if="isVisible"
-      class="fixed left-0 top-0 w-full h-[100vh] z-[802] bg-white flex flex-col justify-between items-center"
-      :class="{ fullScreen: pageReload }"
-    >
-      <Divider class="mt-[var(--nav-height)]" :class="{ fullScreen: pageReload }" />
-
-      <div class="flex justify-center items-end z-[9999]">
-        <img src="/logo-circle.svg" alt="loading spinner logo" class="spinner w-[7em]" />
+    <div v-if="isVisible">
+      <div
+        class="fix"
+        :class="{ fullScreen: pageReload }"
+      >
       </div>
 
-      <div class="h-[var(--nav-height)] w-full" />
+      <Divider class="fixed top-0 mt-[var(--nav-height)] z-[803]" />
+
+      <div class="fixed z-[9999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+        <img src="/logo-circle.svg" alt="loading spinner logo" class="spinner w-[7em]" />
+      </div>
     </div>
   </Transition>
 </template>
@@ -24,9 +24,15 @@ defineProps({
 </script>
 
 <style scoped>
+.fix {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.998) !important;
+  z-index: 803;
+}
+
 .fullScreen {
   z-index: 1005;
-  background-color: white !important;
 }
 
 .fade-enter-active {

@@ -7,6 +7,9 @@
 
 <script setup lang="ts">
 // Global SEO setup
+import { useRouter } from 'vue-router'
+import { useCartStore } from '~/stores/cart'
+
 useHead({
   titleTemplate: (title?: string) => (title ? `${title} · JUOKSUT` : 'Juoksut Run Club'),
 })
@@ -18,9 +21,6 @@ useSeoMeta({
   ogImage: 'https://juoksut.run/logo.svg',
   twitterCard: 'summary_large_image',
 })
-
-import { useRouter } from 'vue-router'
-import { useCartStore } from '~/stores/cart'
 
 const isVisible = ref(true) // Force visible on reload
 const pageReload = ref(true) // // Ref for page reload detection

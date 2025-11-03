@@ -29,7 +29,7 @@ export default defineNuxtConfig({
           name: 'description',
           content: 'Juoksut Run Club',
         },
-        { name: 'theme-color', content: '#ffffff' },
+        // { name: 'theme-color', content: '#ffffff' },
       ],
       link: [
         {
