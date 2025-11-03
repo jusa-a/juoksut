@@ -6,7 +6,7 @@
         JUOKSUT is a running club in Helsinki for everyone, from beginners to advanced runners who want to run together, challenge themselves and have a blast at the same time.
       </p>
       <p>
-        We run on Tuesdays and Sundays with varying paces and distances. Join us by showing up and bring your friends too! You will be welcomed by our fun, friendly, and fast team.
+        We run on Tuesdays, Fridays, and Sundays with varying paces and distances. Join us and bring your friends too! You will be welcomed by our fun, friendly, and fast team.
       </p>
     </section>
 
@@ -15,9 +15,10 @@
     <section>
       <h2>WEEKLY RUNS</h2>
       <div class="max-w-[40em] w-full mx-auto font-serif font-medium tracking-[-0.03em] flex flex-col items-center justify-center">
+
         <div class="flex justify-between items-center w-full py-[0.5em]">
           <div class="flex flex-col">
-            <div>Every Tuesday</div>
+            <div>Tuesday</div>
             <div class="text-[1.8em]">Tuesday Run</div>
           </div>
           <div class="flex flex-col items-end">
@@ -30,21 +31,38 @@
             </div>
           </div>
         </div>
+
         <div class="flex justify-between items-center w-full py-[0.5em]">
           <div class="flex flex-col">
-            <div>Every Sunday</div>
+            <div>Friday</div>
+            <NuxtLink to="/fastlane-friday" class="text-[1.8em] underline decoration-[0.05em]">Fastlane Friday</NuxtLink>
+          </div>
+          <div class="flex flex-col items-end">
+            <div>
+              16:00 @ Olympic Stadium
+            </div>
+            <div class="text-[1.2em]">
+              Speed Session. All Levels.
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center w-full py-[0.5em]">
+          <div class="flex flex-col">
+            <div>Sunday</div>
             <div class="text-[1.8em]">Long Run</div>
           </div>
           <div class="flex flex-col items-end">
             <div>
-              11:00 @ Varying Locations
+              Varying Times & Locations
             </div>
             <div class="text-[1.2em]">
-              Varying Dictances and Pace Groups
+              Varying Distances and Paces
             </div>
           </div>
         </div>
       </div>
+
       <p>
         We post more details about the weekly runs and other events on our social media. Make sure to follow us on <a href="https://www.strava.com/clubs/juoksut">Strava</a> and <a href="https://www.instagram.com/juoksut/">Instagram</a> to keep updated!
       </p>
