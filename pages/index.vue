@@ -41,7 +41,7 @@
             feeling of being invincible.
           </p>
           <p>
-            Running every Tuesday and Sunday.
+            Running every Tuesday, Friday and Sunday.
           </p>
           <p>
             Join us by showing up and bring your friends too!
