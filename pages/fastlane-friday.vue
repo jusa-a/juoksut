@@ -93,22 +93,21 @@
                 powered by New Balance🪽
               </p>
               <p>
-                Every Friday at the Olympic Stadium’s tunnel. 
+                Every Friday at the Olympic Stadium’s tunnel.
               </p>
-              
+
               <p></p>
 
               <ul>
-                  <li>🔥 16:15 warmup </li>
-                  <li>🔃 17:00 track</li>
-                  <li>🍕 18:00 afters (optional)</li>
+                <li>🔥 16:15 warmup </li>
+                <li>🔃 17:00 track</li>
+                <li>🍕 18:00 afters (optional)</li>
               </ul>
 
               <p>
                 All welcome.<br>
                 Be faaaaast⚡️⚡️⚡️⚡️⚡️
               </p>
-            
             </div>
           </div>
         </div>
@@ -228,7 +227,7 @@ useHead({
 useSeoMeta({
   title: 'FASTLANE FRIDAY',
   ogTitle: 'FASTLANE FRIDAY',
-  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg'
+  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
 })
 </script>
 
