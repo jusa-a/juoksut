@@ -99,8 +99,8 @@
               <p></p>
 
               <ul>
-                <li>🔥 16:15 warmup </li>
-                <li>🔃 17:00 track</li>
+                <li>🔥 16:15 warmup & drills outdoors (meet up next to the stadium tower)</li>
+                <li>🔃 17:00 indoor track</li>
                 <li>🍕 18:00 afters (optional)</li>
               </ul>
 
