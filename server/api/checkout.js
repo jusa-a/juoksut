@@ -67,6 +67,14 @@ export default defineEventHandler(async (event) => {
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cancel?canceled=true`,
+      name_collection: {
+        individual: {
+          enabled: true,
+        },
+      },
+      consent_collection: {
+        terms_of_service: 'required',
+      },
       custom_fields: [
         {
           key: 'order_note',
