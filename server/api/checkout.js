@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
       custom_fields: [
         {
           key: 'order_note',
-          label: { type: 'custom', custom: 'Order note (optional)' },
+          label: { type: 'custom', custom: 'Order note' },
           type: 'text',
           optional: true,
         },
