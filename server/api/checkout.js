@@ -72,6 +72,9 @@ export default defineEventHandler(async (event) => {
           enabled: true,
         },
       },
+      phone_number_collection: {
+        enabled: true,
+      },
       consent_collection: {
         terms_of_service: 'required',
       },
