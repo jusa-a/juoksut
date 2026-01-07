@@ -1,10 +1,33 @@
 <template>
   <div class="flex-1 flex flex-col">
     <section class="flex flex-row flex-wrap justify-around items-center w-full p-[1em] gap-[1em] m-0 mb-auto">
+      <NuxtLink
+        to="/fastlane-friday"
+        class="min-w-[290px] max-w-[26em]"
+      >
+        <div class="shopItem border-[1px] border-transparent hover:border-pink">
+          <div class="aspect-[4/5] flex items-center justify-center">
+            <NuxtImg
+              src="https://cdn.juoksut.run/fastlane-friday.jpg"
+              alt="FASTLANE FRIDAY"
+              height="1875"
+              width="1500"
+            />
+          </div>
+
+          <div class="whitespace-nowrap text-[0.95em] py-[0.5em] px-[0.5em]">
+            <div>FASTLANE FRIDAY</div>
+            <div class="uppercase">
+              Weekly Sign-Up
+            </div>
+          </div>
+        </div>
+      </NuxtLink>
+
       <template v-for="product in products" :key="product.slug">
         <NuxtLink
           :to="`/shop/${product.slug}`"
-          class="min-w-[290px] max-w-[26em] flex-1"
+          class="min-w-[290px] max-w-[26em]"
         >
           <div class="shopItem border-[1px] border-transparent hover:border-pink">
             <div class="aspect-[4/5] flex items-center justify-center">
