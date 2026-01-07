@@ -29,7 +29,7 @@
         We will be in touch with you soon about the pickup details.
       </p>
       <p>
-        Meanwhile, if you have any questions, feel free to reach out to us <a href="mailto:info@juoksut.run">info@juoksut.run</a>.
+        Meanwhile, if you have any questions, feel free to reach out to us <a href="mailto:crew@juoksut.run">crew@juoksut.run</a>.
       </p>
     </div>
 
