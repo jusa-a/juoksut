@@ -13,8 +13,9 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/join': { prerender: true },
-    '/shop': { ssr: false },
-    '/shop/**': { ssr: false },
+    // Keep shop pages server-rendered so OG/meta tags are available to crawlers
+    '/shop': { prerender: false },
+    '/shop/**': { prerender: false },
     '/success': { ssr: false },
     '/nb-order-form': { ssr: false },
   },
