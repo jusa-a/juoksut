@@ -10,6 +10,11 @@ export default defineNuxtConfig({
   ],
   devtools: { enabled: true },
 
+  nitro: {
+    // Ensure SSR deploy targets Cloudflare Pages runtime (needed for D1 bindings)
+    preset: 'cloudflare-pages',
+  },
+
   routeRules: {
     '/': { prerender: true },
     '/join': { prerender: true },
