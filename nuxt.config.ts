@@ -12,7 +12,11 @@ export default defineNuxtConfig({
 
   nitro: {
     // Ensure SSR deploy targets Cloudflare Pages runtime (needed for D1 bindings)
-    preset: 'cloudflare-pages',
+    preset: 'cloudflare_pages',
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+    },
   },
 
   routeRules: {
