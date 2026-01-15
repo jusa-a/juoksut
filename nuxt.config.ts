@@ -19,7 +19,8 @@ export default defineNuxtConfig({
     },
   },
 
-  routeRules: {
+  /*
+   routeRules: {
     '/': { prerender: true },
     '/join': { prerender: true },
     // Keep shop pages server-rendered so OG/meta tags are available to crawlers
@@ -28,6 +29,7 @@ export default defineNuxtConfig({
     '/success': { ssr: false },
     '/nb-order-form': { ssr: false },
   },
+  */
 
   app: {
     layoutTransition: { name: 'layout', mode: 'out-in' },
