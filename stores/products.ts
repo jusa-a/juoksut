@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
 import type { Product } from '~/server/utils/productUtils'
+import { defineStore } from 'pinia'
 
 export interface ProductWithImages extends Product {
   images?: string[]
@@ -19,34 +19,35 @@ export const useProductStore = defineStore('products', {
   }),
 
   getters: {
-    isOutOfStock: (state) => (slug: string): boolean => {
+    isOutOfStock: state => (slug: string): boolean => {
       const product = state.products[slug]
       return product ? product.totalStock === 0 : true
     },
 
-    getProduct: (state) => (slug: string): ProductWithImages | null => {
+    getProduct: state => (slug: string): ProductWithImages | null => {
       return state.products[slug] || null
     },
   },
 
   actions: {
     async fetchProducts() {
-      if (this.loading) return // Prevent duplicate fetches
+      if (this.loading)
+        return // Prevent duplicate fetches
 
       this.loading = true
       this.error = null
 
       try {
         const products = await $fetch<Product[]>('/api/products')
-        
+
         products.forEach((product) => {
           this.products[product.slug] = product // Store products by slug
         })
-      } 
+      }
       catch (error) {
         console.error('Error fetching products:', error)
         this.error = 'Failed to fetch products'
-      } 
+      }
       finally {
         this.loading = false
       }
@@ -76,12 +77,12 @@ export const useProductStore = defineStore('products', {
         }
 
         return this.products[slug]
-      } 
+      }
       catch (error) {
         console.error(`Error fetching product with slug ${slug}:`, error)
         this.error = `Failed to fetch product: ${slug}`
         throw error // Re-throw so the caller can handle it
-      } 
+      }
       finally {
         this.loading = false
       }

@@ -64,7 +64,7 @@ export async function fetchProductData(
 ): Promise<ProductRow[]>
 export async function fetchProductData(
   D1: D1Database,
-  slug?: string | null
+  slug?: string | null,
 ): Promise<ProductRow | ProductRow[] | null> {
   const query = `
     SELECT p.id, p.slug, p.title, p.material, p.sizing, p.size_chart, p.description, p.price,

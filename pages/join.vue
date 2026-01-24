@@ -15,7 +15,6 @@
     <section>
       <h2>WEEKLY RUNS</h2>
       <div class="max-w-[40em] w-full mx-auto font-serif font-medium tracking-[-0.03em] flex flex-col items-center justify-center">
-
         <div class="flex justify-between items-center w-full py-[0.5em]">
           <div class="flex flex-col">
             <div>Tuesday</div>
@@ -134,7 +133,7 @@
 <script setup>
 useSeoMeta({
   title: 'Join',
-  description: 'Join JUOKSUT weekly runs! All welcome.'
+  description: 'Join JUOKSUT weekly runs! All welcome.',
 })
 </script>
 

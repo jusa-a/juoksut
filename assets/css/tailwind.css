@@ -3,118 +3,116 @@
 @tailwind utilities;
 
 @layer base {
-    @font-face {
-        font-family: 'JUOKSUT Garamond';
-        src: url('../fonts/garamond-condensed-regular.woff2') format('woff2');
-        font-weight: 400;
-        font-display: swap;
-        font-style: normal;
-    }
+  @font-face {
+    font-family: 'JUOKSUT Garamond';
+    src: url('../fonts/garamond-condensed-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+    font-style: normal;
+  }
 
-    @font-face {
-        font-family: 'JUOKSUT Garamond';
-        src: url('../fonts/juoksut_garamond-webfont.woff2') format('woff2');
-        font-weight: 500;
-        font-display: swap;
-        font-style: normal;
-    }
+  @font-face {
+    font-family: 'JUOKSUT Garamond';
+    src: url('../fonts/juoksut_garamond-webfont.woff2') format('woff2');
+    font-weight: 500;
+    font-display: swap;
+    font-style: normal;
+  }
 
-    @font-face {
-        font-family: 'Inter';
-        src:
-            url('../fonts/InterVariable.woff2')
-                format('woff2 supports variations'),
-            url('../fonts/InterVariable.woff2') format('woff2-variations');
-        font-weight: 100 900;
-        font-display: swap;
-        font-style: normal;
-    }
+  @font-face {
+    font-family: 'Inter';
+    src:
+      url('../fonts/InterVariable.woff2') format('woff2 supports variations'),
+      url('../fonts/InterVariable.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+  }
 
-    @font-face {
-        font-family: 'Inter';
-        src:
-            url('../fonts/InterVariable-Italic.woff2')
-                format('woff2 supports variations'),
-            url('../fonts/InterVariable-Italic.woff2')
-                format('woff2-variations');
-        font-weight: 100 900;
-        font-display: swap;
-        font-style: italic;
-    }
+  @font-face {
+    font-family: 'Inter';
+    src:
+      url('../fonts/InterVariable-Italic.woff2') format('woff2 supports variations'),
+      url('../fonts/InterVariable-Italic.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: italic;
+  }
 
-    * {
-        cursor: crosshair;
-        scrollbar-width: none;
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-    }
+  * {
+    cursor: crosshair;
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 
-    ::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for Chrome, Safari and Opera */
-    }
-    :root {
-        --nav-height: min(26.6vw, 6em);
-    }
+  ::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+  }
+  :root {
+    --nav-height: min(26.6vw, 6em);
+  }
 
-    /* html, body {
+  /* html, body {
         overscroll-behavior: none;
     } */
 
-    body {
-        @apply text-pink;
+  body {
+    @apply text-pink;
 
-        overflow-y: hidden;
-        overflow-x: hidden;
+    overflow-y: hidden;
+    overflow-x: hidden;
 
-        /* font-size: clamp(1em, 2vw, 1.25em); */
-        font-size: calc(0.875em + 0.390625vw);
-        line-height: 1.6em;
-    }
+    /* font-size: clamp(1em, 2vw, 1.25em); */
+    font-size: calc(0.875em + 0.390625vw);
+    line-height: 1.6em;
+  }
 
-    h1 {
-        @apply font-sans;
-        font-size: 1.5em;
-    }
+  h1 {
+    @apply font-sans;
+    font-size: 1.5em;
+  }
 
-    h2 {
-        @apply font-sans;
-        font-size: 1.3em;
-        font-weight: 500
-    }
+  h2 {
+    @apply font-sans;
+    font-size: 1.3em;
+    font-weight: 500;
+  }
 
-    h3 {
-        @apply font-sans pt-[1em];
-        font-size: 1em;
-        font-weight: 500
-    }
+  h3 {
+    @apply font-sans pt-[1em];
+    font-size: 1em;
+    font-weight: 500;
+  }
 
-    p {
-        /* @apply font-serif font-normal;
+  p {
+    /* @apply font-serif font-normal;
         letter-spacing: -0.03em; */
-        font-weight: 400; 
-        line-height: normal;
-        margin-top: 0.9em;
-    }
+    font-weight: 400;
+    line-height: normal;
+    margin-top: 0.9em;
+  }
 
-    a, button {
-        transition: 0.15s;
-        cursor: cell;
-    }
+  a,
+  button {
+    transition: 0.15s;
+    cursor: cell;
+  }
 
-    p a {
-        text-decoration: underline;
-    }
+  p a {
+    text-decoration: underline;
+  }
 
-    @media (hover: hover) {
-        a:hover {
-            opacity: 70%;
-        }
+  @media (hover: hover) {
+    a:hover {
+      opacity: 70%;
     }
+  }
 
-    section {
-        @apply flex flex-col mx-auto mt-[1.5em] mb-[2em] px-[1em];
-        width: clamp(50%, 500px, 100%);
-    }
+  section {
+    @apply flex flex-col mx-auto mt-[1.5em] mb-[2em] px-[1em];
+    width: clamp(50%, 500px, 100%);
+  }
 }
 
 @layer components {

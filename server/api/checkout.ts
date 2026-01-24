@@ -21,9 +21,9 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
   const stripeSecretKey = config.stripeSecretKey || process.env.STRIPE_SECRET_KEY
 
   if (!stripeSecretKey) {
-    throw createError({ 
-      statusCode: 500, 
-      message: 'Stripe configuration missing' 
+    throw createError({
+      statusCode: 500,
+      message: 'Stripe configuration missing',
     })
   }
 
@@ -36,9 +36,9 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
     const body = await readBody<CheckoutRequestBody>(event)
 
     if (!body.items || !Array.isArray(body.items) || body.items.length === 0) {
-      throw createError({ 
-        statusCode: 400, 
-        message: 'Invalid request: items array required' 
+      throw createError({
+        statusCode: 400,
+        message: 'Invalid request: items array required',
       })
     }
 
@@ -49,9 +49,9 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
     const D1 = event.context.cloudflare?.env?.D1
 
     if (!D1) {
-      throw createError({ 
-        statusCode: 500, 
-        message: 'Database not available' 
+      throw createError({
+        statusCode: 500,
+        message: 'Database not available',
       })
     }
 
@@ -59,11 +59,11 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
 
     for (const item of body.items) {
       const productData = await fetchProductData(D1, item.slug)
-      
+
       if (!productData) {
-        throw createError({ 
-          statusCode: 400, 
-          message: `Invalid product: ${item.slug}` 
+        throw createError({
+          statusCode: 400,
+          message: `Invalid product: ${item.slug}`,
         })
       }
 
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
 
       // Check stock for the requested size
       const stock = product.stock.find(stockItem => stockItem.size === item.size)
-      
+
       if (!stock || stock.quantity < item.quantity) {
         throw createError({
           statusCode: 400,
@@ -137,7 +137,7 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
   }
   catch (error) {
     console.error('Checkout error:', error)
-    
+
     // Handle known errors
     if (error && typeof error === 'object' && 'statusCode' in error) {
       throw error
@@ -145,15 +145,15 @@ export default defineEventHandler(async (event): Promise<CheckoutResponse> => {
 
     // Handle Stripe errors
     if (error instanceof Stripe.errors.StripeError) {
-      throw createError({ 
-        statusCode: 400, 
-        message: error.message 
+      throw createError({
+        statusCode: 400,
+        message: error.message,
       })
     }
 
-    throw createError({ 
-      statusCode: 500, 
-      message: 'Internal Server Error' 
+    throw createError({
+      statusCode: 500,
+      message: 'Internal Server Error',
     })
   }
 })

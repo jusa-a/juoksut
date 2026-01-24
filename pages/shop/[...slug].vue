@@ -155,7 +155,6 @@
 <script setup lang="ts">
 import { useCartStore } from '~/stores/cart'
 import { useProductStore } from '~/stores/products'
-import type { ProductWithImages } from '~/stores/products'
 
 const route = useRoute()
 const productStore = useProductStore()
@@ -195,7 +194,8 @@ const inStock = product.totalStock > 0
 
 // Computed property for selected size stock
 const selectedStock = computed(() => {
-  if (!selectedSize.value || !(selectedSize.value in stock)) return null
+  if (!selectedSize.value || !(selectedSize.value in stock))
+    return null
   return stock[selectedSize.value]
 })
 
@@ -213,7 +213,7 @@ function addToCart(): void {
     return
   }
 
-  cart.addItem({ 
+  cart.addItem({
     slug: product.slug,
     size: selectedSize.value,
     price: product.price,
@@ -227,8 +227,9 @@ const runtimeConfig = useRuntimeConfig()
 const siteUrl = String((runtimeConfig.public && runtimeConfig.public.siteUrl) || 'https://juoksut.run')
 const pageUrl = new URL(route.fullPath || '/', siteUrl).toString()
 
-const stripHtml = (html: string): string => 
-  html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
+function stripHtml(html: string): string {
+  return html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
+}
 
 const description = stripHtml(product.description).slice(0, 180)
 const ogImage = product.img || `${siteUrl}/logo.svg`

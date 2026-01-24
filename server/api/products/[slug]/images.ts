@@ -1,4 +1,4 @@
-import { defineEventHandler, createError } from 'h3'
+import { createError, defineEventHandler } from 'h3'
 
 interface ProductImagesResponse {
   images: string[]
@@ -16,10 +16,10 @@ export default defineEventHandler(async (event): Promise<ProductImagesResponse> 
 
     for (let i = 2; i <= maxImages; i++) {
       const imageUrl = `${cdnBaseUrl}/${slug}/${i}.${imageFormat}`
-      
+
       try {
         const response = await fetch(imageUrl, { method: 'HEAD' }) // Use HEAD request to check if the image exists
-        
+
         if (response.ok) {
           images.push(imageUrl) // Add the image URL if it exists
         }
@@ -33,9 +33,9 @@ export default defineEventHandler(async (event): Promise<ProductImagesResponse> 
   }
   catch (error) {
     console.error(`Error fetching images for product with slug ${slug}:`, error)
-    throw createError({ 
-      statusCode: 500, 
-      message: 'Failed to fetch product images' 
+    throw createError({
+      statusCode: 500,
+      message: 'Failed to fetch product images',
     })
   }
 })

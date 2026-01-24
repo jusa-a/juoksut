@@ -35,8 +35,8 @@
                       <div>{{ item.title }}</div>
                       <div>Size: {{ item.size }}</div>
                       <div>Quantity: {{ item.quantity }}</div>
-                      <button 
-                        class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" 
+                      <button
+                        class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline"
                         @click="cart.removeItem(item.slug, item.size)"
                       >
                         Remove
@@ -55,8 +55,8 @@
           </div>
 
           <div>
-            <div 
-              v-if="checkoutError" 
+            <div
+              v-if="checkoutError"
               class="text-red-500 text-[0.8em]/[1.3em] p-[0.5em] border border-t-red-500 flex justify-between items-center"
             >
               {{ checkoutError }}
@@ -118,7 +118,7 @@ const checkoutError = ref<string>('')
 async function handleCheckout(): Promise<void> {
   try {
     checkoutError.value = '' // Clear any previous error
-    
+
     const { data, error } = await useFetch<{ url: string }>('/api/checkout', {
       method: 'POST',
       body: { items: cart.items },
@@ -147,7 +147,7 @@ async function handleCheckout(): Promise<void> {
 // Clear the cart and reload the page
 function clearCartAndReload(): void {
   cart.clearCart()
-  
+
   if (import.meta.client) {
     window.location.reload()
   }

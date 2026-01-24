@@ -1,6 +1,6 @@
+import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types'
 import { createError, defineEventHandler, readRawBody } from 'h3'
 import Stripe from 'stripe'
-import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types'
 
 interface WebhookResponse {
   received: boolean
@@ -16,16 +16,16 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
   const endpointSecret = config.stripeWebhookSecret || process.env.STRIPE_WEBHOOK_SECRET
 
   if (!stripeSecretKey) {
-    throw createError({ 
-      statusCode: 500, 
-      message: 'Stripe configuration missing' 
+    throw createError({
+      statusCode: 500,
+      message: 'Stripe configuration missing',
     })
   }
 
   if (!endpointSecret) {
-    throw createError({ 
-      statusCode: 500, 
-      message: 'Webhook secret not configured' 
+    throw createError({
+      statusCode: 500,
+      message: 'Webhook secret not configured',
     })
   }
 
@@ -37,26 +37,26 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
   const rawBody = await readRawBody(event)
 
   if (!rawBody) {
-    throw createError({ 
-      statusCode: 400, 
-      message: 'Request body is required' 
+    throw createError({
+      statusCode: 400,
+      message: 'Request body is required',
     })
   }
 
   const signature = event.node.req.headers['stripe-signature']
 
   if (!signature) {
-    throw createError({ 
-      statusCode: 400, 
-      message: 'Missing stripe-signature header' 
+    throw createError({
+      statusCode: 400,
+      message: 'Missing stripe-signature header',
     })
   }
 
   try {
     const stripeEvent = await stripe.webhooks.constructEventAsync(
-      rawBody, 
-      signature, 
-      endpointSecret
+      rawBody,
+      signature,
+      endpointSecret,
     )
 
     // console.log('⚡️  Webhook verified:', stripeEvent.type)
@@ -68,9 +68,9 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
       const D1 = event.context.cloudflare?.env?.D1 as D1Database | undefined
 
       if (!D1) {
-        throw createError({ 
-          statusCode: 500, 
-          message: 'Database not available' 
+        throw createError({
+          statusCode: 500,
+          message: 'Database not available',
         })
       }
 
@@ -83,11 +83,11 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
         // Prepare batch queries
         const queries: D1PreparedStatement[] = lineItems.data.map((item) => {
           const product = item.price?.product
-          const productMeta = (typeof product === 'object' && product !== null && 'metadata' in product) 
-            ? product.metadata 
+          const productMeta = (typeof product === 'object' && product !== null && 'metadata' in product)
+            ? product.metadata
             : {}
           const priceMeta = item.price?.metadata || {}
-          
+
           const productSlug = productMeta.slug || priceMeta.slug
           let size = productMeta.size || priceMeta.size
 
@@ -104,7 +104,7 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
           }
 
           return D1.prepare(
-            `UPDATE stock SET quantity = quantity - ? WHERE product_slug = ? AND size = ?`
+            `UPDATE stock SET quantity = quantity - ? WHERE product_slug = ? AND size = ?`,
           ).bind(quantity, productSlug, size)
         })
 
@@ -115,9 +115,9 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
       }
       catch (error) {
         console.error('Failed to process checkout session:', error)
-        throw createError({ 
-          statusCode: 500, 
-          message: 'Failed to update stock' 
+        throw createError({
+          statusCode: 500,
+          message: 'Failed to update stock',
         })
       }
     }
@@ -134,9 +134,9 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
 
     // Handle Stripe signature verification errors
     const message = error instanceof Error ? error.message : 'Unknown error'
-    throw createError({ 
-      statusCode: 400, 
-      message: `Webhook error: ${message}` 
+    throw createError({
+      statusCode: 400,
+      message: `Webhook error: ${message}`,
     })
   }
 })

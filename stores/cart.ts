@@ -25,10 +25,10 @@ export const useCartStore = defineStore('cart', {
   }),
 
   getters: {
-    totalPrice: (state): number => 
+    totalPrice: (state): number =>
       state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    
-    totalItems: (state): number => 
+
+    totalItems: (state): number =>
       state.items.reduce((sum, item) => sum + item.quantity, 0),
   },
 
@@ -38,12 +38,12 @@ export const useCartStore = defineStore('cart', {
       this.isHoverDisabled = true
 
       const existing = this.items.find(
-        item => item.slug === product.slug && item.size === product.size
+        item => item.slug === product.slug && item.size === product.size,
       )
 
       if (existing) {
         existing.quantity++
-      } 
+      }
       else {
         // Save only necessary fields
         this.items.push({
@@ -59,7 +59,7 @@ export const useCartStore = defineStore('cart', {
       // Delay before opening the cart
       setTimeout(() => {
         this.toggleCart()
-        
+
         // After opening the cart, keep hover disabled for a short time
         setTimeout(() => {
           this.isLoading = false
@@ -70,10 +70,10 @@ export const useCartStore = defineStore('cart', {
 
     removeItem(slug: string, size: string) {
       this.isLoading = true
-      
+
       setTimeout(() => {
         this.items = this.items.filter(
-          item => !(item.slug === slug && item.size === size)
+          item => !(item.slug === slug && item.size === size),
         )
         this.isLoading = false
       }, 500) // Delay before removing item
@@ -81,7 +81,7 @@ export const useCartStore = defineStore('cart', {
 
     toggleCart() {
       this.isCartOpen = !this.isCartOpen
-      
+
       if (import.meta.client) {
         document.body.style.overflow = this.isCartOpen ? 'hidden' : 'auto'
       }
@@ -89,7 +89,7 @@ export const useCartStore = defineStore('cart', {
 
     closeCart() {
       this.isCartOpen = false
-      
+
       if (import.meta.client) {
         document.body.style.overflow = 'auto'
       }
@@ -97,9 +97,9 @@ export const useCartStore = defineStore('cart', {
 
     updateQuantity(id: string, size: string, quantity: number) {
       const item = this.items.find(
-        item => item.slug === id && item.size === size
+        item => item.slug === id && item.size === size,
       )
-      
+
       if (item) {
         item.quantity = quantity
       }
@@ -107,7 +107,7 @@ export const useCartStore = defineStore('cart', {
 
     clearCart() {
       this.items = []
-      
+
       if (import.meta.client) {
         localStorage.removeItem('cart')
       }

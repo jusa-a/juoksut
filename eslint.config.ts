@@ -11,7 +11,7 @@ export default antfu(
   },
   {
     rules: {
-      'no-undef': 'warn',
+      'no-undef': 'off',
       'eqeqeq': 'error',
       'no-unused-vars': 'warn',
       'vue/no-unused-refs': 'warn',

@@ -20,9 +20,9 @@ export default defineEventHandler(async (event): Promise<OrderDetailsResponse> =
   const stripeSecretKey = config.stripeSecretKey || process.env.STRIPE_SECRET_KEY
 
   if (!stripeSecretKey) {
-    throw createError({ 
-      statusCode: 500, 
-      message: 'Stripe configuration missing' 
+    throw createError({
+      statusCode: 500,
+      message: 'Stripe configuration missing',
     })
   }
 
@@ -34,9 +34,9 @@ export default defineEventHandler(async (event): Promise<OrderDetailsResponse> =
   const session_id = query.session_id
 
   if (!session_id || typeof session_id !== 'string') {
-    throw createError({ 
-      statusCode: 400, 
-      message: 'Missing or invalid session_id' 
+    throw createError({
+      statusCode: 400,
+      message: 'Missing or invalid session_id',
     })
   }
 
@@ -47,9 +47,9 @@ export default defineEventHandler(async (event): Promise<OrderDetailsResponse> =
     })
 
     if (!session.line_items) {
-      throw createError({ 
-        statusCode: 500, 
-        message: 'Line items not available' 
+      throw createError({
+        statusCode: 500,
+        message: 'Line items not available',
       })
     }
 
@@ -70,15 +70,15 @@ export default defineEventHandler(async (event): Promise<OrderDetailsResponse> =
 
     // Handle Stripe errors
     if (error instanceof Stripe.errors.StripeError) {
-      throw createError({ 
-        statusCode: error.statusCode || 400, 
-        message: error.message 
+      throw createError({
+        statusCode: error.statusCode || 400,
+        message: error.message,
       })
     }
 
-    throw createError({ 
-      statusCode: 500, 
-      message: 'Failed to fetch order details' 
+    throw createError({
+      statusCode: 500,
+      message: 'Failed to fetch order details',
     })
   }
 })
