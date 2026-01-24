@@ -36,7 +36,7 @@ This Nuxt 3 app powers both the public site and the shop. It runs on Cloudflare 
 
 ## Getting started
 
-1) Clone and install
+1. Clone and install
 
 ```bash
 git clone https://github.com/jusa-a/juoksut.git
@@ -44,7 +44,7 @@ cd juoksut
 yarn install
 ```
 
-2) Environment variables
+2. Environment variables
 
 Create a `.env` file in the project root (Nuxt loads it in dev). At minimum:
 
@@ -55,7 +55,7 @@ STRIPE_WEBHOOK_SECRET=whsec_... # only required if you verify webhooks locally
 
 You can also set variables in Cloudflare Pages (Project settings → Variables) and/or in `wrangler.toml` for local/preview builds.
 
-3) Database (Cloudflare D1)
+3. Database (Cloudflare D1)
 
 - One-time local setup:
   - Create a local DB (name matches project config):
@@ -70,7 +70,7 @@ You can also set variables in Cloudflare Pages (Project settings → Variables) 
     ```
 - Remote (production) DB: use `--remote` with the same SQL files as needed.
 
-4) Run the app
+4. Run the app
 
 ```bash
 yarn dev --host

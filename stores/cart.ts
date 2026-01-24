@@ -1,7 +1,23 @@
 import { defineStore } from 'pinia'
 
+export interface CartItem {
+  slug: string
+  size: string
+  price: number
+  title: string
+  img: string
+  quantity: number
+}
+
+export interface CartState {
+  items: CartItem[]
+  isCartOpen: boolean
+  isLoading: boolean
+  isHoverDisabled: boolean
+}
+
 export const useCartStore = defineStore('cart', {
-  state: () => ({
+  state: (): CartState => ({
     items: [],
     isCartOpen: false,
     isLoading: false,
@@ -9,16 +25,22 @@ export const useCartStore = defineStore('cart', {
   }),
 
   getters: {
-    totalPrice: state => state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    totalItems: state => state.items.reduce((sum, item) => sum + item.quantity, 0),
+    totalPrice: (state): number =>
+      state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+
+    totalItems: (state): number =>
+      state.items.reduce((sum, item) => sum + item.quantity, 0),
   },
 
   actions: {
-    addItem(product) {
+    addItem(product: Omit<CartItem, 'quantity'>) {
       this.isLoading = true
       this.isHoverDisabled = true
 
-      const existing = this.items.find(item => item.slug === product.slug && item.size === product.size)
+      const existing = this.items.find(
+        item => item.slug === product.slug && item.size === product.size,
+      )
+
       if (existing) {
         existing.quantity++
       }
@@ -46,27 +68,38 @@ export const useCartStore = defineStore('cart', {
       }, 600) // Initial delay before opening cart
     },
 
-    removeItem(slug, size) {
+    removeItem(slug: string, size: string) {
       this.isLoading = true
 
       setTimeout(() => {
-        this.items = this.items.filter(item => !(item.slug === slug && item.size === size))
+        this.items = this.items.filter(
+          item => !(item.slug === slug && item.size === size),
+        )
         this.isLoading = false
       }, 500) // Delay before removing item
     },
 
     toggleCart() {
       this.isCartOpen = !this.isCartOpen
-      document.body.style.overflow = this.isCartOpen ? 'hidden' : 'auto' // Prevent scrolling when cart is open
+
+      if (import.meta.client) {
+        document.body.style.overflow = this.isCartOpen ? 'hidden' : 'auto'
+      }
     },
 
     closeCart() {
       this.isCartOpen = false
-      document.body.style.overflow = 'auto'
+
+      if (import.meta.client) {
+        document.body.style.overflow = 'auto'
+      }
     },
 
-    updateQuantity(id, size, quantity) {
-      const item = this.items.find(item => item.slug === id && item.size === size)
+    updateQuantity(id: string, size: string, quantity: number) {
+      const item = this.items.find(
+        item => item.slug === id && item.size === size,
+      )
+
       if (item) {
         item.quantity = quantity
       }
@@ -74,7 +107,10 @@ export const useCartStore = defineStore('cart', {
 
     clearCart() {
       this.items = []
-      localStorage.removeItem('cart') // Clear the cart data from localStorage
+
+      if (import.meta.client) {
+        localStorage.removeItem('cart')
+      }
     },
   },
 

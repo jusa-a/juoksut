@@ -25,7 +25,7 @@ useSeoMeta({
 const isVisible = ref(true) // Force visible on reload
 const pageReload = ref(true) // // Ref for page reload detection
 
-const { isLoading, start, finish } = useLoadingIndicator({
+const { isLoading } = useLoadingIndicator({
   throttle: 100,
 })
 

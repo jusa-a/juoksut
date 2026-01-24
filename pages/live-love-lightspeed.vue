@@ -14,7 +14,7 @@
       </h1>
       <p>
         Juoksut will be joining the epic SRC x Marski by Scandic
-        breakfast run for Valentine’s Day morning.
+        breakfast run for Valentine's Day morning.
       </p>
 
       <p>
@@ -24,7 +24,7 @@
       </p>
 
       <p>
-        Come by yourself, bring a friend or your true love. Let’s enjoy
+        Come by yourself, bring a friend or your true love. Let's enjoy
         the Lightspeed together with SRC x Marski.
       </p>
 
@@ -84,7 +84,7 @@
             Thank you {{ name }} for signing up!
           </h1>
           <h3>
-            Keep an eye on your inbox, we’ll send a confirmation
+            Keep an eye on your inbox, we'll send a confirmation
             through email since we have limited spots.
           </h3>
         </div>
@@ -94,8 +94,7 @@
           <h3>
             Thank you everyone who signed up and stay tuned for more
             awesomeness!
-          </h3
-          >
+          </h3>
         </div>
       </div>
     </div>
@@ -117,11 +116,11 @@ const showError = ref(false)
 
 function loadFrame() {
   if (!email.value || !name.value) {
-    console.log('form values missing')
+    console.warn('form values missing')
     showError.value = true
   }
   else {
-    console.log('form sent')
+    console.warn('form sent')
     showForm.value = !showForm.value
   }
 }
