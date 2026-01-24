@@ -20,7 +20,7 @@
               <template v-else>
                 <div
                   v-for="(item, index) in cart.items"
-                  :key="index">
+                  :key="`${item.slug}-${item.size}-${index}`">
                   <div class="flex p-[1.3em] gap-[0.6em]">
                     <NuxtLink :to="`/shop/${item.slug}`" class="self-center w-[10em]">
                       <NuxtImg
@@ -35,13 +35,16 @@
                       <div>{{ item.title }}</div>
                       <div>Size: {{ item.size }}</div>
                       <div>Quantity: {{ item.quantity }}</div>
-                      <button class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" @click="cart.removeItem(item.slug, item.size)">
+                      <button 
+                        class="opacity-70 pt-[0.5em] mt-auto mr-auto hover:underline" 
+                        @click="cart.removeItem(item.slug, item.size)"
+                      >
                         Remove
                       </button>
                     </div>
 
                     <div>
-                      <div>€{{ item.price * item.quantity }}</div>
+                      <div>€{{ (item.price * item.quantity).toFixed(2) }}</div>
                     </div>
                   </div>
 
@@ -52,7 +55,10 @@
           </div>
 
           <div>
-            <div v-if="checkoutError" class="text-red-500 text-[0.8em]/[1.3em] p-[0.5em] border border-t-red-500 flex justify-between items-center">
+            <div 
+              v-if="checkoutError" 
+              class="text-red-500 text-[0.8em]/[1.3em] p-[0.5em] border border-t-red-500 flex justify-between items-center"
+            >
               {{ checkoutError }}
               <div class="text-center">
                 <button
@@ -69,7 +75,7 @@
               <div class="flex justify-between w-full pb-[1.6em] text-[0.8em]/[1.3em]">
                 <span>Subtotal</span>
                 <ClientOnly fallback-tag="span" fallback="Loading...">
-                  <span>€{{ cart.totalPrice }}</span>
+                  <span>€{{ cart.totalPrice.toFixed(2) }}</span>
                 </ClientOnly>
               </div>
 
@@ -86,6 +92,7 @@
                   <button
                     class="self-stretch text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink active:opacity-50"
                     :class="{ 'pointer-events-none': cart.isHoverDisabled }"
+                    :disabled="cart.isLoading"
                     @click="handleCheckout"
                   >
                     {{ cart.isLoading ? 'Updating...' : 'Checkout' }}
@@ -100,25 +107,26 @@
   </Transition>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useCartStore } from '~/stores/cart'
 
 const cart = useCartStore()
-const checkoutError = ref('') // State to store the error message
+const checkoutError = ref<string>('')
 
 // Handle checkout --> redirect to Stripe Checkout
 // Call server to create a Stripe checkout session
-async function handleCheckout() {
+async function handleCheckout(): Promise<void> {
   try {
     checkoutError.value = '' // Clear any previous error
-    const { data, error } = await useFetch('/api/checkout', {
+    
+    const { data, error } = await useFetch<{ url: string }>('/api/checkout', {
       method: 'POST',
-      body: JSON.stringify({ items: cart.items }),
+      body: { items: cart.items },
     })
 
     if (error.value) {
       console.error('Error during checkout:', error.value)
-      checkoutError.value = error.value.data.message || 'An error occurred during checkout'
+      checkoutError.value = error.value.data?.message || 'An error occurred during checkout'
       return
     }
 
@@ -137,9 +145,12 @@ async function handleCheckout() {
 }
 
 // Clear the cart and reload the page
-function clearCartAndReload() {
+function clearCartAndReload(): void {
   cart.clearCart()
-  window.location.reload()
+  
+  if (import.meta.client) {
+    window.location.reload()
+  }
 }
 </script>
 

@@ -498,6 +498,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cloudflare/workers-types@npm:^4.20260124.0":
+  version: 4.20260124.0
+  resolution: "@cloudflare/workers-types@npm:4.20260124.0"
+  checksum: 10c0/c4422a0715f52d253f6f49b2547ea0391395cd87f5b19d4272b31cea88249e0d68b570027be0eb77487eb114564059245af3aec8fa126527d8ba0da03e650eb8
+  languageName: node
+  linkType: hard
+
 "@cspotcode/source-map-support@npm:0.8.1":
   version: 0.8.1
   resolution: "@cspotcode/source-map-support@npm:0.8.1"
@@ -8699,6 +8706,7 @@ __metadata:
   resolution: "nuxt-app@workspace:."
   dependencies:
     "@antfu/eslint-config": "npm:^4.10.1"
+    "@cloudflare/workers-types": "npm:^4.20260124.0"
     "@nuxt/devtools": "npm:^2.2.1"
     "@nuxt/eslint": "npm:1.1.0"
     "@nuxt/image": "npm:^1.9.0"

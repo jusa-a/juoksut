@@ -27,7 +27,7 @@
             <div class="pt-[1em] pb-[0.7em] uppercase">
               {{
                 product.totalStock < 0 ? 'Coming soon...'
-                : (inStock ? `€${product.price}` : 'Out of stock')
+                : (inStock ? `€${product.price.toFixed(2)}` : 'Out of stock')
               }}
             </div>
 
@@ -38,10 +38,10 @@
             >
               <!-- Stock info -->
               <div class="h-[0.8em] mb-[0.2em] self-end">
-                <div v-if="selectedSize" class="text-[0.8em]/[1.3em] px-[1em] opacity-80">
-                  <span v-if="stock[selectedSize] > 100">preorder</span>
-                  <span v-else-if="stock[selectedSize] > 9">in stock</span>
-                  <span v-else-if="stock[selectedSize] > 0">only {{ stock[selectedSize] }} left</span>
+                <div v-if="selectedStock !== null" class="text-[0.8em]/[1.3em] px-[1em] opacity-80">
+                  <span v-if="selectedStock > 100">preorder</span>
+                  <span v-else-if="selectedStock > 9">in stock</span>
+                  <span v-else-if="selectedStock > 0">only {{ selectedStock }} left</span>
                   <span v-else class="opacity-60">out of stock</span>
                 </div>
               </div>
@@ -130,19 +130,20 @@
           <button
             class="w-full text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink"
             :class="{
-              'pointer-events-none': cart.isHoverDisabled || stock[selectedSize] === 0 || !inStock,
-              '!bg-white !text-pink': stock[selectedSize] === 0 || !inStock,
+              'pointer-events-none': cart.isHoverDisabled || selectedStock === 0 || !inStock,
+              '!bg-white !text-pink': selectedStock === 0 || !inStock,
             }"
+            :disabled="!inStock || selectedStock === 0"
             @click="addToCart"
           >
             {{
-              !inStock || stock[selectedSize] === 0
+              !inStock || selectedStock === 0
                 ? 'Out of stock'
                 : cart.isLoading
-                  ? `Adding... €${product.price}`
+                  ? `Adding... €${product.price.toFixed(2)}`
                   : (showSelectSizeMessage
                     ? 'Please select a size'
-                    : `Add to cart €${product.price}`)
+                    : `Add to cart €${product.price.toFixed(2)}`)
             }}
           </button>
         </div>
@@ -151,20 +152,31 @@
   </div>
 </template>
 
-<script setup>
-import { useRoute } from 'vue-router'
+<script setup lang="ts">
 import { useCartStore } from '~/stores/cart'
 import { useProductStore } from '~/stores/products'
+import type { ProductWithImages } from '~/stores/products'
 
 const route = useRoute()
 const productStore = useProductStore()
+const cart = useCartStore()
 
 const isSizingTableVisible = ref(false)
+const selectedSize = ref<string | null>(null)
+const showSelectSizeMessage = ref(false)
 
-// Use useAsyncData to fetch the product during SSR and reuse it on the client
-// const { data } = await useAsyncData(`product-${route.params.slug[0]}`, async () => productStore.fetchSingleProduct(route.params.slug[0]))
+// Get slug from route params
+const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug
 
-const product = await productStore.fetchSingleProduct(route.params.slug[0])
+if (!slug) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Product not found',
+  })
+}
+
+// Fetch the product
+const product = await productStore.fetchSingleProduct(slug)
 
 if (!product) {
   throw createError({
@@ -174,21 +186,24 @@ if (!product) {
 }
 
 // Convert stock array to an object for easier access
-const stock = Object.fromEntries(
+const stock: Record<string, number> = Object.fromEntries(
   product.stock.map(({ size, quantity }) => [size, quantity]),
 )
 
 // Determine if the product is in stock
 const inStock = product.totalStock > 0
-const selectedSize = ref(null)
-const showSelectSizeMessage = ref(false)
-const cart = useCartStore()
 
-function selectSize(size) {
+// Computed property for selected size stock
+const selectedStock = computed(() => {
+  if (!selectedSize.value || !(selectedSize.value in stock)) return null
+  return stock[selectedSize.value]
+})
+
+function selectSize(size: string): void {
   selectedSize.value = size
 }
 
-function addToCart() {
+function addToCart(): void {
   if (!selectedSize.value) {
     showSelectSizeMessage.value = true
 
@@ -198,7 +213,13 @@ function addToCart() {
     return
   }
 
-  cart.addItem({ ...product, size: selectedSize.value })
+  cart.addItem({ 
+    slug: product.slug,
+    size: selectedSize.value,
+    price: product.price,
+    title: product.title,
+    img: product.img,
+  })
 }
 
 // SEO: Set per-product meta tags
@@ -206,7 +227,9 @@ const runtimeConfig = useRuntimeConfig()
 const siteUrl = String((runtimeConfig.public && runtimeConfig.public.siteUrl) || 'https://juoksut.run')
 const pageUrl = new URL(route.fullPath || '/', siteUrl).toString()
 
-const stripHtml = (html) => html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
+const stripHtml = (html: string): string => 
+  html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
+
 const description = stripHtml(product.description).slice(0, 180)
 const ogImage = product.img || `${siteUrl}/logo.svg`
 
@@ -216,7 +239,6 @@ useSeoMeta({
   ogTitle: `${product.title} · Shop`,
   ogDescription: description,
   ogImage,
-  ogType: 'product',
   ogUrl: pageUrl,
   twitterCard: 'summary_large_image',
 })
