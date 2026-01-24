@@ -111,7 +111,7 @@ export default defineEventHandler(async (event): Promise<WebhookResponse> => {
         // Execute all queries in a batch
         await D1.batch(queries)
 
-        console.log(`✅ Stock updated for session ${session.id}`)
+        console.warn(`✅ Stock updated for session ${session.id}`)
       }
       catch (error) {
         console.error('Failed to process checkout session:', error)

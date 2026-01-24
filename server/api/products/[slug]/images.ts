@@ -19,12 +19,11 @@ export default defineEventHandler(async (event): Promise<ProductImagesResponse> 
 
       try {
         const response = await fetch(imageUrl, { method: 'HEAD' }) // Use HEAD request to check if the image exists
-
         if (response.ok) {
           images.push(imageUrl) // Add the image URL if it exists
         }
       }
-      catch (error) {
+      catch {
         console.warn(`Image not found: ${imageUrl}`)
       }
     }

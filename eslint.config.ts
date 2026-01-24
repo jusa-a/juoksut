@@ -25,4 +25,10 @@ export default antfu(
       'vue/singleline-html-element-content-newline': 'off',
     },
   },
+  {
+    files: ['server/**/*.ts'],
+    rules: {
+      'node/prefer-global/process': 'off',
+    },
+  },
 )

@@ -1,7 +1,6 @@
 <template>
   <div>
     <img class="fixed selectDisable w-[calc(var(--nav-height)+75vh)] px-[1em] z-50 top-[calc(var(--nav-height)+30vh)] left-1/2 -translate-x-1/2 -translate-y-1/3  mix-blend-plus-lighter blur-[0.5em] opacity-50" src="/logo.svg" alt="transparent blurred logo overlay">
-
     <div>
       <div class="wrapper selectDisable">
         <div class="values">
@@ -16,11 +15,9 @@
           <div><span>L</span>ifelong <span>W</span>ellness</div>
         </div>
       </div>
-
       <div
         class="sticky selectDisable top-[calc(var(--nav-height)+1px)] -z-10 h-[calc(100vh-var(--nav-height))]">
         <video
-          ref="video"
           class="object-cover object-center w-[100%] h-[100%] absolute"
           autoplay
           playsinline
@@ -31,7 +28,6 @@
             type="video/mp4" />
         </video>
       </div>
-
       <div
         class="sticky z-[0] top-[calc(var(--nav-height))] bg-white flex flex-col w-full">
         <Divider />
@@ -49,7 +45,6 @@
         </section>
         <Divider />
       </div>
-
       <div class="h-[calc(100vh-var(--nav-height))]"></div>
     </div>
   </div>
@@ -69,9 +64,9 @@
         justify-content: center; */
   /* shape-outside: linear-gradient(transparent, transparent); */
 }
+
 .values {
   @apply font-serif font-medium text-center whitespace-nowrap uppercase leading-loose tracking-[-0.04em];
-
   -webkit-text-stroke-width: 0.01em;
   -webkit-text-stroke-color: #ff639a;
 }
