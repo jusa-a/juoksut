@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     'nitro-cloudflare-dev',
-    '@nuxtjs/sitemap',
   ],
   devtools: { enabled: true },
 
@@ -92,17 +91,4 @@ export default defineNuxtConfig({
     },
   },
 
-  site: {
-    url: 'https://juoksut.run',
-  },
-
-  sitemap: {
-    zeroRuntime: true,
-    exclude: [
-      '/success',
-      '/cancel',
-      '/nb-order-form',
-      '/live-love-lightspeed',
-    ],
-  },
 })
