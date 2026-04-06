@@ -92,7 +92,7 @@ export default defineNuxtConfig({
       siteUrl: 'https://www.juoksut.run',
       siteName: 'JUOKSUT',
       siteDescription: 'JUOKSUT Run Club.',
-      siteImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+      siteImage: 'https://cdn.juoksut.run/og-image.jpg',
     },
   },
 })

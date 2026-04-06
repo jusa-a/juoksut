@@ -15,7 +15,6 @@
     <section>
       <h2>WEEKLY RUNS</h2>
       <div class="max-w-[40em] w-full mx-auto font-serif font-medium tracking-[-0.03em] flex flex-col items-center justify-center">
-
         <div class="flex justify-between items-center w-full py-[0.5em]">
           <div class="flex flex-col">
             <div>Tuesday</div>
@@ -134,10 +133,10 @@
 <script setup>
 useSeoMeta({
   title: 'Join · JUOKSUT',
-  description: 'Join JUOKSUT weekly runs in Helsinki. All paces welcome.',
+  description: 'Join JUOKSUT weekly runs in Helsinki. All welcome.',
   ogTitle: 'Join JUOKSUT',
-  ogDescription: 'Join JUOKSUT weekly runs in Helsinki. All paces welcome.',
-  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+  ogDescription: 'Join JUOKSUT weekly runs in Helsinki. All welcome.',
+  ogImage: 'https://cdn.juoksut.run/og-image.jpg',
   ogUrl: 'https://www.juoksut.run/join',
 })
 

@@ -73,10 +73,10 @@ const products = Object.values(productStore.products).sort((a, b) => b.id - a.id
 
 useSeoMeta({
   title: 'Shop · JUOKSUT',
-  description: 'JUOKSUT running apparel. Shop hoodies, tees and gear from the JUOKSUT Run Club.',
+  description: 'JUOKSUT Shop — merch, events and trips.',
   ogTitle: 'Shop · JUOKSUT',
-  ogDescription: 'JUOKSUT running apparel. Shop hoodies, tees and gear from the JUOKSUT Run Club.',
-  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+  ogDescription: 'JUOKSUT Shop — merch, events and trips.',
+  ogImage: 'https://cdn.juoksut.run/og-image.jpg',
   ogUrl: 'https://www.juoksut.run/shop',
 })
 
