@@ -29,6 +29,8 @@ export default antfu(
         order: [['script', 'template'], 'style'],
       }],
       'vue/singleline-html-element-content-newline': 'off',
+
+      'prefer-const': 'off',
     },
   },
 )

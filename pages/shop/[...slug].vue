@@ -164,14 +164,33 @@ const isSizingTableVisible = ref(false)
 // Use useAsyncData to fetch the product during SSR and reuse it on the client
 // const { data } = await useAsyncData(`product-${route.params.slug[0]}`, async () => productStore.fetchSingleProduct(route.params.slug[0]))
 
-const product = await productStore.fetchSingleProduct(route.params.slug[0])
+const slugParamRaw = route.params.slug
+const slugParam = Array.isArray(slugParamRaw) ? slugParamRaw[0] : slugParamRaw
 
+let product = null
+
+if (slugParam) {
+  // Primary fetch path
+  product = await productStore.fetchSingleProduct(slugParam)
+
+  // Fallback: if the single fetch failed (e.g. preview env hiccup), load all products once and try again
+  if (!product) {
+    await productStore.fetchProducts()
+    product = productStore.products[slugParam] || null
+  }
+}
+
+// Ensure we fail cleanly on truly missing products
 if (!product) {
   throw createError({
     statusCode: 404,
     statusMessage: `Page not found: /${route.params.slug}`,
   })
 }
+
+// Guard against missing images field when coming from fallback
+if (!product.images)
+  product.images = []
 
 // Convert stock array to an object for easier access
 const stock = Object.fromEntries(
@@ -206,7 +225,7 @@ const runtimeConfig = useRuntimeConfig()
 const siteUrl = String((runtimeConfig.public && runtimeConfig.public.siteUrl) || 'https://juoksut.run')
 const pageUrl = new URL(route.fullPath || '/', siteUrl).toString()
 
-const stripHtml = (html) => html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
+const stripHtml = html => html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
 const description = stripHtml(product.description).slice(0, 180)
 const ogImage = product.img || `${siteUrl}/logo.svg`
 
