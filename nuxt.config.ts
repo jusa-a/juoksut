@@ -92,8 +92,11 @@ export default defineNuxtConfig({
     },
   },
 
+  site: {
+    url: 'https://juoksut.run',
+  },
+
   sitemap: {
-    siteUrl: 'https://juoksut.run',
     zeroRuntime: true,
     exclude: [
       '/success',
