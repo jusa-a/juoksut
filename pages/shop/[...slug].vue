@@ -222,7 +222,7 @@ function addToCart() {
 
 // SEO: Set per-product meta tags
 const runtimeConfig = useRuntimeConfig()
-const siteUrl = String(runtimeConfig.public?.siteUrl || 'https://www.juoksut.run')
+const siteUrl = String(runtimeConfig.public?.siteUrl || 'https://juoksut.run')
 const pageUrl = new URL(route.fullPath || '/', siteUrl).toString()
 
 const stripHtml = html => html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''

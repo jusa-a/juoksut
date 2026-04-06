@@ -62,12 +62,12 @@ useSeoMeta({
   ogTitle: 'JUOKSUT',
   ogDescription: 'JUOKSUT Run Club. Unity in Running, Respect for the Individual, Achievement, Eternal Endurance, Lifelong Wellness.',
   ogImage: 'https://cdn.juoksut.run/og-image.jpg',
-  ogUrl: 'https://www.juoksut.run/',
+  ogUrl: 'https://juoksut.run/',
 })
 
 useHead({
   titleTemplate: null,
-  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/' }],
+  link: [{ rel: 'canonical', href: 'https://juoksut.run/' }],
 })
 </script>
 

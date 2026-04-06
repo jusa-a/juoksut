@@ -223,11 +223,11 @@ useSeoMeta({
   ogTitle: 'Fastlane Friday · JUOKSUT',
   ogDescription: 'Weekly speed session at the Olympic Stadium tunnel. Warmup, drills, track. All welcome.',
   ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
-  ogUrl: 'https://www.juoksut.run/fastlane-friday',
+  ogUrl: 'https://juoksut.run/fastlane-friday',
 })
 
 useHead({
-  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/fastlane-friday' }],
+  link: [{ rel: 'canonical', href: 'https://juoksut.run/fastlane-friday' }],
 })
 </script>
 

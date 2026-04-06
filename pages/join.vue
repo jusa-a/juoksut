@@ -137,11 +137,11 @@ useSeoMeta({
   ogTitle: 'Join JUOKSUT',
   ogDescription: 'Join JUOKSUT weekly runs in Helsinki. All welcome.',
   ogImage: 'https://cdn.juoksut.run/og-image.jpg',
-  ogUrl: 'https://www.juoksut.run/join',
+  ogUrl: 'https://juoksut.run/join',
 })
 
 useHead({
-  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/join' }],
+  link: [{ rel: 'canonical', href: 'https://juoksut.run/join' }],
 })
 </script>
 

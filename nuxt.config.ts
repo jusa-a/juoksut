@@ -84,7 +84,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       // Used for canonical URLs, sitemap and social tags
-      siteUrl: 'https://www.juoksut.run',
+      siteUrl: 'https://juoksut.run',
       siteName: 'JUOKSUT',
       siteDescription: 'JUOKSUT Run Club.',
       siteImage: 'https://cdn.juoksut.run/og-image.jpg',

@@ -77,11 +77,11 @@ useSeoMeta({
   ogTitle: 'Shop · JUOKSUT',
   ogDescription: 'JUOKSUT Shop — merch, events and trips.',
   ogImage: 'https://cdn.juoksut.run/og-image.jpg',
-  ogUrl: 'https://www.juoksut.run/shop',
+  ogUrl: 'https://juoksut.run/shop',
 })
 
 useHead({
-  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/shop' }],
+  link: [{ rel: 'canonical', href: 'https://juoksut.run/shop' }],
 })
 </script>
 
