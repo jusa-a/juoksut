@@ -89,23 +89,20 @@
           <!-- Event Info -->
           <div class="flex-1 flex flex-col gap-[0.4em]">
             <div class="m-0">
-              <p class="text-[0.9em]">
-                powered by New Balance🪽
-              </p>
               <p>
-                Every Friday at the Olympic Stadium’s tunnel.
+                Fastlane Friday head outdoors for Spring to Eläintarha Sports Field.
               </p>
 
               <p></p>
 
               <ul>
-                <li>🔥 16:15 warmup & drills outdoors (meet up next to the stadium tower)</li>
-                <li>🔃 17:00 indoor track</li>
+                <li>🔥 16:30 warmup & drills</li>
+                <li>🔃 17:00 track session</li>
                 <li>🍕 18:00 afters (optional)</li>
               </ul>
 
               <p>
-                All welcome.<br>
+                Limited spots. All welcome.<br>
                 Be faaaaast⚡️⚡️⚡️⚡️⚡️
               </p>
             </div>
