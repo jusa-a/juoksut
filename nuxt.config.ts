@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     'nitro-cloudflare-dev',
+    '@nuxtjs/sitemap',
   ],
   devtools: { enabled: true },
 
@@ -89,5 +90,15 @@ export default defineNuxtConfig({
       siteDescription: 'JUOKSUT Run Club.',
       siteImage: 'https://cdn.juoksut.run/og-image.jpg',
     },
+  },
+
+  sitemap: {
+    siteUrl: 'https://juoksut.run',
+    exclude: [
+      '/success',
+      '/cancel',
+      '/nb-order-form',
+      '/live-love-lightspeed',
+    ],
   },
 })
