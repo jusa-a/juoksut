@@ -55,7 +55,20 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+useSeoMeta({
+  title: 'JUOKSUT',
+  description: 'JUOKSUT Run Club. Unity in Running, Respect for the Individual, Achievement, Eternal Endurance, Lifelong Wellness.',
+  ogTitle: 'JUOKSUT',
+  ogDescription: 'JUOKSUT Run Club. Unity in Running, Respect for the Individual, Achievement, Eternal Endurance, Lifelong Wellness.',
+  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+  ogUrl: 'https://www.juoksut.run/',
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/' }],
+})
+</script>
 
 <style scoped>
 .wrapper {

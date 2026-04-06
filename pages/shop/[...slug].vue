@@ -222,22 +222,50 @@ function addToCart() {
 
 // SEO: Set per-product meta tags
 const runtimeConfig = useRuntimeConfig()
-const siteUrl = String((runtimeConfig.public && runtimeConfig.public.siteUrl) || 'https://juoksut.run')
+const siteUrl = String(runtimeConfig.public?.siteUrl || 'https://www.juoksut.run')
 const pageUrl = new URL(route.fullPath || '/', siteUrl).toString()
 
 const stripHtml = html => html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
-const description = stripHtml(product.description).slice(0, 180)
+const rawDescription = stripHtml(product.description)
+// Trim to ~160 chars at a word boundary
+const description = rawDescription.length > 160
+  ? rawDescription.slice(0, 160).replace(/\s\S*$/, '').trimEnd()
+  : rawDescription
 const ogImage = product.img || `${siteUrl}/logo.svg`
 
 useSeoMeta({
-  title: `${product.title} · Shop`,
+  title: `${product.title} · JUOKSUT Shop`,
   description,
-  ogTitle: `${product.title} · Shop`,
+  ogTitle: `${product.title} · JUOKSUT Shop`,
   ogDescription: description,
   ogImage,
   ogType: 'product',
   ogUrl: pageUrl,
-  twitterCard: 'summary_large_image',
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: pageUrl }],
+  script: [{
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      'name': product.title,
+      'description': rawDescription,
+      'image': [product.img, ...product.images].filter(Boolean),
+      'brand': { '@type': 'Brand', 'name': 'JUOKSUT' },
+      'url': pageUrl,
+      'offers': {
+        '@type': 'Offer',
+        'price': product.price.toFixed(2),
+        'priceCurrency': 'EUR',
+        'availability': product.totalStock > 0
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+        'url': pageUrl,
+      },
+    }),
+  }],
 })
 </script>
 

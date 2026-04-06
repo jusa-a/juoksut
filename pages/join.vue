@@ -133,8 +133,16 @@
 
 <script setup>
 useSeoMeta({
-  title: 'Join',
-  description: 'Join JUOKSUT weekly runs! All welcome.'
+  title: 'Join · JUOKSUT',
+  description: 'Join JUOKSUT weekly runs in Helsinki. All paces welcome.',
+  ogTitle: 'Join JUOKSUT',
+  ogDescription: 'Join JUOKSUT weekly runs in Helsinki. All paces welcome.',
+  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+  ogUrl: 'https://www.juoksut.run/join',
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/join' }],
 })
 </script>
 

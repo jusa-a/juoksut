@@ -37,8 +37,10 @@ export default defineNuxtConfig({
       meta: [
         {
           name: 'description',
-          content: 'Juoksut Run Club',
+          content: 'JUOKSUT Run Club.',
         },
+        { property: 'og:site_name', content: 'JUOKSUT' },
+        { name: 'twitter:card', content: 'summary_large_image' },
         // { name: 'theme-color', content: '#ffffff' },
       ],
       link: [
@@ -87,10 +89,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       // Used for canonical URLs, sitemap and social tags
-      siteUrl: 'https://juoksut.run',
+      siteUrl: 'https://www.juoksut.run',
       siteName: 'JUOKSUT',
-      siteDescription: 'Juoksut Run Club',
-      siteImage: 'https://juoksut.run/logo.svg',
+      siteDescription: 'JUOKSUT Run Club.',
+      siteImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
     },
   },
 })

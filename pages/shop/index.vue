@@ -72,7 +72,16 @@ await callOnce(async () => {
 const products = Object.values(productStore.products).sort((a, b) => b.id - a.id)
 
 useSeoMeta({
-  title: 'Shop',
+  title: 'Shop · JUOKSUT',
+  description: 'JUOKSUT running apparel. Shop hoodies, tees and gear from the JUOKSUT Run Club.',
+  ogTitle: 'Shop · JUOKSUT',
+  ogDescription: 'JUOKSUT running apparel. Shop hoodies, tees and gear from the JUOKSUT Run Club.',
+  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+  ogUrl: 'https://www.juoksut.run/shop',
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/shop' }],
 })
 </script>
 

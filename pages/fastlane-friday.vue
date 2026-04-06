@@ -217,14 +217,17 @@ onBeforeUnmount(() => {
   document.body.style.overflow = 'auto'
 })
 
-useHead({
-  title: 'FASTLANE FRIDAY',
+useSeoMeta({
+  title: 'Fastlane Friday · JUOKSUT',
+  description: 'Weekly speed session at the Olympic Stadium tunnel. Warmup, drills, track. All welcome.',
+  ogTitle: 'Fastlane Friday · JUOKSUT',
+  ogDescription: 'Weekly speed session at the Olympic Stadium tunnel. Warmup, drills, track. All welcome.',
+  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+  ogUrl: 'https://www.juoksut.run/fastlane-friday',
 })
 
-useSeoMeta({
-  title: 'FASTLANE FRIDAY',
-  ogTitle: 'FASTLANE FRIDAY',
-  ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
+useHead({
+  link: [{ rel: 'canonical', href: 'https://www.juoksut.run/fastlane-friday' }],
 })
 </script>
 
