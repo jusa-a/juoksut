@@ -90,7 +90,7 @@
           <div class="flex-1 flex flex-col gap-[0.4em]">
             <div class="m-0">
               <p>
-                Fastlane Friday head outdoors for Spring to Eläintarha Sports Field.
+                Fastlane Friday heads outdoors for spring to Eläintarha Sports Field.
               </p>
 
               <p></p>
