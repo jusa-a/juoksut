@@ -29,6 +29,6 @@ logs
 
 .dev.vars
 .wrangler
-wrangler.toml
+# wrangler.toml is committed — keep local overrides in wrangler.local.toml
 
 d1
