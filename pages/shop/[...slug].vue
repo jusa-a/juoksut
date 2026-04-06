@@ -234,7 +234,7 @@ const description = rawDescription.length > 160
 const ogImage = product.img || `${siteUrl}/logo.svg`
 
 useSeoMeta({
-  title: `${product.title} · JUOKSUT Shop`,
+  title: `${product.title} · Shop`,
   description,
   ogTitle: `${product.title} · JUOKSUT Shop`,
   ogDescription: description,

@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
 })
 
 useSeoMeta({
-  title: 'Fastlane Friday · JUOKSUT',
+  title: 'Fastlane Friday',
   description: 'Weekly speed session at the Olympic Stadium tunnel. Warmup, drills, track. All welcome.',
   ogTitle: 'Fastlane Friday · JUOKSUT',
   ogDescription: 'Weekly speed session at the Olympic Stadium tunnel. Warmup, drills, track. All welcome.',

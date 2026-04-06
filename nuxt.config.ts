@@ -35,12 +35,7 @@ export default defineNuxtConfig({
 
     head: {
       meta: [
-        {
-          name: 'description',
-          content: 'JUOKSUT Run Club.',
-        },
         { property: 'og:site_name', content: 'JUOKSUT' },
-        { name: 'twitter:card', content: 'summary_large_image' },
         // { name: 'theme-color', content: '#ffffff' },
       ],
       link: [

@@ -15,10 +15,10 @@ useHead({
 })
 
 useSeoMeta({
-  description: 'Juoksut Run Club',
+  description: 'JUOKSUT Run Club.',
   ogTitle: 'JUOKSUT',
-  ogDescription: 'Juoksut Run Club',
-  ogImage: 'https://juoksut.run/logo.svg',
+  ogDescription: 'JUOKSUT Run Club.',
+  ogImage: 'https://cdn.juoksut.run/og-image.jpg',
   twitterCard: 'summary_large_image',
 })
 

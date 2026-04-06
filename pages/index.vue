@@ -66,6 +66,7 @@ useSeoMeta({
 })
 
 useHead({
+  titleTemplate: null,
   link: [{ rel: 'canonical', href: 'https://www.juoksut.run/' }],
 })
 </script>

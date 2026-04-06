@@ -132,7 +132,7 @@
 
 <script setup>
 useSeoMeta({
-  title: 'Join · JUOKSUT',
+  title: 'Join',
   description: 'Join JUOKSUT weekly runs in Helsinki. All welcome.',
   ogTitle: 'Join JUOKSUT',
   ogDescription: 'Join JUOKSUT weekly runs in Helsinki. All welcome.',

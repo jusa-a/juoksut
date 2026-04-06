@@ -72,7 +72,7 @@ await callOnce(async () => {
 const products = Object.values(productStore.products).sort((a, b) => b.id - a.id)
 
 useSeoMeta({
-  title: 'Shop · JUOKSUT',
+  title: 'Shop',
   description: 'JUOKSUT Shop — merch, events and trips.',
   ogTitle: 'Shop · JUOKSUT',
   ogDescription: 'JUOKSUT Shop — merch, events and trips.',
