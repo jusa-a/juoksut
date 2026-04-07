@@ -130,7 +130,7 @@ The archive page pulls videos from the JUOKSUT Instagram account via the Instagr
 
 ## Known issues / TODO
 
-- Product descriptions in D1 are missing spaces after periods (e.g. `Lightspeed.Heavyweight`). Needs fixing in the database content directly.
+- Product descriptions in D1 use `<br>` tags as line breaks. The `stripHtml` function in `shop/[...slug].vue` replaces `<br>` with a space before stripping tags, so meta descriptions render correctly.
 
 ## Branch workflow
 

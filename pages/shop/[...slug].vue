@@ -225,7 +225,7 @@ const runtimeConfig = useRuntimeConfig()
 const siteUrl = String(runtimeConfig.public?.siteUrl || 'https://juoksut.run')
 const pageUrl = new URL(route.fullPath || '/', siteUrl).toString()
 
-const stripHtml = html => html?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
+const stripHtml = html => html?.replace(/<br\s*\/?>/gi, ' ')?.replace(/<[^>]*>/g, '')?.replace(/\s+/g, ' ').trim() || ''
 const rawDescription = stripHtml(product.description)
 // Trim to ~160 chars at a word boundary
 const description = rawDescription.length > 160
