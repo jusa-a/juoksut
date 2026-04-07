@@ -25,6 +25,8 @@ export default defineNuxtConfig({
     // Keep shop pages server-rendered so OG/meta tags are available to crawlers
     '/shop': { prerender: false },
     '/shop/**': { prerender: false },
+    // Archive: SSR for meta tags, videos load client-side (D1 not available in SSR sub-requests)
+    '/archive': { prerender: false },
     '/success': { ssr: false },
     '/nb-order-form': { ssr: false },
   },
