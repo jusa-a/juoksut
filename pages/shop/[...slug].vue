@@ -231,7 +231,7 @@ const rawDescription = stripHtml(product.description)
 const description = rawDescription.length > 160
   ? rawDescription.slice(0, 160).replace(/\s\S*$/, '').trimEnd()
   : rawDescription
-const ogImage = product.img || `${siteUrl}/logo.svg`
+const ogImage = product.img || 'https://cdn.juoksut.run/og-image.jpg'
 
 useSeoMeta({
   title: `${product.title} · Shop`,
