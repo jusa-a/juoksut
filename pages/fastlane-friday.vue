@@ -219,9 +219,9 @@ onBeforeUnmount(() => {
 
 useSeoMeta({
   title: 'Fastlane Friday',
-  description: 'Weekly speed session at the Olympic Stadium tunnel. Warmup, drills, track. All welcome.',
+  description: 'Weekly speed session. Warmup, drills, track. All welcome.',
   ogTitle: 'Fastlane Friday · JUOKSUT',
-  ogDescription: 'Weekly speed session at the Olympic Stadium tunnel. Warmup, drills, track. All welcome.',
+  ogDescription: 'Weekly speed session. Warmup, drills, track. All welcome.',
   ogImage: 'https://cdn.juoksut.run/fastlane-friday.jpg',
   ogUrl: 'https://juoksut.run/fastlane-friday',
 })
