@@ -1,13 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col">
     <div class="p-[1em] pt-0">
-      <div v-if="status === 'pending' || !rows.length" class="mt-6 space-y-3">
-        <div v-for="n in 4" :key="n" class="flex gap-3">
-          <div class="aspect-[9/16] bg-gray-100 animate-pulse" :style="n % 2 === 0 ? 'width:60%' : 'width:40%'" />
-          <div v-if="n % 3 !== 0" class="aspect-[9/16] bg-gray-100 animate-pulse flex-1" />
-        </div>
-      </div>
-      <div v-else-if="error" class="mt-6 text-sm opacity-50">
+      <div v-if="error" class="mt-6 text-sm opacity-50">
         Could not load archive.
       </div>
       <template v-else>
@@ -45,12 +39,6 @@
         </div>
       </template>
       <div ref="sentinel" class="h-4" />
-      <div v-if="loadingMore" class="mt-3 space-y-3">
-        <div v-for="n in 2" :key="n" class="flex gap-3">
-          <div class="aspect-[9/16] bg-gray-100 animate-pulse" :style="n % 2 === 0 ? 'width:60%' : 'width:40%'" />
-          <div class="aspect-[9/16] bg-gray-100 animate-pulse flex-1" />
-        </div>
-      </div>
     </div>
     <div class="h-[3em]" />
     <FooterVideo />
@@ -58,7 +46,7 @@
 </template>
 
 <script setup>
-const { data, status, error } = await useFetch('/api/instagram')
+const { data, error } = await useFetch('/api/instagram')
 
 const rowConfigs = [
   { cols: '1fr 1.75fr 1fr', cells: [null, { size: 'sm' }, null] },
