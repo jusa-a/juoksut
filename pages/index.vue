@@ -21,15 +21,14 @@
         class="sticky selectDisable top-[calc(var(--nav-height)+1px)] -z-10 h-[calc(100vh-var(--nav-height))]">
         <video
           ref="video"
+          :src="heroSrc"
+          :poster="heroPoster"
           class="object-cover object-center w-[100%] h-[100%] absolute"
           autoplay
           playsinline
           loop
-          muted>
-          <source
-            src="https://cdn.juoksut.run/juoksut.mp4"
-            type="video/mp4" />
-        </video>
+          muted
+        />
       </div>
 
       <div
@@ -56,6 +55,27 @@
 </template>
 
 <script setup>
+const FALLBACK = 'https://cdn.juoksut.run/juoksut.mp4'
+const heroSrc = ref(FALLBACK)
+const heroPoster = ref('')
+const video = ref(null)
+
+onMounted(async () => {
+  try {
+    const { media } = await $fetch('/api/instagram')
+    if (media?.length) {
+      const pick = media[Math.floor(Math.random() * media.length)]
+      heroSrc.value = pick.media_url
+      heroPoster.value = pick.thumbnail_url
+    }
+  }
+  catch {
+    // fallback stays
+  }
+})
+
+watch(heroSrc, () => nextTick(() => video.value?.load()))
+
 useSeoMeta({
   title: 'JUOKSUT',
   description: 'JUOKSUT Run Club. Unity in Running, Respect for the Individual, Achievement, Eternal Endurance, Lifelong Wellness.',
