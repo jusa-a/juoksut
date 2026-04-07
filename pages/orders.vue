@@ -84,7 +84,18 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+useSeoMeta({
+  title: 'Orders & Policy',
+  description: 'Order info, preorder process, and policy for JUOKSUT Run Club.',
+  ogTitle: 'Orders & Policy · JUOKSUT',
+  ogDescription: 'Order info, preorder process, and policy for JUOKSUT Run Club.',
+  robots: 'noindex',
+})
+useHead({
+  link: [{ rel: 'canonical', href: 'https://juoksut.run/orders' }],
+})
+</script>
 
 <style scoped>
 h3 {

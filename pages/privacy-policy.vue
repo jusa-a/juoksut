@@ -33,7 +33,14 @@
 </template>
 
 <script lang="ts" setup>
-
+useSeoMeta({
+  title: 'Privacy Policy',
+  ogTitle: 'Privacy Policy · JUOKSUT',
+  robots: 'noindex',
+})
+useHead({
+  link: [{ rel: 'canonical', href: 'https://juoksut.run/privacy-policy' }],
+})
 </script>
 
 <style scoped>
