@@ -103,7 +103,7 @@ const isMobile = ref(false)
 const rows = ref([])
 const sentinel = ref(null)
 const loadingMore = ref(false)
-const nextCursor = ref(null)
+const nextOffset = ref(0)
 const hasMore = ref(false)
 
 onMounted(() => {
@@ -111,7 +111,7 @@ onMounted(() => {
     return
   isMobile.value = window.innerWidth < 640
   rows.value = buildRows(data.value.media)
-  nextCursor.value = data.value.nextCursor
+  nextOffset.value = data.value.nextOffset
   hasMore.value = data.value.hasMore
 
   const observer = new IntersectionObserver(async ([entry]) => {
@@ -119,10 +119,10 @@ onMounted(() => {
       return
     loadingMore.value = true
     try {
-      const more = await $fetch(`/api/instagram?cursor=${nextCursor.value}`)
+      const more = await $fetch(`/api/instagram?offset=${nextOffset.value}`)
       if (more.media?.length) {
         rows.value.push(...buildRows(more.media))
-        nextCursor.value = more.nextCursor
+        nextOffset.value = more.nextOffset
         hasMore.value = more.hasMore
       }
     }

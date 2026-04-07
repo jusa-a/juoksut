@@ -2,21 +2,16 @@ import { defineEventHandler, createError, getQuery } from 'h3'
 
 const INSTAGRAM_API = 'https://graph.instagram.com'
 const FIELDS = 'id,media_type,media_url,thumbnail_url,permalink,timestamp'
+const CACHE_TTL_MINUTES = 30
+const PAGE_SIZE = 12
 
-export default defineEventHandler(async (event) => {
-  const D1 = event.context.cloudflare?.env?.D1
-  if (!D1) {
-    throw createError({ statusCode: 500, message: 'D1 not available' })
-  }
-
+async function getToken(D1) {
   const row = await D1.prepare('SELECT token, expires_at FROM instagram_token WHERE id = 1').first()
-  if (!row) {
+  if (!row)
     throw createError({ statusCode: 503, message: 'Instagram token not configured' })
-  }
 
   let { token } = row
-  const expiresAt = new Date(row.expires_at)
-  const daysUntilExpiry = (expiresAt - Date.now()) / (1000 * 60 * 60 * 24)
+  const daysUntilExpiry = (new Date(row.expires_at) - Date.now()) / (1000 * 60 * 60 * 24)
 
   if (daysUntilExpiry < 7) {
     try {
@@ -37,21 +32,55 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const { cursor } = getQuery(event)
-  const cursorParam = cursor ? `&after=${cursor}` : ''
+  return token
+}
 
-  const res = await fetch(
-    `${INSTAGRAM_API}/me/media?fields=${FIELDS}&limit=50${cursorParam}&access_token=${token}`,
-  )
-  const data = await res.json()
+async function fetchAllVideos(token) {
+  const videos = []
+  let cursor = null
 
-  if (data.error) {
-    throw createError({ statusCode: 502, message: data.error.message })
+  do {
+    const cursorParam = cursor ? `&after=${cursor}` : ''
+    const res = await fetch(
+      `${INSTAGRAM_API}/me/media?fields=${FIELDS}&limit=50${cursorParam}&access_token=${token}`,
+    )
+    const data = await res.json()
+    if (data.error)
+      throw createError({ statusCode: 502, message: data.error.message })
+    videos.push(...(data.data || []).filter(m => m.media_type === 'VIDEO'))
+    cursor = data.paging?.next ? data.paging.cursors?.after : null
+  } while (cursor)
+
+  return videos
+}
+
+export default defineEventHandler(async (event) => {
+  const D1 = event.context.cloudflare?.env?.D1
+  if (!D1)
+    throw createError({ statusCode: 500, message: 'D1 not available' })
+
+  const { offset = '0' } = getQuery(event)
+  const offsetNum = Number(offset)
+
+  // Check cache
+  const cached = await D1.prepare('SELECT videos, cached_at FROM instagram_cache WHERE id = 1').first()
+  const cacheAge = cached ? (Date.now() - new Date(cached.cached_at)) / 60000 : Infinity
+
+  let allVideos
+
+  if (cached && cacheAge < CACHE_TTL_MINUTES) {
+    allVideos = JSON.parse(cached.videos)
+  }
+  else {
+    const token = await getToken(D1)
+    allVideos = await fetchAllVideos(token)
+    await D1.prepare(
+      `INSERT OR REPLACE INTO instagram_cache (id, videos, cached_at) VALUES (1, ?, datetime('now'))`,
+    ).bind(JSON.stringify(allVideos)).run()
   }
 
-  const media = (data.data || []).filter(m => m.media_type === 'VIDEO')
-  const nextCursor = data.paging?.cursors?.after || null
-  const hasMore = !!data.paging?.next
+  const page = allVideos.slice(offsetNum, offsetNum + PAGE_SIZE)
+  const hasMore = offsetNum + PAGE_SIZE < allVideos.length
 
-  return { media, nextCursor, hasMore }
+  return { media: page, nextOffset: offsetNum + PAGE_SIZE, hasMore }
 })
