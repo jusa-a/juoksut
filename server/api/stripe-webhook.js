@@ -29,7 +29,6 @@ export default defineEventHandler(async (event) => {
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
             expand: ['data.price.product'],
           })
-          
 
           // Prepare batch queries
           const queries = lineItems.data.map((item) => {

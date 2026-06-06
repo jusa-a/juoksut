@@ -1,4 +1,4 @@
-import { defineEventHandler, createError, getQuery } from 'h3'
+import { createError, defineEventHandler, getQuery } from 'h3'
 
 const INSTAGRAM_API = 'https://graph.instagram.com'
 const FIELDS = 'id,media_type,media_url,thumbnail_url,permalink,timestamp'
