@@ -1,5 +1,4 @@
 import { defineEventHandler } from 'h3'
-import fetch from 'node-fetch'
 
 export default defineEventHandler(async (event) => {
   const { slug } = event.context.params
@@ -9,20 +8,27 @@ export default defineEventHandler(async (event) => {
     // Fetch available images dynamically and validate them
     const maxImages = 7 // Maximum number of images to check
     const imageFormat = 'png' // Default format, can be 'jpg' or 'png'
-    const images = []
 
-    for (let i = 2; i <= maxImages; i++) {
-      const imageUrl = `${cdnBaseUrl}/${slug}/${i}.${imageFormat}`
-      try {
-        const response = await fetch(imageUrl, { method: 'HEAD' }) // Use HEAD request to check if the image exists
-        if (response.ok) {
-          images.push(imageUrl) // Add the image URL if it exists
+    // Build the candidate URLs (images 2..maxImages; image 1 is assumed to exist)
+    const candidates = []
+    for (let i = 2; i <= maxImages; i++)
+      candidates.push(`${cdnBaseUrl}/${slug}/${i}.${imageFormat}`)
+
+    // Probe them in parallel; Promise.all preserves order so the result stays sequential
+    const results = await Promise.all(
+      candidates.map(async (imageUrl) => {
+        try {
+          const response = await fetch(imageUrl, { method: 'HEAD' }) // HEAD: check existence only
+          return response.ok ? imageUrl : null
         }
-      }
-      catch (error) {
-        console.warn(`Image not found: ${imageUrl}`)
-      }
-    }
+        catch {
+          console.warn(`Image not found: ${imageUrl}`)
+          return null
+        }
+      }),
+    )
+
+    const images = results.filter(Boolean)
 
     return { images } // Return only the valid image URLs
   }
