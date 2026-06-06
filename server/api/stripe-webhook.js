@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { createError, defineEventHandler, readRawBody } from 'h3' // Use readRawBody instead of readBody
 import Stripe from 'stripe'
 
