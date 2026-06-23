@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { createError, defineEventHandler, readRawBody } from 'h3' // Use readRawBody instead of readBody
 import Stripe from 'stripe'
 
@@ -28,7 +29,6 @@ export default defineEventHandler(async (event) => {
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
             expand: ['data.price.product'],
           })
-          
 
           // Prepare batch queries
           const queries = lineItems.data.map((item) => {

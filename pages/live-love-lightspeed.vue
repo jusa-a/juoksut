@@ -130,41 +130,6 @@ useHead({
   title: 'Live Love Lightspeed',
   meta: [{ name: 'description', content: 'Juoksut Run Club' }],
 })
-
-/* function onSubmit(event) {
-        $fetch(
-            'https://docs.google.com/forms/d/e/1FAIpQLSc_4wHttF9L8HoPGSzlVitJI0sRdwqkMnjtqbQ3BrsxqNMYtw/formResponse',
-            {
-                method: 'POST',
-                body: new FormData(event.target)
-            }
-        )
-            .then(response => {
-                if (response.ok) {
-                    response.json().then(json => {
-                        console.log(json)
-                    })
-                }
-            })
-            .then(data => {
-                console.log('OK:', data)
-            })
-            .catch(e => {
-                console.log(e.response)
-            })
-
-        //console.log('error', error)
-
-        //console.log('form submitted')
-        //console.log('data')
-        //console.log(response.data, response.error)
-        //console.log('error')
-        //console.log(response.error)
-
-        //showForm.value = false
-
-        //console.log(new FormData(event.target))
-    } */
 </script>
 
 <style></style>

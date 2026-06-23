@@ -1,6 +1,9 @@
 name = "juoksut"
 pages_build_output_dir = "dist"
 compatibility_date = "2025-03-09"
+# Cloudflare account that owns this project (not a secret). Disambiguates
+# `wrangler ... --remote` when the logged-in user has multiple accounts.
+account_id = "a1706fe2265b785c44d410b6b2ac33c2"
 
 [[d1_databases]]
 binding = "D1"
