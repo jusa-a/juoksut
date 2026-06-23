@@ -2,6 +2,7 @@ import process from 'node:process'
 import { createError, defineEventHandler, getRequestURL, readBody } from 'h3'
 import Stripe from 'stripe'
 import { fetchProductData, transformProductData } from '../utils/productUtils'
+import { validateCheckoutItems } from '../utils/validateCheckout'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -9,6 +10,11 @@ export default defineEventHandler(async (event) => {
 
     // Read request body
     const body = await readBody(event)
+
+    // Validate the request shape before touching D1/Stripe (audit L4 / roadmap R12)
+    const validation = validateCheckoutItems(body?.items)
+    if (!validation.ok)
+      throw createError({ statusCode: 400, message: validation.message })
 
     // Get request origin (for redirect URLs)
     const origin = getRequestURL(event).origin
