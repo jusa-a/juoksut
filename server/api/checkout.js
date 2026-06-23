@@ -2,6 +2,7 @@ import process from 'node:process'
 import { createError, defineEventHandler, getRequestURL, readBody } from 'h3'
 import Stripe from 'stripe'
 import { fetchProductData, transformProductData } from '../utils/productUtils'
+import { validateCheckoutItems } from '../utils/validateCheckout'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -9,6 +10,11 @@ export default defineEventHandler(async (event) => {
 
     // Read request body
     const body = await readBody(event)
+
+    // Validate the request shape before touching D1/Stripe (audit L4 / roadmap R12)
+    const validation = validateCheckoutItems(body?.items)
+    if (!validation.ok)
+      throw createError({ statusCode: 400, message: validation.message })
 
     // Get request origin (for redirect URLs)
     const origin = getRequestURL(event).origin
@@ -92,7 +98,11 @@ export default defineEventHandler(async (event) => {
     return { url: session.url } // Return the URL to the client
   }
   catch (error) {
+    // Preserve intentional client errors (validation / stock / invalid-product 400s);
+    // never leak an unexpected internal error message to the client. (audit L5 / roadmap R13)
+    if (error.statusCode)
+      throw error
     console.error(error)
-    throw createError({ statusCode: error.statusCode || 500, message: error.message || 'Internal Server Error' })
+    throw createError({ statusCode: 500, message: 'Internal Server Error' })
   }
 })

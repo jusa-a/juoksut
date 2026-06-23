@@ -1,9 +1,12 @@
 name = "juoksut"
 pages_build_output_dir = "dist"
 compatibility_date = "2025-03-09"
+# NOTE: Pages does not allow `account_id` in wrangler.toml. For local
+# `wrangler ... --remote` with multiple accounts, set the CLOUDFLARE_ACCOUNT_ID
+# env var instead (account: a1706fe2265b785c44d410b6b2ac33c2).
 
 [[d1_databases]]
 binding = "D1"
 database_name = "juoksut-products"
-database_id = "85dc51df-85fe-4b4a-871c-01a44a6e64b2"
-preview_database_id = "test-juoksut-products"
+database_id = "85dc51df-85fe-4b4a-871c-01a44a6e64b2"            # prod (juoksut-products)
+preview_database_id = "eb16c92e-e775-4c32-8f6c-a312301fd5c2"   # test-juoksut-products (preview deploys)

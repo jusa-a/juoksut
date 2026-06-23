@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { createError, defineEventHandler, getQuery } from 'h3'
 import Stripe from 'stripe'
 
