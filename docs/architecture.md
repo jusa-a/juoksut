@@ -18,18 +18,18 @@ the system of record for orders/customers.
 
 ## 2. Stack & hosting
 
-| Concern | Choice | Where |
-|---|---|---|
-| Framework | Nuxt 3 (Vue 3 + Nitro) | `nuxt.config.ts` |
-| Hosting | Cloudflare Pages | `wrangler.toml`, `nitro.preset` |
-| Nitro preset | `cloudflare_pages`, `nodeCompat: true` | `nuxt.config.ts:13-20` |
-| Database | Cloudflare D1 (`juoksut-products`), binding `D1` | `wrangler.toml:5-9` |
-| Media/CDN | Cloudflare R2 via `cdn.juoksut.run` | `nuxt.config.ts:71-73`, `server/utils/productUtils.js:1` |
-| Payments | Stripe Checkout (hosted) | `server/api/checkout.js`, `stripe-webhook.js` |
-| State | Pinia (+ persistedstate for cart) | `stores/`, `nuxt.config.ts:8` |
-| Styling | Tailwind v3 (pinned) | `tailwind.config.js`, `package.json:41-43` |
-| Lint | `@antfu/eslint-config` | `eslint.config.mjs` |
-| Pkg mgr / Node | Yarn 4 (Corepack) / Node 20 | `package.json:5`, `.nvmrc` |
+| Concern        | Choice                                           | Where                                                    |
+| -------------- | ------------------------------------------------ | -------------------------------------------------------- |
+| Framework      | Nuxt 3 (Vue 3 + Nitro)                           | `nuxt.config.ts`                                         |
+| Hosting        | Cloudflare Pages                                 | `wrangler.toml`, `nitro.preset`                          |
+| Nitro preset   | `cloudflare_pages`, `nodeCompat: true`           | `nuxt.config.ts:13-20`                                   |
+| Database       | Cloudflare D1 (`juoksut-products`), binding `D1` | `wrangler.toml:5-9`                                      |
+| Media/CDN      | Cloudflare R2 via `cdn.juoksut.run`              | `nuxt.config.ts:71-73`, `server/utils/productUtils.js:1` |
+| Payments       | Stripe Checkout (hosted)                         | `server/api/checkout.js`, `stripe-webhook.js`            |
+| State          | Pinia (+ persistedstate for cart)                | `stores/`, `nuxt.config.ts:8`                            |
+| Styling        | Tailwind v3 (pinned)                             | `tailwind.config.js`, `package.json:41-43`               |
+| Lint           | `@antfu/eslint-config`                           | `eslint.config.mjs`                                      |
+| Pkg mgr / Node | Yarn 4 (Corepack) / Node 20                      | `package.json:5`, `.nvmrc`                               |
 
 ```mermaid
 flowchart LR
@@ -105,6 +105,7 @@ erDiagram
 ```
 
 Notes (`d1/schema.sql`):
+
 - `products.slug` is the natural key used everywhere (carts, stock FK, Stripe metadata, CDN paths).
 - `stock.quantity` has **no `CHECK` constraint** (`schema.sql:42`) — negative is a valid "preorder"
   state, and the webhook can drive it arbitrarily negative.
@@ -119,6 +120,7 @@ Notes (`d1/schema.sql`):
 parameterized `WHERE p.slug = ?` (`productUtils.js:24,28`).
 
 `transformProductData(product)` (`productUtils.js:32-45`):
+
 - `JSON.parse`s `material`/`sizing`/`size_chart`/`stock`,
 - converts `price` cents→euros (`/100`, line 41),
 - sets `img = {cdnBaseUrl}/{slug}/1.png` (line 42),
@@ -153,9 +155,9 @@ flowchart TD
 the binding off `useRequestEvent()`, and calling the D1 utilities directly. Client navigations use
 `$fetch`/`useFetch` to the real Worker routes, where the binding is present.
 
-> **Caveat (verified 2026-06):** in the *current* Nitro/Pages runtime the binding **is** actually
+> **Caveat (verified 2026-06):** in the _current_ Nitro/Pages runtime the binding **is** actually
 > available to an internal `useFetch('/api/...')` during SSR — `archive.vue` proves it (§11). So the
-> products-store bypass may be historical (it was added when internal `$fetch` *did* lose D1, commit
+> products-store bypass may be historical (it was added when internal `$fetch` _did_ lose D1, commit
 > `bfe332e`). It's harmless; treat the "loses D1" rule as version-dependent, not absolute. See §11.
 
 - `stores/products.js` — normalized `products` map keyed by slug; `fetchProducts()` and
@@ -202,6 +204,7 @@ sequenceDiagram
 ```
 
 Client side:
+
 - `components/Cart.vue:111-137` — `handleCheckout()` does
   `useFetch('/api/checkout', { method:'POST', body: JSON.stringify({ items: cart.items }) })`, shows
   `checkoutError` on failure, and on success sets `window.location.href = data.value.url` (`:126`).
@@ -215,6 +218,7 @@ Client side:
 ### 6.1 Checkout (`server/api/checkout.js`)
 
 For each `body.items[i]` (`:20-62`):
+
 1. `fetchProductData(D1, item.slug)` → 400 if unknown (`:21-24`).
 2. Stock check: `if (!stock || stock.quantity < item.quantity) → 400` (`:28-35`).
 3. **Price authority — two paths:**
@@ -252,6 +256,7 @@ What's correct: signature verified over the **raw** body with the async verifier
 verification failure → 400 (`:69`).
 
 What's fragile (all detailed in the security review):
+
 - **Silent no-op if `STRIPE_WEBHOOK_SECRET` is unset** — the whole handler is inside
   `if (endpointSecret)` with no `else` (`:15-71`); it returns `undefined`/200 and never decrements.
 - **Not idempotent** — no event/session dedup; a Stripe retry/duplicate decrements stock again
@@ -301,6 +306,7 @@ flowchart TD
 ## 8. Event registration / ticketing (third-party)
 
 Not first-party — no backend code is involved:
+
 - **Fastlane Friday** (`pages/fastlane-friday.vue:150-200`) — injects the Ticket Tailor widget
   script on click, with a 5s fallback link and a `<noscript>` link.
 - **nb-order-form** (`pages/nb-order-form.vue`) — Tally iframe + `Tally.loadEmbeds()` on mount.
@@ -313,6 +319,7 @@ Checkout (with `stripe_price_id`), collecting shirt size / race distance via the
 ## 9. R2 / CDN
 
 All media is served from `cdn.juoksut.run` (R2-backed, public-by-design — only marketing assets):
+
 - Product images: `/products/{slug}/{1..7}.png` (`server/utils/productUtils.js:1,42`). Image `1` is
   assumed; images 2–7 are discovered by HEAD-probing in `server/api/products/[slug]/images.js`.
 - Video: `/juoksut.mp4` (hero fallback `pages/index.vue:58`, footer `components/FooterVideo.vue:12`).
@@ -338,12 +345,12 @@ All media is served from `cdn.juoksut.run` (R2-backed, public-by-design — only
    limitation and fail server-side. **Verified otherwise** (2026-06, against `wrangler pages dev` with
    a seeded local D1, and confirmed by the maintainer on live `juoksut.run`): the SSR `useFetch`
    **succeeds** — the rendered `/archive` HTML embeds the full payload (12 `media_url` entries,
-   `nextOffset`/`hasMore`), no error state, deterministic across runs. So **the D1 binding *is*
+   `nextOffset`/`hasMore`), no error state, deterministic across runs. So **the D1 binding _is_
    available in the internal `useFetch` sub-request in the current Nitro/Pages runtime.** On the
    client, `useFetch` hydrates from that payload and `onMounted` builds the grid — end-to-end working.
    The only failure mode is operational (no Instagram token / empty cache → 503 → "Could not load
    archive", which `useFetch` won't auto-retry on the client).
-   *Side note:* git history (`bfe332e`) shows internal `$fetch` *did* lose D1 at some point, so the
+   _Side note:_ git history (`bfe332e`) shows internal `$fetch` _did_ lose D1 at some point, so the
    runtime behavior changed. That means the `stores/products.js` SSR bypass (§4) may now be
    historical/unnecessary — but it's harmless, and `$fetch`-from-a-store vs `useFetch`-from-a-component
    weren't proven equivalent here, so leave it unless you explicitly re-test (temporarily remove the

@@ -66,20 +66,20 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 
 ## Pages
 
-| Route | File | Notes |
-|---|---|---|
-| `/` | `index.vue` | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (the original CLAUDE.md said "landing layout" — that was wrong; only `nb-order-form` and `live-love-lightspeed` use the landing layout) |
-| `/join` | `join.vue` | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered** |
-| `/shop` | `shop/index.vue` | Product grid (sorted by id desc) + a Fastlane Friday card. SSR |
-| `/shop/[slug]` | `shop/[...slug].vue` | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]` |
-| `/fastlane-friday` | `fastlane-friday.vue` | Weekly speed session. **Ticket Tailor** widget injected on click (5s fallback link) |
-| `/success` | `success.vue` | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart |
-| `/cancel` | `cancel.vue` | Payment cancelled. Static. **Does not clear the cart** |
-| `/orders` | `orders.vue` | Order policy, preorder info, trip T&C. `robots: noindex` |
-| `/archive` | `archive.vue` | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags |
-| `/privacy-policy` | `privacy-policy.vue` | Privacy policy. `robots: noindex` |
-| `/nb-order-form` | `nb-order-form.vue` | **Tally** iframe embed, landing layout, `noindex`. CSR (`ssr: false`) |
-| `/live-love-lightspeed` | `live-love-lightspeed.vue` | Legacy event page (Google Forms hidden-iframe POST). Not actively used; contains dead/commented code |
+| Route                   | File                       | Notes                                                                                                                                                                                                                                                                                                                                                |
+| ----------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (the original CLAUDE.md said "landing layout" — that was wrong; only `nb-order-form` and `live-love-lightspeed` use the landing layout) |
+| `/join`                 | `join.vue`                 | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered**                                                                                                                                                                                                                                                                   |
+| `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc) + a Fastlane Friday card. SSR                                                                                                                                                                                                                                                                                       |
+| `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                                                                                                       |
+| `/fastlane-friday`      | `fastlane-friday.vue`      | Weekly speed session. **Ticket Tailor** widget injected on click (5s fallback link)                                                                                                                                                                                                                                                                  |
+| `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                                                                                                                                                                                 |
+| `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                                                                                                                                                                               |
+| `/orders`               | `orders.vue`               | Order policy, preorder info, trip T&C. `robots: noindex`                                                                                                                                                                                                                                                                                             |
+| `/archive`              | `archive.vue`              | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags                                                                                                                                                                                                                                                                          |
+| `/privacy-policy`       | `privacy-policy.vue`       | Privacy policy. `robots: noindex`                                                                                                                                                                                                                                                                                                                    |
+| `/nb-order-form`        | `nb-order-form.vue`        | **Tally** iframe embed, landing layout, `noindex`. CSR (`ssr: false`)                                                                                                                                                                                                                                                                                |
+| `/live-love-lightspeed` | `live-love-lightspeed.vue` | Legacy event page (Google Forms hidden-iframe POST). Not actively used; contains dead/commented code                                                                                                                                                                                                                                                 |
 
 ## Route rules (`nuxt.config.ts`)
 
@@ -98,7 +98,7 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 Defined in `d1/schema.sql` (gitignored). Four tables:
 
 - **products** — `id, slug (UNIQUE), title, material (JSON), sizing (JSON), size_chart (JSON),
-  description, price (INTEGER cents), stripe_product_id, stripe_price_id`. The two `stripe_*`
+description, price (INTEGER cents), stripe_product_id, stripe_price_id`. The two `stripe_*`
   columns are **optional**; most products leave them NULL.
 - **stock** — `id, product_slug (FK→products.slug ON DELETE CASCADE), size, quantity`. **Negative
   quantity = preorder/"coming soon"** (intentional; there is no `CHECK`/floor on quantity). There is
@@ -108,6 +108,7 @@ Defined in `d1/schema.sql` (gitignored). Four tables:
 - **instagram_cache** — single row (`id=1`): `videos (JSON blob), cached_at`. 30-min TTL.
 
 `server/utils/productUtils.js`:
+
 - `fetchProductData(D1, slug?)` — one query with `LEFT JOIN stock` + `JSON_GROUP_ARRAY` (sizes
   ordered XXS→XXL). **Gotcha:** a product with zero stock rows yields a phantom
   `[{"size":null,"quantity":null}]` entry rather than `[]`.
@@ -133,24 +134,24 @@ Fix (in `stores/products.js`): detect `import.meta.server`, grab `useRequestEven
 navigation uses `$fetch`/`useFetch` to the real API routes normally.
 
 > **Verified (2026-06):** `pages/archive.vue` calls `useFetch('/api/instagram')` at **setup** (during
-> SSR) and it **works** — the binding *is* available to the internal `useFetch` sub-request in the
+> SSR) and it **works** — the binding _is_ available to the internal `useFetch` sub-request in the
 > current runtime, so the SSR HTML embeds the video payload and the client reuses it. (Confirmed
 > against `wrangler pages dev` + the live site.) Implication: the store bypass above may be
-> historical (it was added when internal `$fetch` *did* lose D1, commit `bfe332e`) — treat the
+> historical (it was added when internal `$fetch` _did_ lose D1, commit `bfe332e`) — treat the
 > "loses D1" rule as version-dependent, not absolute. `pages/index.vue` still fetches in `onMounted`
 > for its own reasons (random hero pick, client-only). See `docs/architecture.md §11`.
 
 ## API routes (`server/api/`)
 
-| Route | File | Notes |
-|---|---|---|
-| `GET /api/products` | `products.js` | All products with stock |
-| `GET /api/products/[slug]` | `products/[slug].js` | Single product. **Bug:** its own 404 is caught and re-thrown as 500 |
-| `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1. Imports `node-fetch` (an *undeclared* transitive dep) |
-| `POST /api/checkout` | `checkout.js` | Validates stock + re-reads price from D1, creates Stripe session (30-min expiry) |
-| `GET /api/order-details` | `order-details.js` | Fetches Stripe session by `session_id` (returns `customer_details` PII) |
-| `POST /api/stripe-webhook` | `stripe-webhook.js` | Verifies signature, batch-updates D1 stock on `checkout.session.completed` |
-| `GET /api/instagram` | `instagram.js` | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss |
+| Route                             | File                        | Notes                                                                                          |
+| --------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------- |
+| `GET /api/products`               | `products.js`               | All products with stock                                                                        |
+| `GET /api/products/[slug]`        | `products/[slug].js`        | Single product. **Bug:** its own 404 is caught and re-thrown as 500                            |
+| `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1. Imports `node-fetch` (an _undeclared_ transitive dep) |
+| `POST /api/checkout`              | `checkout.js`               | Validates stock + re-reads price from D1, creates Stripe session (30-min expiry)               |
+| `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id` (returns `customer_details` PII)                        |
+| `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, batch-updates D1 stock on `checkout.session.completed`                     |
+| `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss      |
 
 ## Stripe flow
 
@@ -160,6 +161,7 @@ checkout → `window.location.href = session.url` → `/success?session_id=…` 
 `checkout.session.completed` → webhook decrements D1 stock.
 
 **Two pricing paths in `checkout.js`:**
+
 1. **Inline `price_data`** (most products, `stripe_price_id` NULL): server sets
    `product_data.metadata = { slug, size }` so the webhook can map the line item back to D1 stock.
 2. **Pre-created `stripe_price_id`** (only `all-stars-camp`, `runway-riga` — event/trip
@@ -169,6 +171,7 @@ checkout → `window.location.href = session.url` → `/success?session_id=…` 
    missing in Stripe, the webhook throws and the whole stock batch fails. (See security review.)
 
 **Webhook gotchas** (`stripe-webhook.js`):
+
 - Signature **is** verified (`constructEventAsync` over the raw body) — good.
 - The entire handler is wrapped in `if (endpointSecret)` with no `else`: if
   `STRIPE_WEBHOOK_SECRET` is unset, it silently returns 200 and **never decrements stock**.
@@ -255,7 +258,7 @@ Login product — no Facebook Page).
   transitive dep) — global `fetch` is available under `nodeCompat`.
 - Checkout does not validate `body.items`/`quantity` shape (negative quantity slips past the stock
   check; Stripe then rejects it).
-- ~~`archive.vue` SSR Instagram fetch~~ — verified working (D1 *is* available to SSR `useFetch`); see
+- ~~`archive.vue` SSR Instagram fetch~~ — verified working (D1 _is_ available to SSR `useFetch`); see
   the "D1 access during SSR" caveat above.
 - `cancel.vue` does not clear the cart.
 

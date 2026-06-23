@@ -20,19 +20,20 @@
 - Everything else is Low/Info, mostly defense-in-depth or hygiene, appropriately bounded by the
   no-auth/admin-data nature of the app.
 
-| Severity | Count | Items |
-|---|---|---|
-| Critical | 0 | — |
-| High | 2 | Webhook not idempotent; pre-created-price metadata gap |
-| Medium | 3 | Webhook silent no-op if secret unset; no rate limiting; checkout→webhook stock TOCTOU |
-| Low | ~13 | PII via session_id, no security headers, 404→500, input validation, info leakage, v-html/JSON-LD XSS, node-fetch phantom dep, stock index/floor/phantom-row, IG token handling, dependency advisories |
-| Info | ~5 | BASE_URL dead config, worker sourcemaps, verbose server logging, opaque-500 on missing D1, cancel.vue cart |
+| Severity | Count | Items                                                                                                                                                                                                 |
+| -------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Critical | 0     | —                                                                                                                                                                                                     |
+| High     | 2     | Webhook not idempotent; pre-created-price metadata gap                                                                                                                                                |
+| Medium   | 3     | Webhook silent no-op if secret unset; no rate limiting; checkout→webhook stock TOCTOU                                                                                                                 |
+| Low      | ~13   | PII via session_id, no security headers, 404→500, input validation, info leakage, v-html/JSON-LD XSS, node-fetch phantom dep, stock index/floor/phantom-row, IG token handling, dependency advisories |
+| Info     | ~5    | BASE_URL dead config, worker sourcemaps, verbose server logging, opaque-500 on missing D1, cancel.vue cart                                                                                            |
 
 ---
 
 ## High
 
 ### H1 — Stripe webhook is not idempotent; duplicate/retried events double-decrement stock
+
 **`server/api/stripe-webhook.js:34-57`** · Payments/Data integrity
 
 Stripe delivers `checkout.session.completed` **at least once** and retries on any non-2xx or
@@ -43,11 +44,12 @@ them via `D1.batch` (`:57`) with **no dedup** on `stripeEvent.id` or `session.id
 A redelivery therefore decrements the same order's stock again.
 
 **Impact (bounded):** inventory miscount only — no money lost, no order/customer data corrupted
-(Stripe holds those). But this is the most *likely-to-actually-happen* bug here, since retries are
+(Stripe holds those). But this is the most _likely-to-actually-happen_ bug here, since retries are
 routine. **Fix:** record processed event/session ids (a `processed_events(id PRIMARY KEY)` table with
 `INSERT OR IGNORE`, skip if already present) before applying the batch, inside the same logical step.
 
 ### H2 — Pre-created Stripe Price line items carry no slug/size metadata; the webhook can throw and fail the whole stock batch
+
 **`server/api/checkout.js:37-43`** (+ `server/api/stripe-webhook.js:35-49`) · Payments/Data integrity
 
 When `product.stripe_price_id` is set, checkout pushes only `{ price, quantity }` with **no
@@ -72,6 +74,7 @@ the `stripe_price_id` branch too, so the webhook never depends on dashboard stat
 ## Medium
 
 ### M1 — Webhook silently no-ops (returns 200) when `STRIPE_WEBHOOK_SECRET` is unset
+
 **`server/api/stripe-webhook.js:15-71`** · Payments/Config safety
 
 The entire handler body — signature verification (`:18`), event handling, and the stock `D1.batch`
@@ -83,6 +86,7 @@ fail-open for a critical path. **Fix:** if `endpointSecret` is falsy, `throw cre
 (fail loud) so misconfiguration surfaces immediately.
 
 ### M2 — No rate limiting on any endpoint (checkout can spam live Stripe session creation)
+
 **`server/api/checkout.js:6-90`** (also `order-details.js`, `instagram.js`, `products/[slug]/images.js`) · Abuse/DoS
 
 There is no auth, no `server/middleware/`, and no rate-limit/Turnstile anywhere (grep confirms; the
@@ -95,10 +99,11 @@ lightweight throttle on the abusable endpoints — Cloudflare WAF rate-limit rul
 `/api/checkout`, and cap `body.items` length.
 
 ### M3 — Checkout-time stock check and webhook decrement form a TOCTOU window (overselling)
+
 **`server/api/checkout.js:28-35`** + **`server/api/stripe-webhook.js:51-53`** · Business logic/Concurrency
 
-Stock is *read-checked* at session creation (`checkout.js:30`, a pure read via `fetchProductData`)
-but only *decremented* up to 30 minutes later by the webhook, with **no reservation/hold and no
+Stock is _read-checked_ at session creation (`checkout.js:30`, a pure read via `fetchProductData`)
+but only _decremented_ up to 30 minutes later by the webhook, with **no reservation/hold and no
 `AND quantity >= ?` guard** on the UPDATE. Two buyers can both pass the check for the last unit and
 both complete payment; D1 stock goes negative (and negative also means "preorder", so the oversell is
 invisible). Low exploitability (needs concurrent completions of the same last unit), realistic only
@@ -110,6 +115,7 @@ add a conditional decrement and reconcile against Stripe; at minimum, document t
 ## Low
 
 ### L1 — `order-details` returns full customer PII to any holder of a `session_id`
+
 **`server/api/order-details.js:4-31`** · PII/Access control
 
 The endpoint is unauthenticated; the only guard is a presence check on `session_id` (`:8-10`). It
@@ -121,6 +127,7 @@ credit the response is otherwise narrowed to `description/quantity/amount_total`
 (phone/full address), and add rate limiting to blunt validation/abuse.
 
 ### L2 — No security response headers (CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, HSTS)
+
 **`nuxt.config.ts:22-32`** (none set anywhere) · Headers/Defense-in-depth
 
 No headers are set in `routeRules`, a `_headers` file, or middleware. Real impact is low (no
@@ -131,15 +138,17 @@ free wins. **Fix:** add a Cloudflare Pages `_headers` file (or Nitro `routeRules
 `X-Frame-Options: SAMEORIGIN`, and a CSP (allow `cdn.juoksut.run`, Stripe, Ticket Tailor, Tally).
 
 ### L3 — Single-product API 404 is swallowed and re-thrown as 500
+
 **`server/api/products/[slug].js:11-17`** · Correctness/SEO
 
 `throw createError({ statusCode: 404 })` is inside the `try` and caught by the same block, which
 re-throws a generic 500 (`:17`). Crawlers/clients hitting a missing product via the API get 500
-instead of 404. (The *page* `shop/[...slug].vue:184-189` 404s correctly because the store bypasses
+instead of 404. (The _page_ `shop/[...slug].vue:184-189` 404s correctly because the store bypasses
 this route during SSR.) **Fix:** re-throw when `error.statusCode` is already set, or move the
 not-found check outside the `try`.
 
 ### L4 — Checkout does not validate request body shape, quantity sign/type
+
 **`server/api/checkout.js:11-62`** · Input validation
 
 `body.items` is iterated with no array/length check (`:20`); a malformed body throws a TypeError
@@ -150,6 +159,7 @@ safe, and Stripe rejects bad quantities downstream — so impact is forced error
 `slug`/`size` to strings, returning 400 on violation.
 
 ### L5 — API error responses propagate internal `error.message` to clients
+
 **`server/api/checkout.js:94-97`** (also `instagram.js:11,49,60`) · Information leakage
 
 `checkout.js` re-wraps any caught error into `createError({ message: error.message })`, surfacing
@@ -160,6 +170,7 @@ API key), but it's needless internal exposure. `order-details.js:32-35` does thi
 client messages; log details server-side only.
 
 ### L6 — `v-html` renders DB-derived `product.description` as raw HTML
+
 **`pages/shop/[...slug].vue:71`** · XSS (admin-controlled data)
 
 `v-html="product.description"` with no sanitization (`productUtils.js:43` only wraps paragraphs).
@@ -168,6 +179,7 @@ stored XSS the moment descriptions accept any untrusted input. **Fix:** restrict
 allowlist / sanitize, or treat as accepted-risk and document that descriptions are trusted input.
 
 ### L7 — JSON-LD injected via `innerHTML` without escaping `</script>`
+
 **`pages/shop/[...slug].vue:248-268`** · XSS (admin-controlled data)
 
 `JSON.stringify(product.title / rawDescription …)` is placed into a
@@ -176,6 +188,7 @@ so a product string containing `</script>` would break out of the tag. Admin-dat
 escape `<` as `<` in the serialized JSON before injecting.
 
 ### L8 — `node-fetch` imported in a production route but is an undeclared (phantom) dependency
+
 **`server/api/products/[slug]/images.js:2`** · Dependency/Reliability
 
 `import fetch from 'node-fetch'` (`:2`), but `node-fetch` is not in `package.json`; `yarn.lock`
@@ -185,7 +198,9 @@ available under `nodeCompat`. **Fix:** delete the import and use the global `fet
 `Promise.all` the HEAD probes). Not a security issue — reliability/supply-chain hygiene.
 
 ### L9 — Stock table: no index, no floor, phantom null row
+
 **`d1/schema.sql:38-44`** + **`server/utils/productUtils.js:8-25`** · Data integrity/Performance
+
 - **No index** on `stock.product_slug` (or `(product_slug,size)`); the hot `LEFT JOIN` and webhook
   UPDATE scan. Trivial data volume today, but a `UNIQUE(product_slug,size)` index would also prevent
   duplicate rows. **Fix:** `CREATE INDEX`/`CREATE UNIQUE INDEX`.
@@ -196,6 +211,7 @@ available under `nodeCompat`. **Fix:** delete the import and use the global `fet
   (`productUtils.js:8-25`; live: `fastlane-track-bag`). **Fix:** filter null sizes in the query/transform.
 
 ### L10 — Instagram token handling: plaintext in D1, passed in URL query, broad error logging
+
 **`server/api/instagram.js:8-36, 44-46, 31`** · Secret handling/Info leakage
 
 The token is stored plaintext (`schema.sql:51-56`), interpolated into outbound Graph API URLs
@@ -205,6 +221,7 @@ public feed, so exposure is minimal. **Fix:** log `err.message` only; pass the t
 the API allows; accept plaintext-at-rest as low risk for this scope.
 
 ### L11 — Instagram cache-miss thundering herd + unbounded pagination
+
 **`server/api/instagram.js:71-80, 38-55`** · Resilience
 
 On cache miss every concurrent request independently refreshes the token, paginates IG `/me/media`
@@ -213,7 +230,9 @@ Availability/cost concern only. **Fix:** add a refresh lock/coalesce or `event.w
 stale-while-revalidate; cap pages.
 
 ### L12 — Dependency advisories (mostly dev-time or feature-not-used)
+
 `package.json` · Supply chain. From `corepack yarn npm audit --all`:
+
 - **wrangler 4.5.1** — OS command injection in `wrangler pages deploy` (GHSA, "high"). **Dev/deploy
   tooling only**, never on the edge → negligible runtime risk. Bump to ≥ 4.59.1.
 - **nuxt 3.16.0** (≤3.21.5) — reflected XSS in `navigateTo()` external redirect, `__nuxt_island`
@@ -223,6 +242,7 @@ stale-while-revalidate; cap pages.
 - **@nuxt/devtools 2.2.1** — XSS (<2.6.4), dev-only. Bump.
 
 ### L13 — Image-probe route makes 6 sequential CDN HEADs with no slug validation/caching
+
 **`server/api/products/[slug]/images.js:14-25`** · Perf/Abuse
 
 `for (i=2..7) await fetch(url, {method:'HEAD'})` — serial round-trips against the project's own CDN,
