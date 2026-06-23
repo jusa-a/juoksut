@@ -11219,7 +11219,6 @@ __metadata:
     typescript: "npm:^5.8.2"
     vitest: "npm:^4.1.9"
     vue: "npm:^3.5.13"
-    vue-eslint-parser: "npm:^9.4.3"
     vue-router: "npm:^4.5.0"
     wrangler: "npm:~4.86.0"
   languageName: unknown
