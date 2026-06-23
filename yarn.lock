@@ -3916,13 +3916,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stripe/stripe-js@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "@stripe/stripe-js@npm:6.1.0"
-  checksum: 10c0/6e9f995945aebb615240d9571b646cec400ce46bc7440e01fc54f3d0d5329c3776b94639c6a77fc208e52df545c696c051cc7ac07b336fc1695871443803a570
-  languageName: node
-  linkType: hard
-
 "@stylistic/eslint-plugin@npm:^4.0.0, @stylistic/eslint-plugin@npm:^4.2.0":
   version: 4.2.0
   resolution: "@stylistic/eslint-plugin@npm:4.2.0"
@@ -10834,7 +10827,6 @@ __metadata:
     "@nuxt/image": "npm:^1.9.0"
     "@nuxtjs/tailwindcss": "npm:6.13.1"
     "@pinia/nuxt": "npm:0.10.1"
-    "@stripe/stripe-js": "npm:^6.1.0"
     eslint: "npm:^9.22.0"
     eslint-plugin-format: "npm:^1.0.1"
     nitro-cloudflare-dev: "npm:^0.2.2"
