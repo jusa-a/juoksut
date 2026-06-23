@@ -264,7 +264,9 @@ useHead({
           : 'https://schema.org/OutOfStock',
         'url': pageUrl,
       },
-    }),
+      // escape "<" so product text can't break out of the JSON-LD script element
+      // (audit L7 / roadmap R16)
+    }).replace(/</g, '\\u003c'),
   }],
 })
 </script>

@@ -37,7 +37,9 @@ export function transformProductData(product) {
     material: JSON.parse(product.material || '[]'),
     sizing: JSON.parse(product.sizing || '[]'),
     sizeChart: JSON.parse(product.size_chart || '[]'),
-    stock: JSON.parse(product.stock || '[]'), // Parse stock JSON string into an array
+    // Parse stock; drop the phantom { size: null } row a product with zero stock
+    // rows produces from the LEFT JOIN + JSON_GROUP_ARRAY. (audit R23)
+    stock: JSON.parse(product.stock || '[]').filter(s => s.size !== null),
     price: product.price / 100, // Convert price from cents to euros
     img: `${cdnBaseUrl}/${product.slug}/1.png`, // Fetch only the first image
     description: product.description.split('\\n').map(paragraph => `<p>${paragraph}</p>`).join(''), // Wrap paragraphs in <p> tags
