@@ -1,9 +1,9 @@
 name = "juoksut"
 pages_build_output_dir = "dist"
 compatibility_date = "2025-03-09"
-# Cloudflare account that owns this project (not a secret). Disambiguates
-# `wrangler ... --remote` when the logged-in user has multiple accounts.
-account_id = "a1706fe2265b785c44d410b6b2ac33c2"
+# NOTE: Pages does not allow `account_id` in wrangler.toml. For local
+# `wrangler ... --remote` with multiple accounts, set the CLOUDFLARE_ACCOUNT_ID
+# env var instead (account: a1706fe2265b785c44d410b6b2ac33c2).
 
 [[d1_databases]]
 binding = "D1"
