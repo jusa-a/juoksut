@@ -2,7 +2,7 @@
   "name": "nuxt-app",
   "type": "module",
   "private": true,
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.17.0",
   "scripts": {
     "build": "nuxt build --preset=cloudflare_pages",
     "dev": "nuxt dev",
@@ -18,26 +18,25 @@
     "dev:fresh": "yarn db:reset:local && nuxt dev"
   },
   "dependencies": {
-    "@nuxt/image": "^1.9.0",
+    "@nuxt/image": "^2",
     "pinia-plugin-persistedstate": "^4.2.0",
     "stripe": "^17.7.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.10.1",
-    "@nuxt/devtools": "^2.7.0",
-    "@nuxt/eslint": "1.1.0",
-    "@nuxtjs/tailwindcss": "6.13.1",
-    "@pinia/nuxt": "0.10.1",
-    "eslint": "^9.22.0",
-    "eslint-plugin-format": "^1.0.1",
+    "@antfu/eslint-config": "^9.0.0",
+    "@nuxt/eslint": "^1.16.0",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@pinia/nuxt": "^0.11.3",
+    "eslint": "^10.5.0",
+    "eslint-plugin-format": "^2.0.1",
     "nitro-cloudflare-dev": "^0.2.2",
-    "nuxt": "^3.21.8",
+    "nuxt": "^4",
     "pinia": "^3.0.1",
     "typescript": "^5.8.2",
     "vitest": "^4.1.9",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-    "wrangler": "~4.86.0"
+    "wrangler": "^4.103.0"
   },
   "resolutions": {
     "tailwindcss": "3.4.17"
