@@ -23,20 +23,20 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.10.1",
-    "@nuxt/devtools": "^2.2.1",
+    "@nuxt/devtools": "^2.7.0",
     "@nuxt/eslint": "1.1.0",
     "@nuxtjs/tailwindcss": "6.13.1",
     "@pinia/nuxt": "0.10.1",
     "eslint": "^9.22.0",
     "eslint-plugin-format": "^1.0.1",
     "nitro-cloudflare-dev": "^0.2.2",
-    "nuxt": "^3.16.0",
+    "nuxt": "^3.21.8",
     "pinia": "^3.0.1",
     "typescript": "^5.8.2",
     "vue": "^3.5.13",
     "vue-eslint-parser": "^9.4.3",
     "vue-router": "^4.5.0",
-    "wrangler": "^4.5.1"
+    "wrangler": "~4.86.0"
   },
   "resolutions": {
     "tailwindcss": "3.4.17"
