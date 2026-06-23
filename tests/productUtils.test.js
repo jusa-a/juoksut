@@ -31,6 +31,11 @@ describe('transformProductData', () => {
     expect(transformProductData(raw).img).toBe('https://cdn.juoksut.run/products/test-tee/1.png')
   })
 
+  it('drops the phantom { size: null } row for a product with no stock rows', () => {
+    const noStock = { ...raw, stock: '[{"size":null,"quantity":null}]' }
+    expect(transformProductData(noStock).stock).toEqual([])
+  })
+
   it('splits the description on literal \\n into <p> paragraphs', () => {
     expect(transformProductData(raw).description).toBe('<p>Line one</p><p>Line two</p>')
   })

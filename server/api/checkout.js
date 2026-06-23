@@ -98,7 +98,11 @@ export default defineEventHandler(async (event) => {
     return { url: session.url } // Return the URL to the client
   }
   catch (error) {
+    // Preserve intentional client errors (validation / stock / invalid-product 400s);
+    // never leak an unexpected internal error message to the client. (audit L5 / roadmap R13)
+    if (error.statusCode)
+      throw error
     console.error(error)
-    throw createError({ statusCode: error.statusCode || 500, message: error.message || 'Internal Server Error' })
+    throw createError({ statusCode: 500, message: 'Internal Server Error' })
   }
 })
