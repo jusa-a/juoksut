@@ -153,6 +153,11 @@ flowchart TD
 the binding off `useRequestEvent()`, and calling the D1 utilities directly. Client navigations use
 `$fetch`/`useFetch` to the real Worker routes, where the binding is present.
 
+> **Caveat (verified 2026-06):** in the *current* Nitro/Pages runtime the binding **is** actually
+> available to an internal `useFetch('/api/...')` during SSR — `archive.vue` proves it (§11). So the
+> products-store bypass may be historical (it was added when internal `$fetch` *did* lose D1, commit
+> `bfe332e`). It's harmless; treat the "loses D1" rule as version-dependent, not absolute. See §11.
+
 - `stores/products.js` — normalized `products` map keyed by slug; `fetchProducts()` and
   `fetchSingleProduct(slug)` both have the SSR-bypass branch. `fetchSingleProduct` additionally
   fetches `/api/products/{slug}/images` for images 2–7 and tolerates failure (`:90-100`).
@@ -290,7 +295,8 @@ flowchart TD
 - **Consumers:** `pages/index.vue:63-75` fetches in `onMounted` (client-only) and picks a random
   video for the hero, falling back to `cdn.juoksut.run/juoksut.mp4`. `pages/archive.vue:49` uses
   `useFetch` at **setup** (SSR) then builds a randomized editorial grid with `IntersectionObserver`
-  infinite scroll (`:109-137`). See Open Questions §11 for the archive SSR concern.
+  infinite scroll (`:109-137`). This SSR fetch **does** get the D1 binding and works (verified — see
+  §11): the payload is embedded in the SSR HTML and reused on the client.
 
 ## 8. Event registration / ticketing (third-party)
 
@@ -327,14 +333,21 @@ All media is served from `cdn.juoksut.run` (R2-backed, public-by-design — only
 
 ## 11. Open questions / couldn't fully trace
 
-1. **`archive.vue` SSR Instagram fetch.** `useFetch('/api/instagram')` runs at setup (during SSR),
-   but the documented D1-in-SSR-subrequest limitation (`stores/products.js:29-39`) implies
-   `/api/instagram` returns `500 'D1 not available'` server-side (`instagram.js:58-60`), and
-   `useFetch` does not refetch on the client by default. Either (a) the archive renders its error
-   state on first paint until something forces a client refetch, or (b) the binding *is* available
-   in this path in production. CLAUDE.md historically claimed the archive loads "client-side only via
-   onMounted," but the code uses `useFetch` at setup. **Needs runtime verification against a real D1
-   binding** (couldn't trace statically; would require `wrangler pages dev` + seeded D1).
+1. **`archive.vue` SSR Instagram fetch — RESOLVED (works; the old hypothesis was wrong).** Initial
+   reading suggested `useFetch('/api/instagram')` at setup would hit the documented D1-in-SSR
+   limitation and fail server-side. **Verified otherwise** (2026-06, against `wrangler pages dev` with
+   a seeded local D1, and confirmed by the maintainer on live `juoksut.run`): the SSR `useFetch`
+   **succeeds** — the rendered `/archive` HTML embeds the full payload (12 `media_url` entries,
+   `nextOffset`/`hasMore`), no error state, deterministic across runs. So **the D1 binding *is*
+   available in the internal `useFetch` sub-request in the current Nitro/Pages runtime.** On the
+   client, `useFetch` hydrates from that payload and `onMounted` builds the grid — end-to-end working.
+   The only failure mode is operational (no Instagram token / empty cache → 503 → "Could not load
+   archive", which `useFetch` won't auto-retry on the client).
+   *Side note:* git history (`bfe332e`) shows internal `$fetch` *did* lose D1 at some point, so the
+   runtime behavior changed. That means the `stores/products.js` SSR bypass (§4) may now be
+   historical/unnecessary — but it's harmless, and `$fetch`-from-a-store vs `useFetch`-from-a-component
+   weren't proven equivalent here, so leave it unless you explicitly re-test (temporarily remove the
+   bypass and confirm `/shop` still SSRs products).
 2. **Pre-created-price webhook metadata.** Whether `all-stars-camp`/`runway-riga` decrement stock
    correctly depends on `slug` metadata existing on the Stripe **Product/Price** objects, which is
    not visible in the repo. Confirm in the Stripe dashboard (see security review / roadmap).

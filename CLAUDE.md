@@ -132,11 +132,13 @@ Fix (in `stores/products.js`): detect `import.meta.server`, grab `useRequestEven
 `event.context.cloudflare.env.D1`, and call the DB utilities directly — skip `$fetch`. Client-side
 navigation uses `$fetch`/`useFetch` to the real API routes normally.
 
-> **Caveat:** `pages/archive.vue` calls `useFetch('/api/instagram')` at **setup** (runs during SSR),
-> which hits this exact D1-less sub-request and should fail server-side; `useFetch` does not refetch
-> on the client by default. `pages/index.vue` avoids this by fetching in `onMounted` (client-only).
-> The archive's SSR data path is suspect — verify against a real D1 binding (see
-> `docs/security-review.md` / `docs/roadmap.md`).
+> **Verified (2026-06):** `pages/archive.vue` calls `useFetch('/api/instagram')` at **setup** (during
+> SSR) and it **works** — the binding *is* available to the internal `useFetch` sub-request in the
+> current runtime, so the SSR HTML embeds the video payload and the client reuses it. (Confirmed
+> against `wrangler pages dev` + the live site.) Implication: the store bypass above may be
+> historical (it was added when internal `$fetch` *did* lose D1, commit `bfe332e`) — treat the
+> "loses D1" rule as version-dependent, not absolute. `pages/index.vue` still fetches in `onMounted`
+> for its own reasons (random hero pick, client-only). See `docs/architecture.md §11`.
 
 ## API routes (`server/api/`)
 
@@ -253,7 +255,8 @@ Login product — no Facebook Page).
   transitive dep) — global `fetch` is available under `nodeCompat`.
 - Checkout does not validate `body.items`/`quantity` shape (negative quantity slips past the stock
   check; Stripe then rejects it).
-- `archive.vue` SSR Instagram fetch (see "D1 access during SSR" caveat above).
+- ~~`archive.vue` SSR Instagram fetch~~ — verified working (D1 *is* available to SSR `useFetch`); see
+  the "D1 access during SSR" caveat above.
 - `cancel.vue` does not clear the cart.
 
 ## Branch workflow

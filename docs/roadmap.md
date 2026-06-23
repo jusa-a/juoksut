@@ -14,7 +14,7 @@
 | R2 | P1 | Bug/Security | Pre-created-price line-item metadata | `checkout.js:37-43` | S–M |
 | R3 | P1 | Bug/Security | Webhook fail-loud if secret unset | `stripe-webhook.js:15-71` | S |
 | R4 | P1 | Bug | API 404 swallowed as 500 | `products/[slug].js:11-17` | S |
-| R5 | P1 | Bug | `archive.vue` SSR Instagram fetch likely fails | `archive.vue:49` | M |
+| R5 | P3 | Tech-debt | ~~archive SSR fetch~~ RESOLVED (works); re-test products-store SSR bypass | `stores/products.js` | S |
 | R6 | P1 | Tech-debt | Remove `node-fetch` phantom import **[Stage 5]** | `images.js:2` | S |
 | R7 | P1 | Tech-debt | Version-control the D1 schema (un-gitignore) | `.gitignore`, `d1/` | S |
 | R8 | P2 | Security | Rate limiting + cap `body.items` | `checkout.js`, others | M |
@@ -71,13 +71,15 @@ Re-throw when `error.statusCode` is set (or move the not-found check outside the
 correct status for crawlers/clients. *(Left for you — trivial, but it's a behavior change on a public
 route; safe to apply anytime.)*
 
-### R5 · `archive.vue` SSR Instagram fetch *(Bug — open question)*
-**`pages/archive.vue:49`** · Effort M.
-`useFetch('/api/instagram')` at setup runs during SSR, where the D1 binding is absent in the internal
-sub-request → likely `500 'D1 not available'`, and `useFetch` won't refetch client-side by default.
-**Why:** the archive may render its error state on first paint. **Approach:** verify against a live
-D1 binding; if broken, fetch in `onMounted` (like `index.vue`) or `useFetch(..., { lazy:true, server:false })`.
-*(Left for you — needs runtime verification; see `docs/architecture.md §11`.)*
+### R5 · ~~`archive.vue` SSR fetch~~ → RESOLVED; re-test the products-store SSR bypass *(Tech-debt)*
+**`stores/products.js:29-39, 72-82`** · Effort S.
+**Originally flagged as a likely bug; verified working instead.** The archive's SSR
+`useFetch('/api/instagram')` **does** get the D1 binding and renders correctly — confirmed against
+`wrangler pages dev` (the SSR HTML embeds the full 12-video payload) and by the maintainer on live
+`juoksut.run` (see `docs/architecture.md §11`). No fix needed. **What remains (optional):** since
+internal fetch evidently retains D1 in the current runtime, the products-store SSR bypass (added when
+it *didn't*, commit `bfe332e`) may be dead complexity. To confirm, temporarily remove the bypass and
+check `/shop` still SSRs products; if so, simplify the store. Low value, harmless as-is.
 
 ### R6 · Remove `node-fetch` phantom import *(Tech-debt — L8)* **[Stage 5]**
 **`server/api/products/[slug]/images.js:2`** · Effort S.
@@ -194,5 +196,5 @@ the parts that move money/inventory.
 ## Suggested order
 
 R6 + R22 (Stage 5, done) → R4, R3, R2 (quick correctness on the money path) → R1 (idempotency) →
-R5 (verify archive) → R7 (commit schema) → then the P2 security/SEO batch (R8–R17) → R18 tests →
-P3 polish.
+R7 (commit schema) → then the P2 security/SEO batch (R8–R17) → R18 tests → P3 polish (incl. R5).
+*(R5 was verified working during the audit and demoted to P3 — no longer a blocker.)*
