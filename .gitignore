@@ -31,4 +31,6 @@ logs
 .wrangler
 # wrangler.toml is committed — keep local overrides in wrangler.local.toml
 
-d1
+# Commit the D1 schema (structure, no secrets) for recoverability; keep the
+# local test seed out of version control. (roadmap R7)
+d1/seed.sql

@@ -28,7 +28,9 @@ async function getToken(D1) {
       }
     }
     catch (err) {
-      console.error('Instagram token refresh failed:', err)
+      // Log only the message — never the full error, which can carry the
+      // token-bearing request URL. (audit L10 / roadmap R21)
+      console.error('Instagram token refresh failed:', err?.message || err)
     }
   }
 
