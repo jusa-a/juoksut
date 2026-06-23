@@ -152,7 +152,6 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
 import { useCartStore } from '~/stores/cart'
 import { useProductStore } from '~/stores/products'
 
@@ -160,9 +159,6 @@ const route = useRoute()
 const productStore = useProductStore()
 
 const isSizingTableVisible = ref(false)
-
-// Use useAsyncData to fetch the product during SSR and reuse it on the client
-// const { data } = await useAsyncData(`product-${route.params.slug[0]}`, async () => productStore.fetchSingleProduct(route.params.slug[0]))
 
 const slugParamRaw = route.params.slug
 const slugParam = Array.isArray(slugParamRaw) ? slugParamRaw[0] : slugParamRaw
