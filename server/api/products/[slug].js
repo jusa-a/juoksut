@@ -13,6 +13,10 @@ export default defineEventHandler(async (event) => {
     return transformProductData(queryResult)
   }
   catch (error) {
+    // Preserve intentional HTTP errors (e.g. the 404 above) instead of masking
+    // them as a generic 500. (audit L3 / roadmap R4)
+    if (error.statusCode)
+      throw error
     console.error(`Error fetching product with slug ${slug}:`, error)
     throw createError({ statusCode: 500, message: 'Failed to fetch product' })
   }
