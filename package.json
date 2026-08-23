@@ -30,7 +30,7 @@
     "eslint": "^10.5.0",
     "eslint-plugin-format": "^2.0.1",
     "nitro-cloudflare-dev": "^0.2.2",
-    "nuxt": "^4",
+    "nuxt": "^4.5.1",
     "pinia": "^3.0.1",
     "typescript": "^6",
     "vitest": "^4.1.9",
