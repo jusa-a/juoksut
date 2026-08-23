@@ -136,13 +136,15 @@
             @click="addToCart"
           >
             {{
-              !inStock || stock[selectedSize] === 0
-                ? 'Out of stock'
-                : cart.isLoading
-                  ? `Adding... €${product.price}`
-                  : (showSelectSizeMessage
-                    ? 'Please select a size'
-                    : `Add to cart €${product.price}`)
+              product.totalStock < 0
+                ? 'Coming soon'
+                : !inStock || stock[selectedSize] === 0
+                  ? 'Out of stock'
+                  : cart.isLoading
+                    ? `Adding... €${product.price}`
+                    : (showSelectSizeMessage
+                      ? 'Please select a size'
+                      : `Add to cart €${product.price}`)
             }}
           </button>
         </div>

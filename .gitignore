@@ -34,3 +34,6 @@ logs
 # Commit the D1 schema (structure, no secrets) for recoverability; keep the
 # local test seed out of version control. (roadmap R7)
 d1/seed.sql
+
+# Local-only event planning notes. Never commit unpublished event details.
+private/
