@@ -27,7 +27,7 @@
             <div class="pt-[1em] pb-[0.7em] uppercase">
               {{
                 product.totalStock < 0 ? 'Coming soon...'
-                : !salesOpen ? `Registration opens in ${saleCountdown}`
+                : !salesOpen ? saleCountdown
                   : !hasPrice ? 'Price coming soon...'
                     : (inStock ? `€${product.price}` : 'Out of stock')
               }}
@@ -141,7 +141,7 @@
               product.totalStock < 0
                 ? 'Coming soon'
                 : !salesOpen
-                  ? `Registration opens in ${saleCountdown}`
+                  ? saleCountdown
                   : !hasPrice
                     ? 'Price coming soon'
                     : !inStock || stock[selectedSize] === 0
@@ -245,12 +245,11 @@ function addToCart() {
 
 function formatCountdown(milliseconds) {
   const seconds = Math.max(0, Math.ceil(milliseconds / 1000))
-  const days = Math.floor(seconds / 86400)
-  const hours = Math.floor((seconds % 86400) / 3600)
+  const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
   const remainingSeconds = seconds % 60
 
-  return `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(remainingSeconds).padStart(2, '0')}s`
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
 }
 
 // SEO: Set per-product meta tags
