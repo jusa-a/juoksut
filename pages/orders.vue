@@ -1,7 +1,7 @@
 <template>
   <div>
     <section>
-      <h2>ORDER INFO & POLICY</h2>
+      <h2>TERMS &amp; CONDITIONS</h2>
       <div>
         <h3>1. Products</h3>
         <div>
@@ -86,10 +86,10 @@
 
 <script setup>
 useSeoMeta({
-  title: 'Orders & Policy',
-  description: 'Order info, preorder process, and policy for JUOKSUT Run Club.',
-  ogTitle: 'Orders & Policy · JUOKSUT',
-  ogDescription: 'Order info, preorder process, and policy for JUOKSUT Run Club.',
+  title: 'Terms & Conditions',
+  description: 'Terms and conditions for JUOKSUT orders, preorders, trips, and registrations.',
+  ogTitle: 'Terms & Conditions · JUOKSUT',
+  ogDescription: 'Terms and conditions for JUOKSUT orders, preorders, trips, and registrations.',
   robots: 'noindex',
 })
 useHead({
