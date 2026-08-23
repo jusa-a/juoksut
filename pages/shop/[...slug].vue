@@ -27,13 +27,15 @@
             <div class="pt-[1em] pb-[0.7em] uppercase">
               {{
                 product.totalStock < 0 ? 'Coming soon...'
-                : (inStock ? `€${product.price}` : 'Out of stock')
+                : !salesOpen ? `Registration opens in ${saleCountdown}`
+                  : !hasPrice ? 'Price coming soon...'
+                    : (inStock ? `€${product.price}` : 'Out of stock')
               }}
             </div>
 
             <!-- Size selector -->
             <div
-              v-if="inStock"
+              v-if="canPurchase"
               class="flex-1 flex flex-col mx-[1em] mb-[1em]"
             >
               <!-- Stock info -->
@@ -130,21 +132,25 @@
           <button
             class="w-full text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink"
             :class="{
-              'pointer-events-none': cart.isHoverDisabled || stock[selectedSize] === 0 || !inStock,
-              '!bg-white !text-pink': stock[selectedSize] === 0 || !inStock,
+              'pointer-events-none': cart.isHoverDisabled || stock[selectedSize] === 0 || !canPurchase,
+              '!bg-white !text-pink': stock[selectedSize] === 0 || !canPurchase,
             }"
             @click="addToCart"
           >
             {{
               product.totalStock < 0
                 ? 'Coming soon'
-                : !inStock || stock[selectedSize] === 0
-                  ? 'Out of stock'
-                  : cart.isLoading
-                    ? `Adding... €${product.price}`
-                    : (showSelectSizeMessage
-                      ? 'Please select a size'
-                      : `Add to cart €${product.price}`)
+                : !salesOpen
+                  ? `Registration opens in ${saleCountdown}`
+                  : !hasPrice
+                    ? 'Price coming soon'
+                    : !inStock || stock[selectedSize] === 0
+                      ? 'Out of stock'
+                      : cart.isLoading
+                        ? `Adding... €${product.price}`
+                        : (showSelectSizeMessage
+                          ? 'Please select a size'
+                          : `Add to cart €${product.price}`)
             }}
           </button>
         </div>
@@ -195,8 +201,24 @@ const stock = Object.fromEntries(
   product.stock.map(({ size, quantity }) => [size, quantity]),
 )
 
-// Determine if the product is in stock
-const inStock = product.totalStock > 0
+const now = ref(Date.now())
+let countdownTimer
+
+onMounted(() => {
+  countdownTimer = window.setInterval(() => {
+    now.value = Date.now()
+  }, 1000)
+})
+
+onBeforeUnmount(() => {
+  window.clearInterval(countdownTimer)
+})
+
+const salesOpen = computed(() => !product.salesStartAt || now.value >= product.salesStartAt * 1000)
+const hasPrice = product.price > 0
+const inStock = computed(() => product.totalStock > 0)
+const canPurchase = computed(() => salesOpen.value && hasPrice && inStock.value)
+const saleCountdown = computed(() => formatCountdown(product.salesStartAt * 1000 - now.value))
 const selectedSize = ref(null)
 const showSelectSizeMessage = ref(false)
 const cart = useCartStore()
@@ -206,6 +228,9 @@ function selectSize(size) {
 }
 
 function addToCart() {
+  if (!canPurchase.value)
+    return
+
   if (!selectedSize.value) {
     showSelectSizeMessage.value = true
 
@@ -216,6 +241,16 @@ function addToCart() {
   }
 
   cart.addItem({ ...product, size: selectedSize.value })
+}
+
+function formatCountdown(milliseconds) {
+  const seconds = Math.max(0, Math.ceil(milliseconds / 1000))
+  const days = Math.floor(seconds / 86400)
+  const hours = Math.floor((seconds % 86400) / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const remainingSeconds = seconds % 60
+
+  return `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(remainingSeconds).padStart(2, '0')}s`
 }
 
 // SEO: Set per-product meta tags
@@ -257,7 +292,7 @@ useHead({
         '@type': 'Offer',
         'price': product.price.toFixed(2),
         'priceCurrency': 'EUR',
-        'availability': product.totalStock > 0
+        'availability': canPurchase.value
           ? 'https://schema.org/InStock'
           : 'https://schema.org/OutOfStock',
         'url': pageUrl,

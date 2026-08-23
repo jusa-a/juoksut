@@ -98,7 +98,8 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 Defined in committed `d1/schema.sql`. Six tables:
 
 - **products** — `id, slug (UNIQUE), title, material (JSON), sizing (JSON), size_chart (JSON),
-description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout_fields, reserve_stock`.
+description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout_fields, reserve_stock,
+sales_start_at`.
   The two `stripe_*` columns are **optional**; most products leave them NULL. `checkout_fields` is
   a JSON array of required product-specific Stripe dropdowns, for example a camp shirt size.
 - **stock** — `id, product_slug (FK→products.slug ON DELETE CASCADE), size, quantity`. **Negative
@@ -191,6 +192,8 @@ order note remains for unstructured information.
 - Checkout sessions expire after **10 minutes** (`60 * 10`). A matching camp hold is finalised on
   `checkout.session.completed` or released on `checkout.session.expired`; the Stripe endpoint must
   subscribe to both events.
+- `sales_start_at` is an optional Unix timestamp. The product page displays a countdown and the
+  server rejects checkout before that instant, so sales can open automatically without a cron job.
 
 ## Event registration / ticketing (third-party — not first-party)
 

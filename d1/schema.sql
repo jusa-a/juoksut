@@ -30,13 +30,15 @@ CREATE TABLE products (
     stripe_product_id TEXT,        -- OPTIONAL: existing Stripe Product (prod_...)
     stripe_price_id TEXT,          -- OPTIONAL: existing Stripe Price (price_...)
     checkout_fields TEXT NOT NULL DEFAULT '[]', -- JSON registration fields shown by Stripe Checkout
-    reserve_stock INTEGER NOT NULL DEFAULT 0 -- Hold stock during Checkout for limited registrations
+    reserve_stock INTEGER NOT NULL DEFAULT 0, -- Hold stock during Checkout for limited registrations
+    sales_start_at INTEGER -- Unix timestamp; checkout is blocked until this moment
 );
 -- NOTE (migration for existing DB):
 -- ALTER TABLE products ADD COLUMN stripe_product_id TEXT;
 -- ALTER TABLE products ADD COLUMN stripe_price_id TEXT;
 -- ALTER TABLE products ADD COLUMN checkout_fields TEXT NOT NULL DEFAULT '[]';
 -- ALTER TABLE products ADD COLUMN reserve_stock INTEGER NOT NULL DEFAULT 0;
+-- ALTER TABLE products ADD COLUMN sales_start_at INTEGER;
 
 
 -- Create the stock table
@@ -112,4 +114,3 @@ CREATE TABLE IF NOT EXISTS processed_events (
     type TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
-

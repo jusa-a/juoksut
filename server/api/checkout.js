@@ -48,6 +48,23 @@ export default defineEventHandler(async (event) => {
 
       registrationItems.push({ product, quantity: item.quantity, size: item.size })
 
+      if (product.salesStartAt && Date.now() < product.salesStartAt * 1000) {
+        throw createError({
+          statusCode: 403,
+          message: `${product.title} registration has not opened yet`,
+        })
+      }
+
+      // A registration price must be configured before a limited camp can be
+      // purchased. This is a final server-side safeguard against accidentally
+      // opening a €0 checkout while the launch details are being prepared.
+      if (product.reserveStock && product.price <= 0) {
+        throw createError({
+          statusCode: 400,
+          message: `${product.title} price has not been set yet`,
+        })
+      }
+
       // Check stock for the requested size
       const stock = product.stock.find(stockItem => stockItem.size === item.size)
       if (!stock || stock.quantity < item.quantity) {

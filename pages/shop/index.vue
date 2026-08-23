@@ -44,8 +44,10 @@
               <div>{{ product.title }}</div>
               <div class="uppercase">
                 {{
-                  product.totalStock < 0 ? 'Coming soon...'
-                  : (product.totalStock > 0 ? `€${product.price}` : 'Out of stock')
+                  product.salesStartAt && Date.now() < product.salesStartAt * 1000 ? 'Registration opens soon...'
+                  : product.totalStock < 0 ? 'Coming soon...'
+                    : product.reserveStock && product.price <= 0 ? 'Price coming soon...'
+                      : (product.totalStock > 0 ? `€${product.price}` : 'Out of stock')
                 }}
               </div>
             </div>
