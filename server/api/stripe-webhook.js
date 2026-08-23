@@ -1,6 +1,7 @@
 import process from 'node:process'
 import { createError, defineEventHandler, readRawBody } from 'h3' // Use readRawBody instead of readBody
 import Stripe from 'stripe'
+import { assertStockUpdatesApplied, resolveStockUpdate } from '../utils/stockUpdates'
 
 // Test with your local listener
 // stripe listen --forward-to localhost:3000/api/stripe-webhook
@@ -57,36 +58,40 @@ export default defineEventHandler(async (event) => {
     })
 
     // Resolve (slug, size) for every line item, then decrement stock atomically.
-    const queries = await Promise.all(lineItems.data.map(async (item) => {
+    const updates = await Promise.all(lineItems.data.map(async (item) => {
       const productMeta = item.price.product?.metadata || {}
       const priceMeta = item.price.metadata || {}
 
-      let productSlug = productMeta.slug || priceMeta.slug
-
-      // Pre-created Stripe Price line items carry no metadata from checkout, so
-      // recover the slug from D1 by the price id (D1 is the source of truth).
-      // Removes the dependency on Stripe-dashboard metadata. (audit H2 / roadmap R2)
-      if (!productSlug && item.price?.id) {
-        const row = await D1.prepare(
+      // For a pre-created Stripe Price, D1 is the authoritative mapping. This
+      // deliberately takes precedence over dashboard metadata, which may be
+      // missing or stale. Inline price_data products fall back to their Stripe
+      // metadata because they have no reusable D1 price id.
+      let catalogProduct = null
+      if (item.price?.id) {
+        catalogProduct = await D1.prepare(
           `SELECT slug FROM products WHERE stripe_price_id = ?`,
         ).bind(item.price.id).first()
-        productSlug = row?.slug
       }
-
-      // Fallback: if no size provided (e.g. one-size product), assume 'ONE-SIZE'
-      const size = productMeta.size || priceMeta.size || 'ONE-SIZE'
+      const { productSlug, size } = resolveStockUpdate({
+        catalogProduct,
+        priceId: item.price?.id,
+        priceMetadata: priceMeta,
+        productMetadata: productMeta,
+      })
       const quantity = item.quantity
 
-      if (!productSlug)
-        throw new Error(`Could not resolve product slug for price ${item.price?.id}`)
-
-      return D1.prepare(
-        `UPDATE stock SET quantity = quantity - ? WHERE product_slug = ? AND size = ?`,
-      ).bind(quantity, productSlug, size)
+      return {
+        productSlug,
+        quantity,
+        size,
+      }
     }))
 
     // Execute all decrements in a single atomic batch
-    await D1.batch(queries)
+    const results = await D1.batch(updates.map(update => D1.prepare(
+      `UPDATE stock SET quantity = quantity - ? WHERE product_slug = ? AND size = ?`,
+    ).bind(update.quantity, update.productSlug, update.size)))
+    assertStockUpdatesApplied(updates, results)
   }
   catch (error) {
     // Processing failed — release the idempotency claim so Stripe's retry re-processes.

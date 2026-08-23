@@ -28,7 +28,9 @@ async function getToken(D1) {
       }
     }
     catch (err) {
-      console.error('Instagram token refresh failed:', err)
+      // Log only the message — never the full error, which can carry the
+      // token-bearing request URL. (audit L10 / roadmap R21)
+      console.error('Instagram token refresh failed:', err?.message || err)
     }
   }
 
@@ -54,6 +56,15 @@ async function fetchAllVideos(token) {
   return videos
 }
 
+async function refreshCache(D1) {
+  const token = await getToken(D1)
+  const videos = await fetchAllVideos(token)
+  await D1.prepare(
+    `INSERT OR REPLACE INTO instagram_cache (id, videos, cached_at) VALUES (1, ?, datetime('now'))`,
+  ).bind(JSON.stringify(videos)).run()
+  return videos
+}
+
 export default defineEventHandler(async (event) => {
   const D1 = event.context.cloudflare?.env?.D1
   if (!D1)
@@ -62,21 +73,38 @@ export default defineEventHandler(async (event) => {
   const { offset = '0' } = getQuery(event)
   const offsetNum = Number(offset)
 
-  // Check cache
   const cached = await D1.prepare('SELECT videos, cached_at FROM instagram_cache WHERE id = 1').first()
   const cacheAge = cached ? (Date.now() - new Date(cached.cached_at)) / 60000 : Infinity
 
   let allVideos
-
   if (cached && cacheAge < CACHE_TTL_MINUTES) {
+    // Fresh
     allVideos = JSON.parse(cached.videos)
   }
+  else if (cached) {
+    // Stale: serve the stale copy immediately and refresh in the background.
+    // Coalesce concurrent refreshes with a compare-and-swap on cached_at — only
+    // the request whose UPDATE still matches the value we read wins and refreshes;
+    // the rest just serve stale and skip. Avoids the thundering herd. (roadmap R20)
+    allVideos = JSON.parse(cached.videos)
+    const claim = await D1.prepare(
+      `UPDATE instagram_cache SET cached_at = datetime('now') WHERE id = 1 AND cached_at = ?`,
+    ).bind(cached.cached_at).run()
+
+    if (claim.meta?.changes === 1) {
+      const refresh = refreshCache(D1).catch(err =>
+        console.error('Instagram cache refresh failed:', err?.message || err),
+      )
+      const waitUntil = event.context.cloudflare?.context?.waitUntil?.bind(event.context.cloudflare.context)
+      if (waitUntil)
+        waitUntil(refresh) // background — don't block the response
+      else
+        await refresh // dev fallback (no execution context): block so it completes
+    }
+  }
   else {
-    const token = await getToken(D1)
-    allVideos = await fetchAllVideos(token)
-    await D1.prepare(
-      `INSERT OR REPLACE INTO instagram_cache (id, videos, cached_at) VALUES (1, ?, datetime('now'))`,
-    ).bind(JSON.stringify(allVideos)).run()
+    // Cold cache (first ever request): nothing to serve, so fetch synchronously.
+    allVideos = await refreshCache(D1)
   }
 
   const page = allVideos.slice(offsetNum, offsetNum + PAGE_SIZE)

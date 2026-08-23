@@ -16,13 +16,16 @@ export default defineEventHandler(async (event) => {
       expand: ['line_items.data.price.product'],
     })
 
-    // const customer = await stripe.customers.retrieve(session.customer_details)
-
     return {
       id: session.id,
       amount_total: session.amount_total,
       currency: session.currency,
-      customer_details: session.customer_details, // Ensure this is returned
+      payment_status: session.payment_status,
+      // Only the fields the success page renders — avoid echoing the full
+      // customer_details (phone, billing address, tax ids). (audit L1 / roadmap R10)
+      customer_details: session.customer_details
+        ? { name: session.customer_details.name, email: session.customer_details.email }
+        : null,
       line_items: session.line_items.data.map(item => ({
         description: item.description,
         quantity: item.quantity,

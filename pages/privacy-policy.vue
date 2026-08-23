@@ -10,7 +10,7 @@
       <h3>DATA COLLECTED AND PROCESSED BY THIRD-PARTY SERVICES</h3>
       <p>We do not collect or store personal data on our own servers. We use the following third-party services to operate the website and webshop:</p>
       <ul>
-        <li><strong>Stripe Checkout</strong> – Processes payments securely. We do not store payment details or order information on our servers. We access order details (such as customer email addresses) through the Stripe Dashboard for the purpose of arranging deliveries and pickups.</li>
+        <li><strong>Stripe Checkout</strong> – Processes payments securely. We do not store payment details or order information on our servers. We access order details, including the customer’s name, email address, and phone number, through the Stripe Dashboard for the purpose of arranging registrations, deliveries, and pickups.</li>
         <li><strong>Cloudflare</strong> – Provides website hosting, security, and performance optimization. Cloudflare may collect basic technical data such as IP addresses for security purposes.</li>
       </ul>
       <p>These services have their own privacy policies that you may review.</p>

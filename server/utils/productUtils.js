@@ -3,7 +3,7 @@ export const cdnBaseUrl = 'https://cdn.juoksut.run/products'
 export async function fetchProductData(D1, slug = null) {
   const query = `
     SELECT p.id, p.slug, p.title, p.material, p.sizing, p.size_chart, p.description, p.price,
-           p.stripe_product_id, p.stripe_price_id,
+           p.stripe_product_id, p.stripe_price_id, p.checkout_fields,
            COALESCE(SUM(s.quantity), 0) AS totalStock,
            JSON_GROUP_ARRAY(
              JSON_OBJECT('size', s.size, 'quantity', s.quantity)
@@ -34,6 +34,7 @@ export function transformProductData(product) {
     ...product,
     stripe_product_id: product.stripe_product_id || null,
     stripe_price_id: product.stripe_price_id || null,
+    checkoutFields: JSON.parse(product.checkout_fields || '[]'),
     material: JSON.parse(product.material || '[]'),
     sizing: JSON.parse(product.sizing || '[]'),
     sizeChart: JSON.parse(product.size_chart || '[]'),

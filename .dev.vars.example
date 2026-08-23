@@ -1,0 +1,6 @@
+# Test-mode only. Copy to .dev.vars and add real values locally; never commit .dev.vars.
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Store the separate restricted Stripe management key in macOS Keychain, not in
+# this file. See scripts/stripe-management.sh and README.md.
