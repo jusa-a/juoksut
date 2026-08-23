@@ -1,7 +1,9 @@
 # CLAUDE.md
 
-Project-specific context for Claude Code. See `README.md` for end-user setup and
-`docs/` for the deep audit (`architecture.md`, `security-review.md`, `roadmap.md`).
+Project-specific context for coding agents working in this repository. See
+`README.md` for public setup and `docs/` for the architecture, current security
+posture, and backlog. Keep this file despite its name: it is deliberately useful
+to Claude Code, Codex, and any other agent.
 
 ## What this project is
 
@@ -248,8 +250,12 @@ Login product — no Facebook Page).
 - `wrangler.toml` is committed — **D1 binding config only** (db name/id), no secrets.
 - `.dev.vars` and `.env*` are gitignored; no secret value is in git history or the client bundle
   (verified). `runtimeConfig.public` exposes only non-secret values (siteUrl, siteName, siteImage).
-- **No security response headers** (CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy,
-  HSTS) are set anywhere, and there is **no rate limiting** on any endpoint.
+- Security headers are configured for all routes in `nuxt.config.ts`:
+  `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, and a
+  **report-only** CSP. The CSP must be observed before changing it to enforcing.
+- Cloudflare has an operational WAF rate-limit rule for the checkout endpoint.
+  It is dashboard configuration rather than repository code; keep it in place
+  when changing the Cloudflare account/project.
 
 ## Conventions
 
@@ -267,11 +273,31 @@ Login product — no Facebook Page).
 
 ## Known issues / gotchas (see `docs/` for the full audit)
 
-- Stock is checked when a Checkout Session is created but not reserved. Concurrent checkout sessions
-  can therefore oversell a low-stock item before the successful-payment webhook decrements it.
+- Ordinary merchandise is checked when a Checkout Session is created and decremented after payment,
+  so a concurrent last-unit purchase can still oversell. Products with `reserve_stock = 1` (such as
+  capacity-limited camps) are atomically held for the ten-minute Stripe session and released on expiry.
 - Product-specific checkout fields are limited by Stripe to three per session, including the optional
   order note. The current checkout reserves one slot for the note.
 - `cancel.vue` does not clear the cart.
+
+## Agent access to Stripe and Cloudflare
+
+This public repository documents **how** to use restricted agent access, never
+the credentials themselves. The public-safe setup is in `README.md`.
+
+- Cloudflare remote D1, Pages and R2 commands go through
+  `bash scripts/wrangler-remote.sh …`. Its API token is held in macOS Keychain
+  under `juoksut-cloudflare-api-token` and must be restricted to the JUOKSUT
+  account and only the required resources/permissions.
+- Stripe catalogue inspection goes through
+  `bash scripts/stripe-management.sh …`. Normal development uses the
+  Keychain service `juoksut-stripe-management-test`; an explicitly authorised
+  live action may use `juoksut-stripe-management-live` if a restricted live key
+  has been added locally.
+- Never paste, print, commit, log, or put an API key, webhook signing secret,
+  Keychain output, customer export, or account dump in an issue, prompt, or
+  repository file. Do not perform production changes unless the user has
+  explicitly approved the exact operation.
 
 ## Branch workflow
 
