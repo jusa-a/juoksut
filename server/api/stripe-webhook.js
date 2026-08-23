@@ -1,6 +1,7 @@
 import process from 'node:process'
 import { createError, defineEventHandler, readRawBody } from 'h3' // Use readRawBody instead of readBody
 import Stripe from 'stripe'
+import { completeReservationGroup, releaseReservationGroup } from '../utils/checkoutReservations'
 import { assertStockUpdatesApplied, resolveStockUpdate } from '../utils/stockUpdates'
 
 // Test with your local listener
@@ -32,8 +33,9 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: `Webhook error: ${error.message}` })
   }
 
-  // Only checkout completions mutate stock; ack everything else.
-  if (stripeEvent.type !== 'checkout.session.completed')
+  // Completions finalise a held camp place; expiry releases it. Ordinary
+  // merchandise only mutates stock after a completed payment.
+  if (!['checkout.session.completed', 'checkout.session.expired'].includes(stripeEvent.type))
     return { received: true }
 
   const session = stripeEvent.data.object
@@ -52,6 +54,17 @@ export default defineEventHandler(async (event) => {
     return { received: true, duplicate: true }
 
   try {
+    if (stripeEvent.type === 'checkout.session.expired') {
+      await releaseReservationGroup(D1, session.client_reference_id)
+      return { received: true }
+    }
+
+    // A reserved camp place was already removed from stock at checkout
+    // creation. Mark it paid instead of decrementing it a second time.
+    const reservationCompleted = await completeReservationGroup(D1, session.client_reference_id)
+    if (reservationCompleted)
+      return { received: true }
+
     // Fetch line items for the session with expanded product details
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
       expand: ['data.price.product'],

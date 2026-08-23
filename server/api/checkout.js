@@ -2,6 +2,14 @@ import process from 'node:process'
 import { createError, defineEventHandler, getRequestURL, readBody } from 'h3'
 import Stripe from 'stripe'
 import { buildRegistrationCustomFields } from '../utils/checkoutFields'
+import {
+  CHECKOUT_RESERVATION_SECONDS,
+  releaseExpiredReservations,
+  releaseReservationGroup,
+  reservationItems,
+  ReservationUnavailableError,
+  reserveItems,
+} from '../utils/checkoutReservations'
 import { fetchProductData, transformProductData } from '../utils/productUtils'
 import { validateCheckoutItems } from '../utils/validateCheckout'
 
@@ -25,6 +33,11 @@ export default defineEventHandler(async (event) => {
     const validatedItems = []
     const registrationItems = []
 
+    // A missed expiry webhook must not keep a camp place unavailable forever.
+    // This does nothing for regular merchandise, which never creates rows in
+    // checkout_reservations.
+    await releaseExpiredReservations(D1)
+
     for (const item of body.items) {
       const productData = await fetchProductData(D1, item.slug)
       if (!productData) {
@@ -33,7 +46,7 @@ export default defineEventHandler(async (event) => {
 
       const product = transformProductData(productData)
 
-      registrationItems.push({ product, quantity: item.quantity })
+      registrationItems.push({ product, quantity: item.quantity, size: item.size })
 
       // Check stock for the requested size
       const stock = product.stock.find(stockItem => stockItem.size === item.size)
@@ -71,6 +84,14 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    const reservedItems = reservationItems(registrationItems)
+    if (reservedItems.some(item => item.quantity !== 1)) {
+      throw createError({
+        statusCode: 400,
+        message: 'Limited registrations must be purchased one at a time',
+      })
+    }
+
     let registrationCustomFields
     try {
       // One optional note remains available for general order information.
@@ -82,38 +103,71 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: error.message })
     }
 
-    // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      line_items: validatedItems,
-      mode: 'payment',
-      // Keep customer names, emails, and collected phone numbers together in
-      // Stripe's Customers view instead of showing completed payments only as
-      // anonymous guest checkouts.
-      customer_creation: 'always',
-      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/cancel?canceled=true`,
-      name_collection: {
-        individual: {
+    // Reserve camp capacity before giving the browser a payment URL. Stripe's
+    // client_reference_id lets the webhook find this hold without storing any
+    // buyer information in D1.
+    const reservationGroupId = reservedItems.length > 0 ? crypto.randomUUID() : null
+    const expiresAt = Math.floor(Date.now() / 1000) + CHECKOUT_RESERVATION_SECONDS
+    if (reservationGroupId) {
+      try {
+        await reserveItems(D1, reservationGroupId, reservedItems, expiresAt)
+      }
+      catch (error) {
+        if (error instanceof ReservationUnavailableError) {
+          throw createError({ statusCode: 400, message: error.message })
+        }
+        throw error
+      }
+    }
+
+    let session
+    try {
+      // Create Stripe Checkout Session
+      session = await stripe.checkout.sessions.create({
+        line_items: validatedItems,
+        mode: 'payment',
+        // Keep customer names, emails, and collected phone numbers together in
+        // Stripe's Customers view instead of showing completed payments only as
+        // anonymous guest checkouts.
+        customer_creation: 'always',
+        success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/cancel?canceled=true`,
+        name_collection: {
+          individual: {
+            enabled: true,
+          },
+        },
+        phone_number_collection: {
           enabled: true,
         },
-      },
-      phone_number_collection: {
-        enabled: true,
-      },
-      consent_collection: {
-        terms_of_service: 'required',
-      },
-      custom_fields: [
-        ...registrationCustomFields,
-        {
-          key: 'order_note',
-          label: { type: 'custom', custom: 'Order note' },
-          type: 'text',
-          optional: true,
+        consent_collection: {
+          terms_of_service: 'required',
         },
-      ],
-      expires_at: Math.floor(Date.now() / 1000) + (60 * 10), // Expires after 10 min
-    })
+        custom_fields: [
+          ...registrationCustomFields,
+          {
+            key: 'order_note',
+            label: { type: 'custom', custom: 'Order note' },
+            type: 'text',
+            optional: true,
+          },
+        ],
+        expires_at: expiresAt,
+        ...(reservationGroupId ? { client_reference_id: reservationGroupId } : {}),
+      })
+    }
+    catch (error) {
+      // Do not strand a camp place when Stripe cannot create a session.
+      if (reservationGroupId) {
+        try {
+          await releaseReservationGroup(D1, reservationGroupId)
+        }
+        catch (releaseError) {
+          console.error('Failed to release checkout reservation:', releaseError)
+        }
+      }
+      throw error
+    }
 
     return { url: session.url } // Return the URL to the client
   }

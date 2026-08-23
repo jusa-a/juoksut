@@ -13,6 +13,7 @@
 
 
 -- Dev reset: drop existing tables (safe locally)
+DROP TABLE IF EXISTS checkout_reservations;
 DROP TABLE IF EXISTS stock;
 DROP TABLE IF EXISTS products;
 
@@ -28,12 +29,14 @@ CREATE TABLE products (
     price INTEGER NOT NULL DEFAULT 0,
     stripe_product_id TEXT,        -- OPTIONAL: existing Stripe Product (prod_...)
     stripe_price_id TEXT,          -- OPTIONAL: existing Stripe Price (price_...)
-    checkout_fields TEXT NOT NULL DEFAULT '[]' -- JSON registration fields shown by Stripe Checkout
+    checkout_fields TEXT NOT NULL DEFAULT '[]', -- JSON registration fields shown by Stripe Checkout
+    reserve_stock INTEGER NOT NULL DEFAULT 0 -- Hold stock during Checkout for limited registrations
 );
 -- NOTE (migration for existing DB):
 -- ALTER TABLE products ADD COLUMN stripe_product_id TEXT;
 -- ALTER TABLE products ADD COLUMN stripe_price_id TEXT;
 -- ALTER TABLE products ADD COLUMN checkout_fields TEXT NOT NULL DEFAULT '[]';
+-- ALTER TABLE products ADD COLUMN reserve_stock INTEGER NOT NULL DEFAULT 0;
 
 
 -- Create the stock table
@@ -54,6 +57,31 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_stock_slug_size ON stock(product_slug, siz
 CREATE UNIQUE INDEX IF NOT EXISTS idx_products_stripe_price_id
 ON products(stripe_price_id)
 WHERE stripe_price_id IS NOT NULL;
+
+
+-- CHECKOUT RESERVATIONS
+
+-- Limited registrations can reserve capacity while the buyer is at Stripe
+-- Checkout. Regular merchandise continues to decrement only after payment.
+CREATE TABLE IF NOT EXISTS checkout_reservations (
+    id TEXT PRIMARY KEY,
+    group_id TEXT NOT NULL,
+    product_slug TEXT NOT NULL,
+    size TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active', -- active, paid, released
+    expires_at INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    completed_at INTEGER,
+    released_at INTEGER,
+    FOREIGN KEY (product_slug) REFERENCES products(slug) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_checkout_reservations_active_expiry
+ON checkout_reservations(status, expires_at);
+
+CREATE INDEX IF NOT EXISTS idx_checkout_reservations_group
+ON checkout_reservations(group_id, status);
 
 
 
@@ -84,5 +112,4 @@ CREATE TABLE IF NOT EXISTS processed_events (
     type TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
-
 

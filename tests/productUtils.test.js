@@ -14,6 +14,7 @@ describe('transformProductData', () => {
     stock: '[{"size":"M","quantity":5}]',
     stripe_product_id: null,
     stripe_price_id: null,
+    reserve_stock: 1,
   }
 
   it('converts price from cents to euros', () => {
@@ -25,6 +26,7 @@ describe('transformProductData', () => {
     expect(p.material).toEqual(['100% cotton'])
     expect(p.sizing).toEqual(['fits true'])
     expect(p.stock).toEqual([{ size: 'M', quantity: 5 }])
+    expect(p.reserveStock).toBe(true)
   })
 
   it('builds the primary CDN image url from the slug', () => {

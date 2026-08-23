@@ -20,7 +20,7 @@ libraries/frameworks without asking.
 
 ## Commands & local dev
 
-Node **20** (`.nvmrc`). Package manager is **Yarn 4** via Corepack. In a non-interactive shell
+Node **22** (`.nvmrc`). Package manager is **Yarn 4** via Corepack. In a non-interactive shell
 `yarn` may not be on `PATH` — use `corepack yarn …`. `node_modules` is **not** checked in and may be
 absent; run an install first.
 
@@ -95,10 +95,10 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 
 ## D1 database (`juoksut-products`, binding `D1`)
 
-Defined in committed `d1/schema.sql`. Five tables:
+Defined in committed `d1/schema.sql`. Six tables:
 
 - **products** — `id, slug (UNIQUE), title, material (JSON), sizing (JSON), size_chart (JSON),
-description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout_fields`.
+description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout_fields, reserve_stock`.
   The two `stripe_*` columns are **optional**; most products leave them NULL. `checkout_fields` is
   a JSON array of required product-specific Stripe dropdowns, for example a camp shirt size.
 - **stock** — `id, product_slug (FK→products.slug ON DELETE CASCADE), size, quantity`. **Negative
@@ -109,6 +109,8 @@ description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout
 - **instagram_cache** — single row (`id=1`): `videos (JSON blob), cached_at`. 30-min TTL.
 - **processed_events** — Stripe event ids already applied by the webhook, preventing duplicate stock
   decrements when Stripe retries delivery.
+- **checkout_reservations** — short-lived capacity holds for products with `reserve_stock = 1`;
+  contains product/stock references and Stripe's random checkout reference, never buyer PII.
 
 `server/utils/productUtils.js`:
 
@@ -124,7 +126,8 @@ description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout
 > full schema file against `--remote`**. Apply specific `CREATE TABLE IF NOT EXISTS …` /
 > `ALTER TABLE …` statements via `wrangler d1 execute --remote juoksut-products --command "…"`.
 > There is **no admin/stock-write HTTP endpoint** — product/stock edits are done out-of-band with
-> `wrangler d1 execute`. The signed Stripe webhook is the only programmatic stock mutator.
+> `wrangler d1 execute`. The camp reservation checkout flow and signed Stripe webhook are the only
+> programmatic stock mutators.
 
 ## Critical: D1 access during SSR
 
@@ -147,17 +150,18 @@ navigation uses `$fetch`/`useFetch` to the real API routes normally.
 | `GET /api/products`               | `products.js`               | All products with stock                                                                        |
 | `GET /api/products/[slug]`        | `products/[slug].js`        | Single product; preserves a genuine 404                                                        |
 | `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1; uses the runtime `fetch`                             |
-| `POST /api/checkout`              | `checkout.js`               | Validates stock + re-reads price from D1, creates Stripe session (30-min expiry)               |
+| `POST /api/checkout`              | `checkout.js`               | Validates stock + re-reads price from D1, reserves configured registrations, creates a 10-min Stripe session |
 | `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id`; returns only name and email for the success page       |
-| `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, batch-updates D1 stock on `checkout.session.completed`                     |
+| `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, finalises/releases reservations, updates merch stock on completion         |
 | `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss      |
 
 ## Stripe flow
 
 Cart (Pinia → localStorage) → `Cart.vue` `useFetch('POST /api/checkout', { items })` →
 server validates stock + **re-reads price from D1** (never trusts client price) → Stripe hosted
-checkout → `window.location.href = session.url` → `/success?session_id=…` → Stripe fires
-`checkout.session.completed` → webhook decrements D1 stock.
+checkout → configured registrations atomically hold a place → `window.location.href = session.url`
+→ `/success?session_id=…` → Stripe fires `checkout.session.completed` → webhook decrements normal
+merch stock or marks the pre-held registration paid.
 
 **Two pricing paths in `checkout.js`:**
 
@@ -182,9 +186,11 @@ order note remains for unstructured information.
   idempotent. On a failed update it releases the claim so Stripe can retry.
 - A stock update that affects zero rows fails the webhook instead of silently accepting a missing
   product/size row.
-- Decrement still has no floor (`quantity = quantity - ?`), and checkout-time stock checks are not
-  reservations, so a popular item can still oversell under concurrent checkouts.
-- Checkout sessions expire after **10 minutes** (`60 * 10`).
+- Decrement still has no floor (`quantity = quantity - ?`) for ordinary merchandise, so it can
+  oversell under concurrent checkouts. Products with `reserve_stock = 1` are held atomically instead.
+- Checkout sessions expire after **10 minutes** (`60 * 10`). A matching camp hold is finalised on
+  `checkout.session.completed` or released on `checkout.session.expired`; the Stripe endpoint must
+  subscribe to both events.
 
 ## Event registration / ticketing (third-party — not first-party)
 
