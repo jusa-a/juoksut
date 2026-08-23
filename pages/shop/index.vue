@@ -2,6 +2,7 @@
   <div class="flex-1 flex flex-col">
     <section class="flex flex-row flex-wrap justify-around items-center w-full p-[1em] gap-[1em] m-0 mb-auto">
       <NuxtLink
+        v-if="showFastlaneFriday"
         to="/fastlane-friday"
         class="min-w-[290px] max-w-[26em]"
       >
@@ -63,6 +64,9 @@
 import { useProductStore } from '~/stores/products'
 
 const productStore = useProductStore()
+// Keep the page ready for the autumn relaunch without showing an inactive
+// weekly signup ahead of the current shop catalogue.
+const showFastlaneFriday = false
 
 await callOnce(async () => {
   await productStore.fetchProducts()
