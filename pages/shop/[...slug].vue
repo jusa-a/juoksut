@@ -71,7 +71,7 @@
             <div class="m-0" v-html="product.description"></div>
 
             <div>
-              <NuxtLink to="/orders" class="text-[0.8em] opacity-70 hover:underline">Terms &amp; Conditions</NuxtLink>
+              <NuxtLink to="/terms-and-conditions" class="text-[0.8em] opacity-70 hover:underline">Terms &amp; Conditions</NuxtLink>
             </div>
 
             <!-- Material -->

@@ -19,8 +19,8 @@
       </NuxtLink>
 
       <div class="flex flex-col items-end self-stretch justify-between flex-1">
-        <NuxtLink to="/orders">TERMS &amp; CONDITIONS</NuxtLink>
         <NuxtLink to="/archive">ARCHIVE</NuxtLink>
+        <NuxtLink to="/terms-and-conditions">TERMS &amp; CONDITIONS</NuxtLink>
       </div>
     </div>
 

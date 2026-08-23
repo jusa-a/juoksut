@@ -55,6 +55,8 @@ export default defineNuxtConfig({
     '/shop/**': { prerender: false },
     // Archive: SSR for meta tags, videos load client-side (D1 not available in SSR sub-requests)
     '/archive': { prerender: false },
+    // Keep old shared links working after the terms page moved to its own URL.
+    '/orders': { redirect: { to: '/terms-and-conditions', statusCode: 301 } },
     '/success': { ssr: false },
     '/nb-order-form': { ssr: false },
   },

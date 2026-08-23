@@ -93,7 +93,7 @@ useSeoMeta({
   robots: 'noindex',
 })
 useHead({
-  link: [{ rel: 'canonical', href: 'https://juoksut.run/orders' }],
+  link: [{ rel: 'canonical', href: 'https://juoksut.run/terms-and-conditions' }],
 })
 </script>
 
