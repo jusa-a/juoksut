@@ -53,7 +53,48 @@ STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_... # only required if you verify webhooks locally
 ```
 
+Use a restricted Stripe API key for `STRIPE_MANAGEMENT_KEY`, not the checkout
+server key. Give it only the permissions required for inspection (normally
+read-only Products, Prices, Checkout Sessions, Events, and Customers). Store
+the management key in macOS Keychain, not `.dev.vars`:
+
+```bash
+security add-generic-password -U -a "$(id -un)" -s juoksut-stripe-management-test -w
+```
+
+The checked-in wrapper exposes it only to the command it runs:
+
+```bash
+bash scripts/stripe-management.sh node scripts/stripe-inspect.mjs catalog
+```
+
+Keep a test-mode key for normal development. A live restricted key should use
+the service name `juoksut-stripe-management-live` and only be used for an
+explicitly approved production task.
+
 You can also set variables in Cloudflare Pages (Project settings → Variables) and/or in `wrangler.toml` for local/preview builds.
+
+### Cloudflare CLI access (optional)
+
+Remote D1, Pages, and R2 operations use a Cloudflare API token. Create a
+restricted token in the Cloudflare dashboard and store it in the macOS Keychain
+instead of a repository file or shell history:
+
+```bash
+security add-generic-password -U -a "$(id -un)" -s juoksut-cloudflare-api-token -w
+```
+
+Enter the token when prompted. Use the wrapper for remote commands; it supplies
+the token and the Juoksut account id only to Wrangler:
+
+```bash
+bash scripts/wrangler-remote.sh d1 execute juoksut-products --remote --command "SELECT 1"
+```
+
+Grant only the permissions needed: **D1 Edit** for migrations and stock/product
+changes, **Pages/Workers Edit** for deployments, and **R2 Object Read/Write**
+only when managing images. A read-only token is preferable for inspection.
+Never run `d1/schema.sql` against `--remote`; use a specific migration instead.
 
 3) Database (Cloudflare D1)
 

@@ -5,7 +5,7 @@ Project-specific context for Claude Code. See `README.md` for end-user setup and
 
 ## What this project is
 
-JUOKSUT Run Club website + shop (Helsinki). A Nuxt 3 (Vue 3 + Nitro) SSR app deployed on
+JUOKSUT Run Club website + shop (Helsinki). A Nuxt 4 (Vue 3 + Nitro) SSR app deployed on
 **Cloudflare Pages**, backed by **Cloudflare D1** (SQLite — holds only product/stock + a couple of
 Instagram bookkeeping rows) and **Cloudflare R2** served via the `cdn.juoksut.run` CDN (all images
 and videos). **Stripe Checkout** handles merch payments and is the **system of record** for
@@ -55,14 +55,14 @@ stores/         → Pinia: cart.js (persisted to localStorage), products.js
 components/     → Nav, LandingNav, Cart, Footer, FooterVideo, LoadingScreen, Divider
 layouts/        → default.vue (Nav + Cart + Footer), landing.vue (LandingNav + FooterVideo + Footer)
 assets/css/     → tailwind.css (fonts, base styles, --nav-height CSS var, global cursor)
-d1/             → schema.sql + seed.sql  (GITIGNORED — not committed; see ".gitignore")
+d1/             → schema.sql (committed) + seed.sql (local-only, ignored)
 public/         → static assets, favicons, sitemap.xml, site.webmanifest
 app.vue         → root: LoadingScreen + NuxtLayout + global SEO/title template
 error.vue       → error page (statusCode/statusMessage + "go home")
 ```
 
-> **`d1/` is gitignored** (last line of `.gitignore`). `schema.sql` and `seed.sql` exist locally but
-> are **not** in version control — keep that in mind before assuming they're a shared source of truth.
+> `d1/schema.sql` is committed as the recoverable schema source of truth. `d1/seed.sql` is ignored
+> intentionally because it is local development data; do not assume it represents production.
 
 ## Pages
 
@@ -95,17 +95,20 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 
 ## D1 database (`juoksut-products`, binding `D1`)
 
-Defined in `d1/schema.sql` (gitignored). Four tables:
+Defined in committed `d1/schema.sql`. Five tables:
 
 - **products** — `id, slug (UNIQUE), title, material (JSON), sizing (JSON), size_chart (JSON),
-description, price (INTEGER cents), stripe_product_id, stripe_price_id`. The two `stripe_*`
-  columns are **optional**; most products leave them NULL.
+description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout_fields`.
+  The two `stripe_*` columns are **optional**; most products leave them NULL. `checkout_fields` is
+  a JSON array of required product-specific Stripe dropdowns, for example a camp shirt size.
 - **stock** — `id, product_slug (FK→products.slug ON DELETE CASCADE), size, quantity`. **Negative
-  quantity = preorder/"coming soon"** (intentional; there is no `CHECK`/floor on quantity). There is
-  **no index** on `product_slug`.
+  quantity = preorder/"coming soon"** (intentional; there is no `CHECK`/floor on quantity). A unique
+  `(product_slug, size)` index prevents duplicate stock rows and speeds stock reads/updates.
 - **instagram_token** — single row (`id=1`): `token, expires_at, updated_at`. Long-lived IG token;
   auto-refreshed when within 7 days of expiry.
 - **instagram_cache** — single row (`id=1`): `videos (JSON blob), cached_at`. 30-min TTL.
+- **processed_events** — Stripe event ids already applied by the webhook, preventing duplicate stock
+  decrements when Stripe retries delivery.
 
 `server/utils/productUtils.js`:
 
@@ -125,31 +128,27 @@ description, price (INTEGER cents), stripe_product_id, stripe_price_id`. The two
 
 ## Critical: D1 access during SSR
 
-**Never use `$fetch('/api/...')` in the Pinia store during SSR for D1 data.** Nitro's internal fetch
-creates a fresh sub-request event that does **not** inherit `event.context.cloudflare`, so `D1` is
-`undefined` in the API handler.
+Prefer direct D1 access from the Pinia store during SSR rather than an internal `$fetch('/api/...')`.
+The direct path retains the original request context and avoids relying on framework-specific
+sub-request behavior.
 
 Fix (in `stores/products.js`): detect `import.meta.server`, grab `useRequestEvent()`, read
 `event.context.cloudflare.env.D1`, and call the DB utilities directly — skip `$fetch`. Client-side
 navigation uses `$fetch`/`useFetch` to the real API routes normally.
 
-> **Verified (2026-06):** `pages/archive.vue` calls `useFetch('/api/instagram')` at **setup** (during
-> SSR) and it **works** — the binding _is_ available to the internal `useFetch` sub-request in the
-> current runtime, so the SSR HTML embeds the video payload and the client reuses it. (Confirmed
-> against `wrangler pages dev` + the live site.) Implication: the store bypass above may be
-> historical (it was added when internal `$fetch` _did_ lose D1, commit `bfe332e`) — treat the
-> "loses D1" rule as version-dependent, not absolute. `pages/index.vue` still fetches in `onMounted`
-> for its own reasons (random hero pick, client-only). See `docs/architecture.md §11`.
+> **Verified (2026-06):** `pages/archive.vue` calls `useFetch('/api/instagram')` at setup during SSR
+> and the binding is available in the current runtime. The store's direct-D1 path is therefore a
+> conservative compatibility choice, not evidence that all internal fetches fail.
 
 ## API routes (`server/api/`)
 
 | Route                             | File                        | Notes                                                                                          |
 | --------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------- |
 | `GET /api/products`               | `products.js`               | All products with stock                                                                        |
-| `GET /api/products/[slug]`        | `products/[slug].js`        | Single product. **Bug:** its own 404 is caught and re-thrown as 500                            |
-| `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1. Imports `node-fetch` (an _undeclared_ transitive dep) |
+| `GET /api/products/[slug]`        | `products/[slug].js`        | Single product; preserves a genuine 404                                                        |
+| `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1; uses the runtime `fetch`                             |
 | `POST /api/checkout`              | `checkout.js`               | Validates stock + re-reads price from D1, creates Stripe session (30-min expiry)               |
-| `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id` (returns `customer_details` PII)                        |
+| `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id`; returns only name and email for the success page       |
 | `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, batch-updates D1 stock on `checkout.session.completed`                     |
 | `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss      |
 
@@ -164,20 +163,28 @@ checkout → `window.location.href = session.url` → `/success?session_id=…` 
 
 1. **Inline `price_data`** (most products, `stripe_price_id` NULL): server sets
    `product_data.metadata = { slug, size }` so the webhook can map the line item back to D1 stock.
-2. **Pre-created `stripe_price_id`** (only `all-stars-camp`, `runway-riga` — event/trip
-   registrations): the line item is just `{ price, quantity }` with **no metadata added by
-   checkout**. The webhook's slug/size lookup therefore depends entirely on metadata set
-   **Stripe-side** on the Product/Price; size falls back to `'ONE-SIZE'`. If `slug` metadata is
-   missing in Stripe, the webhook throws and the whole stock batch fails. (See security review.)
+2. **Pre-created `stripe_price_id`** (event/trip registrations may use this): the line item is just
+   `{ price, quantity }`. The webhook looks up its D1 product by Stripe price id *before*
+   considering Stripe metadata, so stale or missing dashboard metadata cannot misdirect stock.
+   The D1 mapping is unique. Size falls back to `'ONE-SIZE'`.
+
+Checkout validates the cart shape and re-reads all prices from D1. It requires the buyer's name and
+phone number and sets `customer_creation: 'always'`, so completed payments also create Stripe
+Customer records. Product `checkout_fields` become required Stripe dropdowns; registrations with
+such fields can only be purchased one at a time, ensuring one answer per participant. The optional
+order note remains for unstructured information.
 
 **Webhook gotchas** (`stripe-webhook.js`):
 
-- Signature **is** verified (`constructEventAsync` over the raw body) — good.
-- The entire handler is wrapped in `if (endpointSecret)` with no `else`: if
-  `STRIPE_WEBHOOK_SECRET` is unset, it silently returns 200 and **never decrements stock**.
-- **Not idempotent** — a retried/duplicate `checkout.session.completed` decrements stock again.
-- Decrement has no floor (`quantity = quantity - ?`), so stock can over-decrement / go negative.
-- Code comment says "20 min" session expiry but the value is **30 min** (`60 * 30`).
+- Signature is verified with `constructEventAsync` over the raw body. A missing webhook secret fails
+  loudly instead of acknowledging the event.
+- The webhook claims `processed_events.id` before mutating stock, making retried Stripe events
+  idempotent. On a failed update it releases the claim so Stripe can retry.
+- A stock update that affects zero rows fails the webhook instead of silently accepting a missing
+  product/size row.
+- Decrement still has no floor (`quantity = quantity - ?`), and checkout-time stock checks are not
+  reservations, so a popular item can still oversell under concurrent checkouts.
+- Checkout sessions expire after **30 minutes** (`60 * 30`).
 
 ## Event registration / ticketing (third-party — not first-party)
 
@@ -185,8 +192,8 @@ checkout → `window.location.href = session.url` → `/success?session_id=…` 
   (`cdn.tickettailor.com/js/widgets/min/widget.js`) injected on "Sign Up" click; 5s fallback link.
 - **nb-order-form** (`nb-order-form.vue`): Tally form iframe (`tally.so/embed/…`).
 - **live-love-lightspeed** (legacy): posts to a Google Form via a hidden iframe.
-- Trip registrations (`all-stars-camp`, `runway-riga`) DO go through first-party Stripe Checkout
-  (size/distance collected via the checkout custom "Order note" field).
+- Trip registrations can use first-party Stripe Checkout. Required structured answers belong in the
+  product's `checkout_fields` JSON configuration, not the free-text order note or stock sizes.
 
 ## R2 / CDN
 
@@ -207,8 +214,8 @@ is public-by-design (only public marketing assets). `products/[slug]/images.js` 
 - **Sitemap is the static, hand-maintained `public/sitemap.xml`** (lists `/`, `/shop`, `/join`,
   `/fastlane-friday`, `/archive`). The `@nuxtjs/sitemap` module was removed (git history); update
   the file by hand when routes change.
-- **There is no `robots.txt`** anywhere (gap). `README.md`'s claims about `@nuxtjs/sitemap` /
-  `@nuxtjs/robots` are **stale/inaccurate** — neither module is installed.
+- `public/robots.txt` and `public/sitemap.xml` are static, hand-maintained files. The sitemap and
+  robots Nuxt modules are not installed.
 - `site.webmanifest` has empty `name`/`short_name` (PWA branding gap). `CNAME` (`juoksut.run`) is a
   legacy GitHub-Pages artifact and unused on Cloudflare Pages.
 
@@ -251,15 +258,10 @@ Login product — no Facebook Page).
 
 ## Known issues / gotchas (see `docs/` for the full audit)
 
-- Webhook: no idempotency; silent no-op if `STRIPE_WEBHOOK_SECRET` unset; pre-created-price products
-  rely on Stripe-side `slug` metadata.
-- `products/[slug].js` turns its own 404 into a 500.
-- `images.js` imports `node-fetch`, which is undeclared in `package.json` (works only as a hoisted
-  transitive dep) — global `fetch` is available under `nodeCompat`.
-- Checkout does not validate `body.items`/`quantity` shape (negative quantity slips past the stock
-  check; Stripe then rejects it).
-- ~~`archive.vue` SSR Instagram fetch~~ — verified working (D1 _is_ available to SSR `useFetch`); see
-  the "D1 access during SSR" caveat above.
+- Stock is checked when a Checkout Session is created but not reserved. Concurrent checkout sessions
+  can therefore oversell a low-stock item before the successful-payment webhook decrements it.
+- Product-specific checkout fields are limited by Stripe to three per session, including the optional
+  order note. The current checkout reserves one slot for the note.
 - `cancel.vue` does not clear the cart.
 
 ## Branch workflow

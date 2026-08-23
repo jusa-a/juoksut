@@ -27,11 +27,13 @@ CREATE TABLE products (
     description TEXT,
     price INTEGER NOT NULL DEFAULT 0,
     stripe_product_id TEXT,        -- OPTIONAL: existing Stripe Product (prod_...)
-    stripe_price_id TEXT           -- OPTIONAL: existing Stripe Price (price_...)
+    stripe_price_id TEXT,          -- OPTIONAL: existing Stripe Price (price_...)
+    checkout_fields TEXT NOT NULL DEFAULT '[]' -- JSON registration fields shown by Stripe Checkout
 );
 -- NOTE (migration for existing DB):
 -- ALTER TABLE products ADD COLUMN stripe_product_id TEXT;
 -- ALTER TABLE products ADD COLUMN stripe_price_id TEXT;
+-- ALTER TABLE products ADD COLUMN checkout_fields TEXT NOT NULL DEFAULT '[]';
 
 
 -- Create the stock table
@@ -46,6 +48,12 @@ CREATE TABLE stock (
 -- Speeds the LEFT JOIN (productUtils) and the webhook UPDATE, and prevents
 -- duplicate (product_slug, size) rows. (roadmap R15)
 CREATE UNIQUE INDEX IF NOT EXISTS idx_stock_slug_size ON stock(product_slug, size);
+
+-- A reusable Stripe Price must map to exactly one webshop product. Inline
+-- price_data products leave this field NULL and are unaffected.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_products_stripe_price_id
+ON products(stripe_price_id)
+WHERE stripe_price_id IS NOT NULL;
 
 
 
@@ -76,7 +84,5 @@ CREATE TABLE IF NOT EXISTS processed_events (
     type TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
-
-
 
 
