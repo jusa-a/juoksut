@@ -17,7 +17,7 @@
         <li><strong>Webshop purchases and first-party registrations:</strong> Stripe Checkout collects your name, email address, phone number, payment and billing information where required, the purchased items, and any information you provide in an optional order note or required registration field (for example, camp shirt size). Stripe also creates a Stripe Customer for the purchase.</li>
         <li><strong>Order fulfilment:</strong> Juoksut can access the order, registration, name, email address, and phone number in the Stripe Dashboard to arrange registrations, deliveries, pickups, refunds, and customer support. Our own D1 database stores product, stock, and technical webhook records only; it is not used as a customer database.</li>
         <li><strong>Checkout confirmation:</strong> After checkout, the site retrieves a limited order summary from Stripe to show the confirmation page. This includes the name, email address, items, amount, currency, and payment status for that checkout session.</li>
-        <li><strong>Third-party event forms and ticketing:</strong> Some pages link to or embed Ticket Tailor, Tally, or Google Forms. Information you submit there is processed by that provider and according to the form or ticketing flow. We may receive the information needed to run the event or respond to the form.</li>
+        <li><strong>Third-party event forms and ticketing:</strong> Some pages link to or embed Ticket Tailor or Google Forms. Information you submit there is processed by that provider and according to the form or ticketing flow. We may receive the information needed to run the event or respond to the form.</li>
       </ul>
 
       <h3>WHY WE USE THIS DATA</h3>
@@ -28,7 +28,7 @@
       <ul>
         <li><a href="https://stripe.com/privacy">Stripe</a> for payment processing, Checkout, and customer/order records.</li>
         <li><a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a> for hosting, security, and delivery of the website and public media.</li>
-        <li><a href="https://www.tickettailor.com/legal/privacy/">Ticket Tailor</a>, <a href="https://tally.so/help/privacy">Tally</a>, and <a href="https://policies.google.com/privacy">Google Forms</a> where you choose to use their ticketing or forms.</li>
+        <li><a href="https://www.tickettailor.com/legal/privacy/">Ticket Tailor</a> and <a href="https://policies.google.com/privacy">Google Forms</a> where you choose to use their ticketing or forms.</li>
         <li><a href="https://privacycenter.instagram.com/policy/">Instagram/Meta</a> when you visit our Instagram profile or load Instagram-hosted media in the site archive.</li>
       </ul>
       <p>These providers may process data outside Finland or the European Economic Area. Where required, they use the transfer mechanisms and safeguards described in their own privacy documentation.</p>

@@ -184,7 +184,7 @@ order note remains for unstructured information.
   product/size row.
 - Decrement still has no floor (`quantity = quantity - ?`), and checkout-time stock checks are not
   reservations, so a popular item can still oversell under concurrent checkouts.
-- Checkout sessions expire after **30 minutes** (`60 * 30`).
+- Checkout sessions expire after **10 minutes** (`60 * 10`).
 
 ## Event registration / ticketing (third-party — not first-party)
 

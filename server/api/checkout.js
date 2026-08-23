@@ -112,7 +112,7 @@ export default defineEventHandler(async (event) => {
           optional: true,
         },
       ],
-      expires_at: Math.floor(Date.now() / 1000) + (60 * 30), // Expires after 30 min
+      expires_at: Math.floor(Date.now() / 1000) + (60 * 10), // Expires after 10 min
     })
 
     return { url: session.url } // Return the URL to the client
