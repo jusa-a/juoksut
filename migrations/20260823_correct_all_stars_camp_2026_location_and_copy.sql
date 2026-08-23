@@ -1,0 +1,5 @@
+-- Vierumäki is the confirmed 2026 camp location. Refresh the placeholder copy
+-- with the campaign language while final price and capacity remain pending.
+UPDATE products
+SET description = 'Damn, the juice on the porch was good last year. We are having it again with our all-star qualified friends: three days of running, training, recovery and good temper activity at JUOKSUT ALL-STARS CAMP 2026.\n\n16.–18.10.2026\nVierumäki\n\nConsistency. Performance. Progress.\n\nWhat’s included:\n✅ Accommodation\n✅ Three meals per day\n✅ A full schedule of guided running sessions and activities\n✅ Runner-specific strength training, body maintenance and recovery\n✅ A limited edition ALL-STARS CAMP shirt\n\nThe All-Stars Camp is open to all Juoksut runners. Come ready to build athletic potential, enjoy some pure sensations and share an amazing autumn weekend with your fellow lightspeeders.\n\n⚡️ Limited spots available — be fast when registration opens.\n\nChoose your camp shirt size at checkout.\n\nLIGHTSPEEDERS ONLY PLEASE.'
+WHERE slug = 'all-stars-camp-2026';
