@@ -34,7 +34,7 @@
 
             <!-- Size selector -->
             <div
-              v-if="canPurchase && !singleSize"
+              v-if="canPurchase"
               class="flex-1 flex flex-col mx-[1em] mb-[1em]"
             >
               <!-- Stock info -->
@@ -49,6 +49,7 @@
 
               <!-- Select size -->
               <div
+                v-if="!singleSize"
                 :class="{
                   'flex justify-center': Object.keys(stock).length === 1,
                   'flex justify-between': Object.keys(stock).length > 1,
