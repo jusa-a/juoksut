@@ -74,10 +74,13 @@ CREATE TABLE IF NOT EXISTS checkout_reservations (
     status TEXT NOT NULL DEFAULT 'active', -- active, paid, released
     expires_at INTEGER NOT NULL,
     created_at INTEGER NOT NULL,
+    stripe_session_id TEXT,
     completed_at INTEGER,
     released_at INTEGER,
     FOREIGN KEY (product_slug) REFERENCES products(slug) ON DELETE CASCADE
 );
+-- Migration for an existing database:
+-- ALTER TABLE checkout_reservations ADD COLUMN stripe_session_id TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_checkout_reservations_active_expiry
 ON checkout_reservations(status, expires_at);

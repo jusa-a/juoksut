@@ -148,7 +148,11 @@ export default defineEventHandler(async (event) => {
         // anonymous guest checkouts.
         customer_creation: 'always',
         success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/cancel?canceled=true`,
+        // The opaque reservation id lets /cancel expire this exact Stripe
+        // session and release its held place immediately. It is not buyer PII.
+        cancel_url: reservationGroupId
+          ? `${origin}/cancel?canceled=true&reservation=${reservationGroupId}`
+          : `${origin}/cancel?canceled=true`,
         name_collection: {
           individual: {
             enabled: true,
@@ -184,6 +188,36 @@ export default defineEventHandler(async (event) => {
         }
       }
       throw error
+    }
+
+    if (reservationGroupId) {
+      try {
+        const storedSession = await D1.prepare(`
+          UPDATE checkout_reservations
+          SET stripe_session_id = ?
+          WHERE group_id = ? AND status = 'active'
+        `).bind(session.id, reservationGroupId).run()
+
+        if (!storedSession.meta?.changes)
+          throw new Error('Reservation was not active after Checkout creation')
+      }
+      catch (error) {
+        // Do not leave a live payment URL for a reservation we cannot cancel
+        // or reconcile. Expire it first, then return the held capacity.
+        try {
+          await stripe.checkout.sessions.expire(session.id)
+        }
+        catch (expireError) {
+          console.error('Failed to expire Checkout Session after reservation error:', expireError)
+        }
+        try {
+          await releaseReservationGroup(D1, reservationGroupId)
+        }
+        catch (releaseError) {
+          console.error('Failed to release checkout reservation:', releaseError)
+        }
+        throw error
+      }
     }
 
     return { url: session.url } // Return the URL to the client
