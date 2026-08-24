@@ -34,7 +34,7 @@
 
             <!-- Size selector -->
             <div
-              v-if="canPurchase"
+              v-if="canPurchase && !singleSize"
               class="flex-1 flex flex-col mx-[1em] mb-[1em]"
             >
               <!-- Stock info -->
@@ -199,6 +199,9 @@ if (!product.images)
 const stock = Object.fromEntries(
   product.stock.map(({ size, quantity }) => [size, quantity]),
 )
+const singleSize = Object.keys(stock).length === 1 && stock[Object.keys(stock)[0]] > 0
+  ? Object.keys(stock)[0]
+  : null
 
 const now = ref(Date.now())
 let countdownTimer
@@ -218,7 +221,9 @@ const hasPrice = product.price > 0
 const inStock = computed(() => product.totalStock > 0)
 const canPurchase = computed(() => salesOpen.value && hasPrice && inStock.value)
 const saleCountdown = computed(() => formatCountdown(product.salesStartAt * 1000 - now.value))
-const selectedSize = ref(null)
+// One-size products still need a size internally for cart and stock handling,
+// but asking the shopper to choose the only option is redundant.
+const selectedSize = ref(singleSize)
 const showSelectSizeMessage = ref(false)
 const cart = useCartStore()
 
