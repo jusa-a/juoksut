@@ -146,7 +146,7 @@ example camp shirt size) are configured in `products.checkout_fields` and appear
 as required Stripe Checkout dropdowns.
 
 For a capacity-limited registration, set `reserve_stock = 1`: stock is held
-before Checkout, the session expires after ten minutes, and the signed webhook
+before Checkout, the session expires after 30 minutes (Stripe Checkout's minimum), and the signed webhook
 marks the hold paid on completion or releases it on expiry. `sales_start_at` is
 an optional Unix timestamp that the product page counts down to and the server
 enforces. The live webhook destination must subscribe to both

@@ -15,8 +15,9 @@
 | Security and SEO | Security headers are configured, static robots/sitemap and webmanifest are present, and JSON-LD escaping is fixed. |
 | Reliability and tests | Image probes run in parallel using global fetch; money-path unit tests exist; Nuxt and deployment dependencies are current. |
 
-The All-Stars Camp 2026 launch uses the limited-registration path: 35 places,
-€199, a shirt-size checkout dropdown, 10-minute holds, and automatic sale start
+The All-Stars Camp 2026 launch uses the limited-registration path: 37 places,
+€199, a shirt-size checkout dropdown, 30-minute holds (Stripe Checkout's
+minimum), and automatic sale start
 at 24 August 2026 12:00 Europe/Helsinki.
 
 ## Next sensible work

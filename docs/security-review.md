@@ -15,7 +15,8 @@
 - Pre-created Stripe Prices map back to D1 via the unique `stripe_price_id`.
   Inline prices retain item metadata as a fallback; manual Stripe metadata is
   not the inventory source of truth.
-- Limited registrations use atomic ten-minute D1 holds. Completion finalises a
+- Limited registrations use atomic 30-minute D1 holds (matching Stripe Checkout's
+  minimum session lifetime). Completion finalises a
   hold and expiry releases it. The Stripe destination must receive both
   `checkout.session.completed` and `checkout.session.expired`.
 - Checkout validates a non-empty bounded cart and positive integer quantities.

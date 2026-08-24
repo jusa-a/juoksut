@@ -1,4 +1,7 @@
-export const CHECKOUT_RESERVATION_SECONDS = 60 * 10
+// Stripe Checkout Sessions cannot expire sooner than 30 minutes. Keep the
+// D1 hold identical to the Stripe session lifetime so a valid payment can
+// never arrive after its capacity has been released.
+export const CHECKOUT_RESERVATION_SECONDS = 60 * 30
 
 // Camp places are held in D1 before a Checkout Session URL is returned. The
 // stock decrement is therefore the reservation itself; a paid reservation is

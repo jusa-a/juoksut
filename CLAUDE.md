@@ -153,7 +153,7 @@ navigation uses `$fetch`/`useFetch` to the real API routes normally.
 | `GET /api/products`               | `products.js`               | All products with stock                                                                        |
 | `GET /api/products/[slug]`        | `products/[slug].js`        | Single product; preserves a genuine 404                                                        |
 | `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1; uses the runtime `fetch`                             |
-| `POST /api/checkout`              | `checkout.js`               | Validates stock + re-reads price from D1, reserves configured registrations, creates a 10-min Stripe session |
+| `POST /api/checkout`              | `checkout.js`               | Validates stock + re-reads price from D1, reserves configured registrations, creates a 30-min Stripe session |
 | `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id`; returns only name and email for the success page       |
 | `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, finalises/releases reservations, updates merch stock on completion         |
 | `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss      |
@@ -191,7 +191,7 @@ order note remains for unstructured information.
   product/size row.
 - Decrement still has no floor (`quantity = quantity - ?`) for ordinary merchandise, so it can
   oversell under concurrent checkouts. Products with `reserve_stock = 1` are held atomically instead.
-- Checkout sessions expire after **10 minutes** (`60 * 10`). A matching camp hold is finalised on
+- Checkout sessions expire after **30 minutes** (`60 * 30`, Stripe's minimum). A matching camp hold is finalised on
   `checkout.session.completed` or released on `checkout.session.expired`; the Stripe endpoint must
   subscribe to both events.
 - `sales_start_at` is an optional Unix timestamp. The product page displays a countdown and the
@@ -275,7 +275,7 @@ Login product — no Facebook Page).
 
 - Ordinary merchandise is checked when a Checkout Session is created and decremented after payment,
   so a concurrent last-unit purchase can still oversell. Products with `reserve_stock = 1` (such as
-  capacity-limited camps) are atomically held for the ten-minute Stripe session and released on expiry.
+  capacity-limited camps) are atomically held for the 30-minute Stripe session and released on expiry.
 - Product-specific checkout fields are limited by Stripe to three per session, including the optional
   order note. The current checkout reserves one slot for the note.
 - `cancel.vue` does not clear the cart.

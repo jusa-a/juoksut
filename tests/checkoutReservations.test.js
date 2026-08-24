@@ -13,7 +13,7 @@ describe('checkout reservations', () => {
     }])
   })
 
-  it('uses the same ten-minute window as Stripe Checkout', () => {
-    expect(CHECKOUT_RESERVATION_SECONDS).toBe(60 * 10)
+  it('uses Stripe Checkout\'s 30-minute minimum window', () => {
+    expect(CHECKOUT_RESERVATION_SECONDS).toBe(60 * 30)
   })
 })

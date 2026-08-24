@@ -61,7 +61,7 @@ sequenceDiagram
   B->>A: POST /api/checkout {items}
   A->>D: Re-read product, price, stock and sale state
   alt reserve_stock = 1
-    A->>D: Atomically hold capacity for 10 minutes
+    A->>D: Atomically hold capacity for 30 minutes
   end
   A->>S: Create Checkout Session (name, phone, Customer)
   S-->>B: Hosted payment URL
