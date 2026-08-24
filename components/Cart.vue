@@ -83,6 +83,9 @@
                   </NuxtLink>
                 </template>
                 <template v-else>
+                  <p v-if="cart.hasLimitedRegistration" class="pb-[0.7em] text-center text-[0.8em]/[1.3em] opacity-70">
+                    Your place is held for 30 minutes only after you continue to payment.
+                  </p>
                   <button
                     class="self-stretch text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink active:opacity-50"
                     :class="{ 'pointer-events-none': cart.isHoverDisabled }"

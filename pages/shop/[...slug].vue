@@ -152,12 +152,6 @@
                           : `Add to cart €${product.price}`)
             }}
           </button>
-          <p
-            v-if="product.reserveStock"
-            class="pt-[0.7em] text-center text-[0.8em]/[1.3em] opacity-70"
-          >
-            Your place is held for 30 minutes only after you continue to payment.
-          </p>
         </div>
       </div>
     </section>

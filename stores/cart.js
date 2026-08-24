@@ -11,6 +11,7 @@ export const useCartStore = defineStore('cart', {
   getters: {
     totalPrice: state => state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
     totalItems: state => state.items.reduce((sum, item) => sum + item.quantity, 0),
+    hasLimitedRegistration: state => state.items.some(item => item.reserveStock),
   },
 
   actions: {
@@ -21,6 +22,7 @@ export const useCartStore = defineStore('cart', {
       const existing = this.items.find(item => item.slug === product.slug && item.size === product.size)
       if (existing) {
         existing.quantity++
+        existing.reserveStock = Boolean(product.reserveStock)
       }
       else {
         // Save only necessary fields
@@ -30,6 +32,7 @@ export const useCartStore = defineStore('cart', {
           price: product.price,
           title: product.title,
           img: product.img,
+          reserveStock: Boolean(product.reserveStock),
           quantity: 1,
         })
       }
