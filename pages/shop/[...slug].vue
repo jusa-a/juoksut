@@ -27,9 +27,8 @@
             <div class="pt-[1em] pb-[0.7em] uppercase">
               {{
                 product.totalStock < 0 ? 'Coming soon...'
-                : !salesOpen ? saleCountdown
-                  : !hasPrice ? 'Price coming soon...'
-                    : (inStock ? `€${product.price}` : 'Out of stock')
+                : !hasPrice ? 'Price coming soon...'
+                  : (inStock ? `€${product.price}` : 'Out of stock')
               }}
             </div>
 
