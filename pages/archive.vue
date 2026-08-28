@@ -26,6 +26,7 @@
               :style="`width: ${cell.size === 'sm' ? '75%' : cell.size === 'md' ? '79%' : '83%'}`"
             >
               <video
+                v-if="cell.video.media_url"
                 :src="cell.video.media_url"
                 :poster="cell.video.thumbnail_url"
                 autoplay
@@ -34,6 +35,12 @@
                 playsinline
                 class="w-full block"
               />
+              <img
+                v-else
+                :src="cell.video.thumbnail_url"
+                alt=""
+                class="w-full block"
+              >
             </a>
           </div>
         </div>

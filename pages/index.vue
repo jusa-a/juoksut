@@ -63,8 +63,9 @@ const video = ref(null)
 onMounted(async () => {
   try {
     const { media } = await $fetch('/api/instagram')
-    if (media?.length) {
-      const pick = media[Math.floor(Math.random() * media.length)]
+    const playableMedia = media?.filter(item => item.media_url)
+    if (playableMedia?.length) {
+      const pick = playableMedia[Math.floor(Math.random() * playableMedia.length)]
       heroSrc.value = pick.media_url
       heroPoster.value = pick.thumbnail_url
     }
