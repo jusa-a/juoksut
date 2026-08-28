@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
   if (!D1)
     throw createError({ statusCode: 500, message: 'D1 not available' })
 
-  const { offset = '0' } = getQuery(event)
+  const { offset = '0', playable = 'false' } = getQuery(event)
   const offsetNum = Number(offset)
 
   const cached = await D1.prepare('SELECT videos, cached_at FROM instagram_cache WHERE id = 1').first()
@@ -107,8 +107,9 @@ export default defineEventHandler(async (event) => {
     allVideos = await refreshCache(D1)
   }
 
-  const page = allVideos.slice(offsetNum, offsetNum + PAGE_SIZE)
-  const hasMore = offsetNum + PAGE_SIZE < allVideos.length
+  const videos = playable === 'true' ? allVideos.filter(video => video.media_url) : allVideos
+  const page = videos.slice(offsetNum, offsetNum + PAGE_SIZE)
+  const hasMore = offsetNum + PAGE_SIZE < videos.length
 
   return { media: page, nextOffset: offsetNum + PAGE_SIZE, hasMore }
 })

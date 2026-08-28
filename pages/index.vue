@@ -62,7 +62,7 @@ const video = ref(null)
 
 onMounted(async () => {
   try {
-    const { media } = await $fetch('/api/instagram')
+    const { media } = await $fetch('/api/instagram?playable=true')
     const playableMedia = media?.filter(item => item.media_url)
     if (playableMedia?.length) {
       const pick = playableMedia[Math.floor(Math.random() * playableMedia.length)]
