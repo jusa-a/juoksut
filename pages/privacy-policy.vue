@@ -2,7 +2,7 @@
   <div>
     <section>
       <h2>PRIVACY POLICY</h2>
-      <p class="font-[500]">Last updated: 23.08.2026</p>
+      <p class="font-[500]">Last updated: 24.10.2026</p>
 
       <h3>INTRODUCTION</h3>
       <p>This Privacy Policy explains how Juoksut ry (“Juoksut”, “we”, “our”, or “us”) processes personal data when you use <a href="https://juoksut.run">juoksut.run</a>, buy from our webshop, or register for an event through a service linked from the site.</p>
@@ -15,8 +15,9 @@
         <li><strong>Website use:</strong> Cloudflare hosts and protects the site and may process technical request data, such as IP address, device/browser information, and security logs, to deliver and secure the service.</li>
         <li><strong>Shopping cart:</strong> The cart stores selected products, sizes, and quantities in your browser’s LocalStorage. When you start checkout, those selections are sent to our checkout endpoint so we can create the payment session.</li>
         <li><strong>Webshop purchases and first-party registrations:</strong> Stripe Checkout collects your name, email address, phone number, payment and billing information where required, the purchased items, and any information you provide in an optional order note or required registration field (for example, camp shirt size). Stripe also creates a Stripe Customer for the purchase.</li>
-        <li><strong>Order fulfilment:</strong> Juoksut can access the order, registration, name, email address, and phone number in the Stripe Dashboard to arrange registrations, deliveries, pickups, refunds, and customer support. Our own D1 database stores product, stock, and technical webhook records only; it is not used as a customer database.</li>
+        <li><strong>Order fulfilment:</strong> Juoksut can access the order, registration, name, email address, and phone number in the Stripe Dashboard to arrange registrations, deliveries, pickups, refunds, and customer support. Apart from the free session signups described below, our own D1 database stores product, stock, and technical webhook records only; it is not used as a customer database.</li>
         <li><strong>Checkout confirmation:</strong> After checkout, the site retrieves a limited order summary from Stripe to show the confirmation page. This includes the name, email address, items, amount, currency, and payment status for that checkout session.</li>
+        <li><strong>Free session signups (for example Fastlane Friday):</strong> When you sign up for a free session on this site, we store your name, email address, and signup status (confirmed, waitlisted, or cancelled) in our own database, and we email you a confirmation, waitlist and spot-opened messages, and a cancellation link. We use this only to run that session and its waitlist.</li>
         <li><strong>Third-party event forms and ticketing:</strong> Some pages link to or embed Ticket Tailor or Google Forms. Information you submit there is processed by that provider and according to the form or ticketing flow. We may receive the information needed to run the event or respond to the form.</li>
       </ul>
 
@@ -27,14 +28,14 @@
       <p>We use service providers to operate the site and payments. Their processing is governed by their own terms and privacy information:</p>
       <ul>
         <li><a href="https://stripe.com/privacy">Stripe</a> for payment processing, Checkout, and customer/order records.</li>
-        <li><a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a> for hosting, security, and delivery of the website and public media.</li>
+        <li><a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a> for hosting, security, delivery of the website and public media, and sending session signup emails.</li>
         <li><a href="https://www.tickettailor.com/legal/privacy/">Ticket Tailor</a> and <a href="https://policies.google.com/privacy">Google Forms</a> where you choose to use their ticketing or forms.</li>
         <li><a href="https://privacycenter.instagram.com/policy/">Instagram/Meta</a> when you visit our Instagram profile or load Instagram-hosted media in the site archive.</li>
       </ul>
       <p>These providers may process data outside Finland or the European Economic Area. Where required, they use the transfer mechanisms and safeguards described in their own privacy documentation.</p>
 
       <h3>RETENTION</h3>
-      <p>We do not keep customer records in the website database. Stripe retains payment and customer records under its service and retention settings; Juoksut keeps access to information only for as long as needed to manage the purchase or registration, provide support, and meet legal obligations. Third-party form and ticketing providers retain submissions under their own settings.</p>
+      <p>Apart from free session signups, we do not keep customer records in the website database. Session signups (name, email address, and signup status) are deleted automatically about a week after the session. Stripe retains payment and customer records under its service and retention settings; Juoksut keeps access to information only for as long as needed to manage the purchase or registration, provide support, and meet legal obligations. Third-party form and ticketing providers retain submissions under their own settings.</p>
 
       <h3>COOKIES AND LOCALSTORAGE</h3>
       <ul>
