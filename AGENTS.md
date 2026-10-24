@@ -328,6 +328,12 @@ git checkout main && git merge feat/my-change && git push
 
 ## Database and deployment safety
 
+- Pages bindings come from `wrangler.toml`, not the dashboard. Production uses the top-level
+  `[[d1_databases]]`; every non-`main` branch uses `[[env.preview.d1_databases]]`, the test database
+  `test-juoksut-products`. The test database is migrated by hand with `--remote`; it needs the same
+  structure as production (apply structural migrations, not the product-data ones).
+- Preview URLs (`<branch>.juoksut.pages.dev`) sit behind Cloudflare Access.
+
 - `d1/schema.sql` drops tables for local development. Never execute the full
   schema file against `--remote`.
 - Production D1 schema changes must use a small, reviewable migration and be
