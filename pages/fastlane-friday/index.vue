@@ -60,7 +60,7 @@
                 <div class="flex flex-wrap items-center gap-[0.7em]">
                   <span class="text-[0.8em]">
                     <template v-if="session.state === 'open'">
-                      {{ session.capacity - session.confirmed }} spots left
+                      {{ spotsLeft(session) }}
                     </template>
                     <template v-else-if="session.state === 'full'">
                       Full · {{ session.waitlist }} on waitlist
@@ -129,7 +129,7 @@
                   >
                 </div>
 
-                <p class="m-0 text-[0.75em]">
+                <p class="m-0 text-[0.75em] leading-[1.4]">
                   We store your name and email to run the session and delete them a week after. See our <NuxtLink to="/privacy-policy" class="underline">privacy policy</NuxtLink>.
                 </p>
 
@@ -169,6 +169,11 @@ const timeFormat = new Intl.DateTimeFormat('en-GB', {
 
 const formatDay = date => dayFormat.format(new Date(`${date}T12:00:00Z`))
 const formatOpens = unix => `${dayFormat.format(new Date(unix * 1000))}, ${timeFormat.format(new Date(unix * 1000))} Helsinki`
+
+function spotsLeft({ capacity, confirmed }) {
+  const left = capacity - confirmed
+  return `${left} ${left === 1 ? 'spot' : 'spots'} left`
+}
 
 const openId = ref(null)
 const name = ref('')
