@@ -37,7 +37,7 @@ export async function listSessions(D1, today, now) {
   }))
 }
 
-export async function signUp(D1, { sessionId, name, email, token, now }) {
+export async function signUp(D1, { sessionId, name, email, token, now, today = helsinkiToday(now) }) {
   // One statement decides confirmed vs waitlist from the current confirmed
   // count, so two racing signups cannot both take the last place. A cancelled
   // row may sign up again; that update also re-evaluates capacity.
@@ -50,23 +50,23 @@ export async function signUp(D1, { sessionId, name, email, token, now }) {
       ) < s.capacity THEN 'confirmed' ELSE 'waitlist' END,
       ?, ?
     FROM fastlane_sessions s
-    WHERE s.id = ? AND s.opens_at <= ?
+    WHERE s.id = ? AND s.opens_at <= ? AND s.date >= ?
     ON CONFLICT(session_id, email) DO UPDATE SET
       status = excluded.status,
       token = excluded.token,
       created_at = excluded.created_at
     WHERE fastlane_signups.status = 'cancelled'
     RETURNING status, token
-  `).bind(name, email, token, now, sessionId, now).first()
+  `).bind(name, email, token, now, sessionId, now, today).first()
 
   if (signup)
     return { status: signup.status, token: signup.token }
 
-  // No row means: no session, signups not open yet, or an existing
+  // No row means: no upcoming session, signups not open yet, or an existing
   // confirmed/waitlisted signup (the upsert above only fires for cancelled).
   const session = await D1.prepare(
-    'SELECT opens_at FROM fastlane_sessions WHERE id = ?',
-  ).bind(sessionId).first()
+    'SELECT opens_at FROM fastlane_sessions WHERE id = ? AND date >= ?',
+  ).bind(sessionId, today).first()
 
   if (!session)
     throw new FastlaneSignupError('not_found')

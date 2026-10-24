@@ -94,6 +94,18 @@ describe('fastlane signups', () => {
     expect(await statuses(sessionId)).toEqual([])
   })
 
+  it('rejects a session whose day has already passed', async () => {
+    const id = await addSession({ date: '2026-11-06' })
+    await expect(signUp(db, {
+      sessionId: id,
+      name: 'Late',
+      email: 'late@example.com',
+      token: tokenFor(1),
+      now: 1000,
+      today: '2026-11-07',
+    })).rejects.toMatchObject({ code: 'not_found' })
+  })
+
   it('rejects an unknown session', async () => {
     await expect(signUpPerson(999, 1)).rejects.toBeInstanceOf(FastlaneSignupError)
     await expect(signUpPerson(999, 1)).rejects.toMatchObject({ code: 'not_found' })
