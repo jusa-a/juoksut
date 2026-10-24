@@ -13,6 +13,8 @@
 
 
 -- Dev reset: drop existing tables (safe locally)
+DROP TABLE IF EXISTS fastlane_signups;
+DROP TABLE IF EXISTS fastlane_sessions;
 DROP TABLE IF EXISTS checkout_reservations;
 DROP TABLE IF EXISTS stock;
 DROP TABLE IF EXISTS products;
@@ -117,3 +119,30 @@ CREATE TABLE IF NOT EXISTS processed_events (
     type TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+
+-- FASTLANE FRIDAY SIGNUPS
+
+-- Free weekly sessions. Confirmed signups fill up to capacity; the rest wait
+-- on a waitlist. Dates are Helsinki local days ('YYYY-MM-DD').
+CREATE TABLE IF NOT EXISTS fastlane_sessions (
+    id INTEGER PRIMARY KEY,
+    date TEXT NOT NULL UNIQUE,
+    capacity INTEGER NOT NULL CHECK (capacity > 0),
+    opens_at INTEGER NOT NULL -- Unix seconds; signups are rejected before this
+);
+
+CREATE TABLE IF NOT EXISTS fastlane_signups (
+    id INTEGER PRIMARY KEY,
+    session_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,        -- stored lowercase
+    status TEXT NOT NULL CHECK (status IN ('confirmed', 'waitlist', 'cancelled')),
+    token TEXT NOT NULL UNIQUE, -- 32 hex chars; used in the cancel link
+    created_at INTEGER NOT NULL,
+    UNIQUE (session_id, email),
+    FOREIGN KEY (session_id) REFERENCES fastlane_sessions(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_fastlane_signups_session_status
+ON fastlane_signups(session_id, status, created_at);
