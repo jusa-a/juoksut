@@ -10,14 +10,14 @@ JUOKSUT is a Nuxt 4 (Vue 3 + Nitro) website and webshop deployed to Cloudflare
 Pages. It uses on-demand SSR where current product data and social metadata
 matter, and prerenders selected stable pages.
 
-| Concern | Current implementation |
-| --- | --- |
-| Runtime | Nuxt 4 / Nitro, Cloudflare Pages preset with Node compatibility |
-| Local toolchain | Node 22, Yarn 4 through Corepack |
-| Database | Cloudflare D1 `juoksut-products`, bound as `D1` |
-| Media | Public Cloudflare R2 assets at `https://cdn.juoksut.run` |
-| Payments and buyer records | Stripe Checkout and Stripe Customers |
-| Client state | Pinia; cart persists only in browser localStorage |
+| Concern                    | Current implementation                                          |
+| -------------------------- | --------------------------------------------------------------- |
+| Runtime                    | Nuxt 4 / Nitro, Cloudflare Pages preset with Node compatibility |
+| Local toolchain            | Node 22, Yarn 4 through Corepack                                |
+| Database                   | Cloudflare D1 `juoksut-products`, bound as `D1`                 |
+| Media                      | Public Cloudflare R2 assets at `https://cdn.juoksut.run`        |
+| Payments and buyer records | Stripe Checkout and Stripe Customers                            |
+| Client state               | Pinia; cart persists only in browser localStorage               |
 
 `/` and `/join` are prerendered. `/shop`, `/shop/**`, and `/archive` render on
 demand. `/success` and `/nb-order-form` are client-only. `/orders` permanently
@@ -34,13 +34,13 @@ The CSP should be checked for violations before it is enforced.
 a production migration or source of production truth. Never run the whole
 schema file against remote D1 because its initial drops are for local reset.
 
-| Table | Purpose |
-| --- | --- |
-| `products` | Catalogue data; prices are integer cents. Optional Stripe product/price IDs, checkout fields, reservation flag, and sale-start timestamp live here. |
-| `stock` | Per-product-size quantity. Negative quantities intentionally mean preorder/coming soon. A unique `(product_slug, size)` index prevents duplicates. |
-| `checkout_reservations` | Ten-minute, non-PII capacity holds for products using `reserve_stock = 1`. |
-| `processed_events` | Stripe webhook event IDs, for at-least-once delivery idempotency. |
-| `instagram_token` / `instagram_cache` | One Instagram token and a cached media payload. |
+| Table                                 | Purpose                                                                                                                                             |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `products`                            | Catalogue data; prices are integer cents. Optional Stripe product/price IDs, checkout fields, reservation flag, and sale-start timestamp live here. |
+| `stock`                               | Per-product-size quantity. Negative quantities intentionally mean preorder/coming soon. A unique `(product_slug, size)` index prevents duplicates.  |
+| `checkout_reservations`               | Thirty-minute, non-PII capacity holds for products using `reserve_stock = 1`.                                                                       |
+| `processed_events`                    | Stripe webhook event IDs, for at-least-once delivery idempotency.                                                                                   |
+| `instagram_token` / `instagram_cache` | One Instagram token and a cached media payload.                                                                                                     |
 
 `products.checkout_fields` is JSON for structured registration choices, such
 as a camp shirt-size dropdown. This is deliberately separate from `stock`: the

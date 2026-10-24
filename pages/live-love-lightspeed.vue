@@ -117,11 +117,9 @@ const showError = ref(false)
 
 function loadFrame() {
   if (!email.value || !name.value) {
-    console.log('form values missing')
     showError.value = true
   }
   else {
-    console.log('form sent')
     showForm.value = !showForm.value
   }
 }

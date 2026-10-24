@@ -18,9 +18,9 @@
     "dev:fresh": "yarn db:reset:local && nuxt dev"
   },
   "dependencies": {
-    "@nuxt/image": "^2",
-    "pinia-plugin-persistedstate": "^4.2.0",
-    "stripe": "^22"
+    "@nuxt/image": "^2.2.0",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "stripe": "^22.6.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.0.0",
@@ -30,13 +30,13 @@
     "eslint": "^10.5.0",
     "eslint-plugin-format": "^2.0.1",
     "nitro-cloudflare-dev": "^0.2.2",
-    "nuxt": "^4.5.1",
-    "pinia": "^3.0.1",
-    "typescript": "^6",
-    "vitest": "^4.1.9",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0",
-    "wrangler": "^4.103.0"
+    "nuxt": "~4.5.2",
+    "pinia": "^3.0.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.12",
+    "vue": "^3.5.44",
+    "vue-router": "^4.6.4",
+    "wrangler": "^4.152.0"
   },
   "resolutions": {
     "tailwindcss": "3.4.17"

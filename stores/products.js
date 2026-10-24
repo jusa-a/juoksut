@@ -1,5 +1,5 @@
-import { useRequestEvent } from '#app'
 import { defineStore } from 'pinia'
+import { useRequestEvent } from '#app'
 
 export const useProductStore = defineStore('products', {
   state: () => ({

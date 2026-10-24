@@ -76,6 +76,8 @@ const mobileConfigs = [
   { cols: '1fr 1fr', cells: [{ size: 'md' }, { size: 'lg' }] },
 ]
 
+const isMobile = ref(false)
+
 function buildRows(videos) {
   const configs = isMobile.value ? mobileConfigs : rowConfigs
   const pool = [...videos]
@@ -106,7 +108,6 @@ function buildRows(videos) {
   return result
 }
 
-const isMobile = ref(false)
 const rows = ref([])
 const sentinel = ref(null)
 const loadingMore = ref(false)

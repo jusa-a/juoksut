@@ -25,7 +25,7 @@ libraries/frameworks without asking.
 
 ## Commands & local dev
 
-Node **22** (`.nvmrc`). Package manager is **Yarn 4** via Corepack. In a non-interactive shell
+Node **24** (`.nvmrc`). Package manager is **Yarn 4** via Corepack. In a non-interactive shell
 `yarn` may not be on `PATH` — use `corepack yarn …`. `node_modules` is **not** checked in and may be
 absent; run an install first.
 
@@ -71,24 +71,24 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 
 ## Pages
 
-| Route                   | File                       | Notes                                                                                                                                                                                                                                                                                                                                                |
-| ----------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Route                   | File                       | Notes                                                                                                                                                                                                                                                                                 |
+| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (only `nb-order-form` and `live-love-lightspeed` use the landing layout) |
-| `/join`                 | `join.vue`                 | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered**                                                                                                                                                                                                                                                                   |
-| `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc) + a Fastlane Friday card. SSR                                                                                                                                                                                                                                                                                       |
-| `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                                                                                                       |
-| `/fastlane-friday`      | `fastlane-friday.vue`      | Weekly speed session. **Ticket Tailor** widget injected on click (5s fallback link)                                                                                                                                                                                                                                                                  |
-| `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                                                                                                                                                                                 |
-| `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                                                                                                                                                                               |
-| `/terms-and-conditions` | `terms-and-conditions.vue` | Terms & Conditions: order policy, preorder info, and trip terms. `robots: noindex`; `/orders` permanently redirects here.                                                                                                                                                                                                                               |
-| `/archive`              | `archive.vue`              | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags                                                                                                                                                                                                                                                                          |
-| `/privacy-policy`       | `privacy-policy.vue`       | Privacy policy. `robots: noindex`                                                                                                                                                                                                                                                                                                                    |
-| `/nb-order-form`        | `nb-order-form.vue`        | **Tally** iframe embed, landing layout, `noindex`. CSR (`ssr: false`)                                                                                                                                                                                                                                                                                |
-| `/live-love-lightspeed` | `live-love-lightspeed.vue` | Legacy event page (Google Forms hidden-iframe POST). Not actively used; contains dead/commented code                                                                                                                                                                                                                                                 |
+| `/join`                 | `join.vue`                 | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered**                                                                                                                                                                                                    |
+| `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc) + a Fastlane Friday card. SSR                                                                                                                                                                                                                        |
+| `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                                        |
+| `/fastlane-friday`      | `fastlane-friday.vue`      | Weekly speed session. **Ticket Tailor** widget injected on click (5s fallback link)                                                                                                                                                                                                   |
+| `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                                                                                                                  |
+| `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                                                                                                                |
+| `/terms-and-conditions` | `terms-and-conditions.vue` | Terms & Conditions: order policy, preorder info, and trip terms. `robots: noindex`; `/orders` permanently redirects here.                                                                                                                                                             |
+| `/archive`              | `archive.vue`              | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags                                                                                                                                                                                                           |
+| `/privacy-policy`       | `privacy-policy.vue`       | Privacy policy. `robots: noindex`                                                                                                                                                                                                                                                     |
+| `/nb-order-form`        | `nb-order-form.vue`        | **Tally** iframe embed, landing layout, `noindex`. CSR (`ssr: false`)                                                                                                                                                                                                                 |
+| `/live-love-lightspeed` | `live-love-lightspeed.vue` | Legacy event page (Google Forms hidden-iframe POST). Not actively used; contains dead/commented code                                                                                                                                                                                  |
 
 ## Route rules (`nuxt.config.ts`)
 
-```js
+```text
 '/':              { prerender: true }
 '/join':          { prerender: true }
 '/shop':          { prerender: false }   // SSR on demand — products change
@@ -151,15 +151,15 @@ navigation uses `$fetch`/`useFetch` to the real API routes normally.
 
 ## API routes (`server/api/`)
 
-| Route                             | File                        | Notes                                                                                          |
-| --------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------- |
-| `GET /api/products`               | `products.js`               | All products with stock                                                                        |
-| `GET /api/products/[slug]`        | `products/[slug].js`        | Single product; preserves a genuine 404                                                        |
-| `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1; uses the runtime `fetch`                             |
+| Route                             | File                        | Notes                                                                                                        |
+| --------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `GET /api/products`               | `products.js`               | All products with stock                                                                                      |
+| `GET /api/products/[slug]`        | `products/[slug].js`        | Single product; preserves a genuine 404                                                                      |
+| `GET /api/products/[slug]/images` | `products/[slug]/images.js` | Probes CDN (HEAD) for images 2–7. No D1; uses the runtime `fetch`                                            |
 | `POST /api/checkout`              | `checkout.js`               | Validates stock + re-reads price from D1, reserves configured registrations, creates a 30-min Stripe session |
-| `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id`; returns only name and email for the success page       |
-| `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, finalises/releases reservations, updates merch stock on completion         |
-| `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss      |
+| `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id`; returns only name and email for the success page                     |
+| `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, finalises/releases reservations, updates merch stock on completion                       |
+| `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss                    |
 
 ## Stripe flow
 
@@ -174,7 +174,7 @@ merch stock or marks the pre-held registration paid.
 1. **Inline `price_data`** (most products, `stripe_price_id` NULL): server sets
    `product_data.metadata = { slug, size }` so the webhook can map the line item back to D1 stock.
 2. **Pre-created `stripe_price_id`** (event/trip registrations may use this): the line item is just
-   `{ price, quantity }`. The webhook looks up its D1 product by Stripe price id *before*
+   `{ price, quantity }`. The webhook looks up its D1 product by Stripe price id _before_
    considering Stripe metadata, so stale or missing dashboard metadata cannot misdirect stock.
    The D1 mapping is unique. Size falls back to `'ONE-SIZE'`.
 
@@ -323,8 +323,8 @@ git checkout main && git merge feat/my-change && git push
 - Use `rg` for codebase search.
 - Run focused tests after code changes. For changes that can affect deployment,
   run `corepack yarn build` when practical.
-- The repository-wide linter has known pre-existing failures. Run lint on the
-  files changed by the task, and distinguish pre-existing failures from new ones.
+- `corepack yarn lint` must report zero errors (CI enforces it). Its `no-undef` warnings on
+  Nuxt auto-imports (`useFetch`, `createError`, `$fetch`) are false positives.
 
 ## Database and deployment safety
 

@@ -39,7 +39,7 @@ product and social metadata stay current.
 
 ## Getting started
 
-1) Clone and install
+1. Clone and install
 
 ```bash
 git clone https://github.com/jusa-a/juoksut.git
@@ -47,7 +47,7 @@ cd juoksut
 corepack yarn install
 ```
 
-2) Environment variables
+2. Environment variables
 
 Create a `.env` file in the project root (Nuxt loads it in dev). At minimum:
 
@@ -108,7 +108,7 @@ public repository. Token values, Stripe secret keys, webhook signing secrets,
 Keychain output, and customer data are not. Use live access only for a
 user-authorised, specific production operation.
 
-3) Database (Cloudflare D1)
+3. Database (Cloudflare D1)
 
 - One-time local setup:
   - Create a local DB (name matches project config):
@@ -125,7 +125,7 @@ user-authorised, specific production operation.
   reviewed migration or statement. Do not apply the local reset schema or seed
   file remotely.
 
-4) Run the app
+4. Run the app
 
 ```bash
 corepack yarn dev --host

@@ -33,17 +33,17 @@
 
 ## Residual risks and accepted trade-offs
 
-| Risk | Current position |
-| --- | --- |
+| Risk                             | Current position                                                                                                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Concurrent normal-merch checkout | Normal merchandise has a small last-unit oversell window because it changes stock after payment. Use `reserve_stock = 1` for constrained registration/capacity products. |
-| Trusted HTML descriptions | Product descriptions use `v-html`; only trusted administrators may write them. Introduce sanitisation before accepting user/third-party content. |
-| Stripe success URL | A high-entropy session ID is in the success URL. The endpoint now minimises its returned PII; users should still avoid sharing the URL. |
-| Instagram token in D1 | The token is server-only but stored plaintext in D1 and used with the Graph API. Its scope is limited to the public feed; log carefully and rotate if exposed. |
-| Report-only CSP | It does not block violations yet. Enforcement needs a reviewed allowlist because Nuxt and embeds use inline/third-party resources. |
+| Trusted HTML descriptions        | Product descriptions use `v-html`; only trusted administrators may write them. Introduce sanitisation before accepting user/third-party content.                         |
+| Stripe success URL               | A high-entropy session ID is in the success URL. The endpoint now minimises its returned PII; users should still avoid sharing the URL.                                  |
+| Instagram token in D1            | The token is server-only but stored plaintext in D1 and used with the Graph API. Its scope is limited to the public feed; log carefully and rotate if exposed.           |
+| Report-only CSP                  | It does not block violations yet. Enforcement needs a reviewed allowlist because Nuxt and embeds use inline/third-party resources.                                       |
 
 ## Access policy for coding agents
 
-It is appropriate for this public repository to document the access *method*,
+It is appropriate for this public repository to document the access _method_,
 the wrapper commands, and Keychain service names. It is never appropriate to
 commit or paste an API token, Stripe secret key, webhook signing secret,
 Keychain output, customer data, or a full account export.
