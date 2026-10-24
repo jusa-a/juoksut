@@ -6,13 +6,13 @@
 // because Nuxt injects inline hydration scripts/styles without nonces.
 const csp = [
   'default-src \'self\'',
-  'script-src \'self\' \'unsafe-inline\' https://cdn.tickettailor.com https://tally.so',
+  'script-src \'self\' \'unsafe-inline\' https://tally.so',
   'style-src \'self\' \'unsafe-inline\'',
-  'img-src \'self\' data: https://cdn.juoksut.run https://*.cdninstagram.com https://*.tickettailor.com https://tally.so',
+  'img-src \'self\' data: https://cdn.juoksut.run https://*.cdninstagram.com https://tally.so',
   'media-src \'self\' https://cdn.juoksut.run https://*.cdninstagram.com',
   'font-src \'self\'',
   'connect-src \'self\'',
-  'frame-src https://tally.so https://*.tickettailor.com https://docs.google.com',
+  'frame-src https://tally.so https://docs.google.com',
   'frame-ancestors \'none\'',
   'base-uri \'self\'',
   'form-action \'self\' https://docs.google.com',
