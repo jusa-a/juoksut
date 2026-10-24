@@ -1,7 +1,7 @@
 # JUOKSUT — Architecture
 
 > Current architecture reference, updated 23 August 2026. Operational guidance
-> for coding agents lives in [`CLAUDE.md`](../CLAUDE.md); public local and
+> for coding agents lives in [`AGENTS.md`](../AGENTS.md); public local and
 > restricted-access setup lives in [`README.md`](../README.md).
 
 ## Application and hosting
