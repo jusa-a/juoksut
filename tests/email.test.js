@@ -46,8 +46,8 @@ function fromBase64(value) {
 function parseRaw(raw) {
   // base64url -> bytes -> UTF-8
   const message = fromBase64(raw.replace(/-/g, '+').replace(/_/g, '/'))
-  const [head, body] = message.split('\r\n\r\n')
-  return { message, headers: head.split('\r\n'), body }
+  const [head, ...rest] = message.split('\r\n\r\n')
+  return { message, headers: head.split('\r\n'), body: rest.join('\r\n\r\n') }
 }
 
 async function sentRaw(fetchMock) {
@@ -116,6 +116,51 @@ describe('sendEmail', () => {
     for (const line of body.split('\r\n'))
       expect(line.length).toBeLessThanOrEqual(76)
     expect(fromBase64(body.replace(/\r\n/g, ''))).toBe('Moi Äijä 🏃')
+  })
+
+  it('sends the text and html parts as multipart/alternative', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce(tokenReply()).mockResolvedValueOnce(sendReply())
+    vi.stubGlobal('fetch', fetchMock)
+    const text = 'Moi Äijä — juoksut.run'
+    const html = '<p>Moi <b>Äijä</b> — juoksut.run</p>'
+
+    await sendEmail({ to: 'runner@example.com', subject: 'Hi', text, html })
+
+    const { headers, body } = await sentRaw(fetchMock)
+    const contentType = headers.find(line => line.startsWith('Content-Type: multipart/alternative'))
+    const boundary = /boundary="(.+)"/.exec(contentType)[1]
+
+    expect(body.startsWith(`--${boundary}\r\n`)).toBe(true)
+    expect(body).toContain(`\r\n--${boundary}\r\n`)
+    expect(body.endsWith(`\r\n--${boundary}--`)).toBe(true)
+
+    const [, plain, rich, close] = body.split(`--${boundary}`)
+    expect(close).toBe('--')
+
+    const [plainHeaders, plainBody] = plain.trim().split('\r\n\r\n')
+    const [richHeaders, richBody] = rich.trim().split('\r\n\r\n')
+
+    expect(plainHeaders.split('\r\n')).toContain('Content-Type: text/plain; charset=UTF-8')
+    expect(richHeaders.split('\r\n')).toContain('Content-Type: text/html; charset=UTF-8')
+    expect(plainHeaders.split('\r\n')).toContain('Content-Transfer-Encoding: base64')
+    expect(richHeaders.split('\r\n')).toContain('Content-Transfer-Encoding: base64')
+
+    expect(fromBase64(plainBody.replace(/\r\n/g, ''))).toBe(text)
+    expect(fromBase64(richBody.replace(/\r\n/g, ''))).toBe(html)
+
+    for (const line of `${plainBody}\r\n${richBody}`.split('\r\n'))
+      expect(line.length).toBeLessThanOrEqual(76)
+  })
+
+  it('stays one text/plain part when no html is given', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce(tokenReply()).mockResolvedValueOnce(sendReply())
+    vi.stubGlobal('fetch', fetchMock)
+
+    await sendEmail({ to: 'runner@example.com', subject: 'Hi', text: 'Moi' })
+
+    const { headers } = await sentRaw(fetchMock)
+    expect(headers).toContain('Content-Type: text/plain; charset=UTF-8')
+    expect(headers.some(line => line.startsWith('Content-Type: multipart'))).toBe(false)
   })
 
   it('omits Reply-To when EMAIL_REPLY_TO is unset', async () => {
