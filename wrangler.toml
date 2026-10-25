@@ -30,7 +30,7 @@ database_id = "eb16c92e-e775-4c32-8f6c-a312301fd5c2"
 # Preview has its own Access application, so its own audience tag.
 [env.preview.vars]
 CF_ACCESS_TEAM_DOMAIN = "https://juoksut.cloudflareaccess.com"
-CF_ACCESS_AUD = ""
+CF_ACCESS_AUD = "708756cd1794efef3cfc18560df26c23abc74fca0abfa594e565072c424057ca"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFlBk0KLWz2PyE7d"
 EMAIL_FROM = "JUOKSUT <crew@juoksut.run>"
 EMAIL_REPLY_TO = "crew@juoksut.run"
