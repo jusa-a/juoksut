@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { createError, defineEventHandler } from 'h3'
 import { getPublishedPage, purgeOldSignups } from '../../utils/events'
 
@@ -13,5 +14,8 @@ export default defineEventHandler(async (event) => {
   if (!page)
     throw createError({ statusCode: 404, message: 'No such event page' })
 
-  return page
+  return {
+    ...page,
+    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || null,
+  }
 })
