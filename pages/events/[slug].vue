@@ -183,17 +183,19 @@ const pending = ref(false)
 const message = ref('')
 
 // Turnstile: one widget in whichever form is open. The token is single-use,
-// so every submit attempt gets a fresh one.
-const turnstileEl = ref(null)
+// so every submit attempt gets a fresh one. The container sits inside the
+// v-for, so Vue fills this ref with an array.
+const turnstileEl = ref([])
 const turnstileToken = ref('')
 const turnstileScript = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
 let widgetId = null
 
 function renderTurnstile() {
   const sitekey = page.value?.turnstileSiteKey
-  if (!sitekey || !window.turnstile || !turnstileEl.value)
+  const el = turnstileEl.value[0]
+  if (!sitekey || !window.turnstile || !el)
     return
-  widgetId = window.turnstile.render(turnstileEl.value, {
+  widgetId = window.turnstile.render(el, {
     sitekey,
     callback: (token) => { turnstileToken.value = token },
   })
