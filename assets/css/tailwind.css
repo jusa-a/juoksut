@@ -99,7 +99,9 @@
     cursor: cell;
   }
 
-  p a {
+  /* Links inside running text, paragraphs and list items alike. */
+  p a,
+  li a {
     text-decoration: underline;
   }
 

@@ -15,9 +15,9 @@
         <li><strong>Website use:</strong> Cloudflare hosts and protects the site and may process technical request data, such as IP address, device/browser information, and security logs, to deliver and secure the service.</li>
         <li><strong>Shopping cart:</strong> The cart stores selected products, sizes, and quantities in your browser’s LocalStorage. When you start checkout, those selections are sent to our checkout endpoint so we can create the payment session.</li>
         <li><strong>Webshop purchases and first-party registrations:</strong> Stripe Checkout collects your name, email address, phone number, payment and billing information where required, the purchased items, and any information you provide in an optional order note or required registration field (for example, camp shirt size). Stripe also creates a Stripe Customer for the purchase.</li>
-        <li><strong>Order fulfilment:</strong> Juoksut can access the order, registration, name, email address, and phone number in the Stripe Dashboard to arrange registrations, deliveries, pickups, refunds, and customer support. Apart from the free session signups described below, our own D1 database stores product, stock, and technical webhook records only; it is not used as a customer database.</li>
+        <li><strong>Order fulfilment:</strong> Juoksut can access the order, registration, name, email address, and phone number in the Stripe Dashboard to arrange registrations, deliveries, pickups, refunds, and customer support. Apart from the free event signups described below, our own D1 database stores product, stock, and technical webhook records only; it is not used as a customer database.</li>
         <li><strong>Checkout confirmation:</strong> After checkout, the site retrieves a limited order summary from Stripe to show the confirmation page. This includes the name, email address, items, amount, currency, and payment status for that checkout session.</li>
-        <li><strong>Free session signups (for example Fastlane Friday):</strong> When you sign up for a free session on this site, we store your name, email address, and signup status (confirmed, waitlisted, or cancelled) in our own database, and we email you a confirmation, waitlist and spot-opened messages, and a cancellation link. Juoksut crew see the signup list after logging in with a club account. A Cloudflare Turnstile check runs on the signup form to stop automated signups; it is covered by Cloudflare's <a href="https://www.cloudflare.com/turnstile-privacy-policy/">Turnstile Privacy Addendum</a>. We use this only to run that session and its waitlist.</li>
+        <li><strong>Free event signups:</strong> When you sign up for a free event on this site, we store your name, email address and signup status in our own database and email you about your signup. Only Juoksut crew can see the signup list. We use this only to run that event. A Cloudflare Turnstile check stops automated signups (see Cloudflare's <a href="https://www.cloudflare.com/turnstile-privacy-policy/">Turnstile Privacy Addendum</a>).</li>
         <li><strong>Third-party forms:</strong> Some pages link to or embed Google Forms or Tally. Information you submit there is processed by that provider and according to the form. We may receive the information needed to run the event or respond to the form.</li>
       </ul>
 
@@ -29,14 +29,14 @@
       <ul>
         <li><a href="https://stripe.com/privacy">Stripe</a> for payment processing, Checkout, and customer/order records.</li>
         <li><a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a> for hosting, security, delivery of the website and public media, the signup database, and the Turnstile bot check.</li>
-        <li><a href="https://policies.google.com/privacy">Google</a> (Google Workspace) for sending session signup emails from our club email account.</li>
+        <li><a href="https://policies.google.com/privacy">Google</a> (Google Workspace) for sending event signup emails from our club email address.</li>
         <li><a href="https://policies.google.com/privacy">Google Forms</a> and <a href="https://tally.so/help/privacy-policy">Tally</a> where you choose to use their forms.</li>
         <li><a href="https://privacycenter.instagram.com/policy/">Instagram/Meta</a> when you visit our Instagram profile or load Instagram-hosted media in the site archive.</li>
       </ul>
       <p>These providers may process data outside Finland or the European Economic Area. Where required, they use the transfer mechanisms and safeguards described in their own privacy documentation.</p>
 
       <h3>RETENTION</h3>
-      <p>Apart from free session signups, we do not keep customer records in the website database. Session signups (name, email address, and signup status) are deleted automatically about a week after the session. Stripe retains payment and customer records under its service and retention settings; Juoksut keeps access to information only for as long as needed to manage the purchase or registration, provide support, and meet legal obligations. Third-party form providers retain submissions under their own settings.</p>
+      <p>Apart from free event signups, we do not keep customer records in the website database. Event signups are deleted automatically a week after the event. Stripe retains payment and customer records under its service and retention settings; Juoksut keeps access to information only for as long as needed to manage the purchase or registration, provide support, and meet legal obligations. Third-party form providers retain submissions under their own settings.</p>
 
       <h3>COOKIES AND LOCALSTORAGE</h3>
       <ul>
