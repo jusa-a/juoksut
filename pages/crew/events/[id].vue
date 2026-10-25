@@ -26,7 +26,11 @@
     </p>
 
     <template v-if="crewEvent">
-      <form class="max-w-[46em] mt-[1em]" @submit.prevent="save">
+      <p class="note">
+        {{ opensLine }}
+      </p>
+
+      <form class="max-w-[46em] mt-[1em]" @submit.prevent="save()">
         <div class="grid gap-[0.75em] sm:grid-cols-2">
           <label class="field">
             <span>Start date</span>
@@ -74,6 +78,9 @@
           <button type="submit" class="btn" :disabled="busy">
             {{ busy ? 'Saving…' : 'Save' }}
           </button>
+          <button v-if="canOpenNow" type="button" class="btn ghost" :disabled="busy" @click="openNow">
+            Open signups now
+          </button>
           <button type="button" class="btn ghost" :disabled="busy" @click="removeEvent">
             {{ confirmingRemove ? 'Confirm delete event' : 'Delete event' }}
           </button>
@@ -84,104 +91,39 @@
         </p>
       </form>
 
-      <section class="max-w-[46em] box">
+      <section v-for="group in groups" :key="group.key" class="max-w-[46em] box">
         <h2 class="px-[0.75em] py-[0.5em] border-b border-pink text-[0.9em] uppercase">
-          Confirmed {{ confirmed.length }}/{{ crewEvent.capacity }}
+          {{ group.title }}
         </h2>
-        <p v-if="!confirmed.length" class="note px-[0.75em]">
-          Nobody confirmed yet.
+        <p v-if="!group.rows.length" class="note px-[0.75em]">
+          {{ group.empty }}
         </p>
-        <table v-else class="w-full text-left text-[0.9em]">
-          <thead class="text-[0.75em] uppercase">
-            <tr class="border-b border-pink">
-              <th class="px-[0.75em] py-[0.35em] font-normal">
-                Name
-              </th>
-              <th class="font-normal">
-                Email
-              </th>
-              <th class="font-normal">
-                Signed up
-              </th>
-              <th class="font-normal">
-                &nbsp;
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="signup in confirmed" :key="signup.id" class="border-b border-pink last:border-b-0">
-              <td class="px-[0.75em] py-[0.4em]">
+        <ul v-else class="text-[0.9em]">
+          <li
+            v-for="(signup, index) in group.rows"
+            :key="signup.id"
+            class="px-[0.75em] py-[0.4em] border-b border-pink last:border-b-0"
+          >
+            <div class="flex items-center justify-between gap-[0.75em]">
+              <span>
+                <template v-if="group.numbered">{{ index + 1 }}.</template>
                 {{ signup.name }}
-              </td>
-              <td class="break-all">
-                {{ signup.email }}
-              </td>
-              <td>
-                {{ unixToHelsinki(signup.createdAt).date }} {{ unixToHelsinki(signup.createdAt).time }}
-              </td>
-              <td class="text-right pr-[0.75em] text-[0.8em] uppercase">
-                <button
-                  type="button"
-                  class="underline"
-                  :disabled="removingId === signup.id"
-                  @click="removeSignup(signup)"
-                >
-                  {{ confirmingSignup === signup.id ? 'Confirm remove' : 'Remove' }}
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <section class="max-w-[46em] box">
-        <h2 class="px-[0.75em] py-[0.5em] border-b border-pink text-[0.9em] uppercase">
-          Waitlist {{ waitlist.length }}
-        </h2>
-        <p v-if="!waitlist.length" class="note px-[0.75em]">
-          Nobody waiting.
-        </p>
-        <table v-else class="w-full text-left text-[0.9em]">
-          <thead class="text-[0.75em] uppercase">
-            <tr class="border-b border-pink">
-              <th class="px-[0.75em] py-[0.35em] font-normal">
-                Name
-              </th>
-              <th class="font-normal">
-                Email
-              </th>
-              <th class="font-normal">
-                Signed up
-              </th>
-              <th class="font-normal">
-                &nbsp;
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="signup in waitlist" :key="signup.id" class="border-b border-pink last:border-b-0">
-              <td class="px-[0.75em] py-[0.4em]">
-                {{ signup.name }}
-              </td>
-              <td class="break-all">
-                {{ signup.email }}
-              </td>
-              <td>
-                {{ unixToHelsinki(signup.createdAt).date }} {{ unixToHelsinki(signup.createdAt).time }}
-              </td>
-              <td class="text-right pr-[0.75em] text-[0.8em] uppercase">
-                <button
-                  type="button"
-                  class="underline"
-                  :disabled="removingId === signup.id"
-                  @click="removeSignup(signup)"
-                >
-                  {{ confirmingSignup === signup.id ? 'Confirm remove' : 'Remove' }}
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </span>
+              <button
+                type="button"
+                class="underline text-[0.8em] uppercase shrink-0 min-h-[44px]"
+                :disabled="removingId === signup.id"
+                @click="removeSignup(signup)"
+              >
+                {{ confirmingSignup === signup.id ? 'Confirm remove' : 'Remove' }}
+              </button>
+            </div>
+            <div class="text-[0.8em]">
+              <span class="email">{{ signup.email }}</span>
+              · {{ unixToHelsinki(signup.createdAt).date }} {{ unixToHelsinki(signup.createdAt).time }}
+            </div>
+          </li>
+        </ul>
       </section>
     </template>
   </div>
@@ -213,6 +155,39 @@ const signups = computed(() => data.value?.signups || [])
 const confirmed = computed(() => signups.value.filter(entry => entry.status === 'confirmed'))
 const waitlist = computed(() => signups.value.filter(entry => entry.status === 'waitlist'))
 const startDate = computed(() => crewEvent.value ? unixToHelsinki(crewEvent.value.startsAt).date : '')
+
+const groups = computed(() => [
+  {
+    key: 'confirmed',
+    title: `Confirmed ${confirmed.value.length}/${crewEvent.value.capacity}`,
+    empty: 'Nobody confirmed yet.',
+    numbered: false,
+    rows: confirmed.value,
+  },
+  {
+    key: 'waitlist',
+    title: `Waitlist ${waitlist.value.length}`,
+    empty: 'Nobody waiting.',
+    numbered: true,
+    rows: waitlist.value,
+  },
+])
+
+const opensLine = computed(() => {
+  if (!crewEvent.value)
+    return ''
+  const { date, time } = unixToHelsinki(crewEvent.value.opensAt)
+  return crewEvent.value.opensAt * 1000 > Date.now()
+    ? `Signups open ${date} ${time}`
+    : 'Signups are open'
+})
+
+const canOpenNow = computed(() => {
+  if (!crewEvent.value)
+    return false
+  const now = Date.now() / 1000
+  return crewEvent.value.opensAt > now && crewEvent.value.startsAt > now
+})
 
 const form = reactive({
   startsAtDate: '',
@@ -258,16 +233,17 @@ function messageOf(error) {
   return error?.data?.message || error?.data?.statusMessage || error?.message || 'Something went wrong'
 }
 
-async function save() {
+async function save(overrides = {}, done = 'Saved') {
   busy.value = true
   message.value = ''
   isError.value = false
   try {
-    const result = await $fetch(`/api/crew/events/${id}`, { method: 'PATCH', body: { ...form } })
+    const result = await $fetch(`/api/crew/events/${id}`, { method: 'PATCH', body: { ...form, ...overrides } })
     await refresh()
+    fill(crewEvent.value)
     message.value = result.promoted
       ? `Saved. ${result.promoted} promoted from the waitlist.`
-      : 'Saved'
+      : done
   }
   catch (error) {
     message.value = messageOf(error)
@@ -276,6 +252,11 @@ async function save() {
   finally {
     busy.value = false
   }
+}
+
+function openNow() {
+  const now = unixToHelsinki(Math.floor(Date.now() / 1000))
+  return save({ opensAtDate: now.date, opensAtTime: now.time }, 'Signups are open')
 }
 
 async function removeEvent() {
@@ -383,6 +364,9 @@ async function removeSignup(signup) {
   margin-top: 0.75em;
   font-size: 0.85em;
   text-transform: uppercase;
+}
+.email {
+  overflow-wrap: anywhere;
 }
 .error {
   margin-top: 0.75em;

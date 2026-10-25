@@ -47,42 +47,44 @@
       <p v-if="!eventsOf(page.id).length" class="note px-[0.75em]">
         No events in the last week or ahead.
       </p>
-      <table v-else class="w-full text-left text-[0.9em]">
-        <thead class="text-[0.75em] uppercase">
-          <tr class="border-b border-pink">
-            <th class="px-[0.75em] py-[0.35em] font-normal">
-              Date
-            </th>
-            <th class="font-normal">
-              Time
-            </th>
-            <th class="font-normal">
-              Confirmed
-            </th>
-            <th class="font-normal">
-              Waitlist
-            </th>
-            <th class="font-normal">
-              &nbsp;
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="entry in eventsOf(page.id)" :key="entry.id" class="border-b border-pink last:border-b-0">
-            <td class="px-[0.75em] py-[0.4em]">
-              {{ unixToHelsinki(entry.startsAt).date }}
-            </td>
-            <td>{{ unixToHelsinki(entry.startsAt).time }}</td>
-            <td>{{ entry.confirmed }}/{{ entry.capacity }}</td>
-            <td>{{ entry.waitlist }}</td>
-            <td class="text-right pr-[0.75em] text-[0.8em] uppercase">
-              <NuxtLink :to="`/crew/events/${entry.id}`" class="underline">
-                Open
-              </NuxtLink>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="eventsOf(page.id).length" class="overflow-x-auto">
+        <table class="w-full text-left text-[0.9em]">
+          <thead class="text-[0.75em] uppercase">
+            <tr class="border-b border-pink">
+              <th class="px-[0.75em] py-[0.35em] font-normal">
+                Date
+              </th>
+              <th class="font-normal">
+                Time
+              </th>
+              <th class="font-normal">
+                Confirmed
+              </th>
+              <th class="font-normal">
+                Waitlist
+              </th>
+              <th class="font-normal">
+                &nbsp;
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="entry in eventsOf(page.id)" :key="entry.id" class="border-b border-pink last:border-b-0">
+              <td class="px-[0.75em] py-[0.4em]">
+                {{ unixToHelsinki(entry.startsAt).date }}
+              </td>
+              <td>{{ unixToHelsinki(entry.startsAt).time }}</td>
+              <td>{{ entry.confirmed }}/{{ entry.capacity }}</td>
+              <td>{{ entry.waitlist }}</td>
+              <td class="text-right pr-[0.75em] text-[0.8em] uppercase">
+                <NuxtLink :to="`/crew/events/${entry.id}`" class="underline">
+                  Open
+                </NuxtLink>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
 </template>
