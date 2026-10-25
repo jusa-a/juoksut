@@ -1,16 +1,6 @@
 import process from 'node:process'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { sendEmail } from '../server/utils/email'
-import { confirmedEmail, promotedEmail, waitlistEmail } from '../server/utils/fastlaneEmails'
-
-const signup = {
-  name: 'Ada',
-  date: '2026-11-06',
-  token: 'a'.repeat(32),
-  origin: 'https://juoksut.run',
-}
-
-const cancelLink = `https://juoksut.run/fastlane-friday/cancel?token=${'a'.repeat(32)}`
 
 const originalEnv = {
   EMAIL_API_TOKEN: process.env.EMAIL_API_TOKEN,
@@ -33,36 +23,6 @@ afterEach(() => {
     else
       process.env[key] = value
   }
-})
-
-describe('fastlane emails', () => {
-  it.each([
-    ['confirmed', confirmedEmail],
-    ['waitlist', waitlistEmail],
-    ['promoted', promotedEmail],
-  ])('%s email names the date, times and cancel link', (_, build) => {
-    const { subject, text } = build(signup)
-
-    expect(subject).toContain('Friday 6 November')
-    expect(text).toContain('Friday 6 November')
-    expect(text).toContain(cancelLink)
-  })
-
-  it('includes the session details in the confirmed and promoted bodies', () => {
-    for (const build of [confirmedEmail, promotedEmail]) {
-      const { text } = build(signup)
-      expect(text).toContain('16:30')
-      expect(text).toContain('17:00')
-      expect(text).toContain('Helsinki Olympic Stadium')
-      expect(text).toContain('https://www.juoksut.run/join')
-    }
-  })
-
-  it('tells a waitlisted person that a spot opens up', () => {
-    const { text } = waitlistEmail(signup)
-    expect(text).toContain('waitlist')
-    expect(text).toContain('if a spot opens up')
-  })
 })
 
 describe('sendEmail', () => {

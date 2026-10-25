@@ -1,23 +1,24 @@
 // Minimal in-memory stand-in for a Cloudflare D1 binding, backed by Node's
-// built-in SQLite so the fastlane logic runs against the real SQL from
+// built-in SQLite so the event signup logic runs against the real SQL from
 // d1/schema.sql instead of a mock.
 import { readFileSync } from 'node:fs'
 import { DatabaseSync } from 'node:sqlite'
 
 const schema = readFileSync(new URL('../../d1/schema.sql', import.meta.url), 'utf8')
 
-// Only the fastlane statements: the rest of the schema depends on tables and
-// fixtures these tests do not need.
-const fastlaneStatements = schema
+// Only the event signup statements: the rest of the schema depends on tables
+// and fixtures these tests do not need.
+const signupStatements = schema
   // Strip comments first: they contain semicolons that would split statements.
   .replace(/--.*$/gm, '')
   .split(';')
   .map(statement => statement.trim())
-  .filter(statement => /CREATE (?:TABLE|INDEX) IF NOT EXISTS (?:fastlane_|idx_fastlane_)/.test(statement))
+  .filter(statement => /CREATE (?:TABLE|INDEX) IF NOT EXISTS (?:event_pages|events|signups|idx_signups_)/.test(statement))
 
 export function createD1() {
   const db = new DatabaseSync(':memory:')
-  for (const statement of fastlaneStatements)
+  db.exec('PRAGMA foreign_keys = ON')
+  for (const statement of signupStatements)
     db.exec(statement)
 
   function statement(sql, params = []) {

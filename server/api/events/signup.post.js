@@ -1,32 +1,36 @@
-import { createError, defineEventHandler, getRequestURL, readBody } from 'h3'
+import { createError, defineEventHandler, getRequestHeader, getRequestURL, readBody } from 'h3'
 import { sendEmail } from '../../utils/email'
-import { FastlaneSignupError, signUp } from '../../utils/fastlane'
-import { confirmedEmail, waitlistEmail } from '../../utils/fastlaneEmails'
+import { confirmedEmail, waitlistEmail } from '../../utils/eventEmails'
+import { EventSignupError, getEventDetails, signUp } from '../../utils/events'
+import { verifyTurnstile } from '../../utils/turnstile'
 
 const emailPattern = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/
 const errorMessages = {
-  not_found: 'No such session',
+  not_found: 'No such event',
   not_open: 'Signups are not open yet',
   already_signed_up: 'You are already signed up',
 }
 
 export default defineEventHandler(async (event) => {
-  const { sessionId, name, email, website } = await readBody(event) || {}
+  const { eventId, name, email, website, turnstileToken } = await readBody(event) || {}
 
   // Honeypot: a real browser never fills this hidden field. Answer like a
   // normal success so bots get no signal, but write nothing.
-  if (typeof website === 'string' && website.trim()) {
+  if (typeof website === 'string' && website.trim())
     return { status: 'confirmed' }
-  }
 
   const cleanName = typeof name === 'string' ? name.trim() : ''
   const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase() : ''
 
-  if (!Number.isInteger(sessionId) || sessionId <= 0
+  if (!Number.isInteger(eventId) || eventId <= 0
     || cleanName.length < 1 || cleanName.length > 80
     || cleanEmail.length > 254 || !emailPattern.test(cleanEmail)) {
     throw createError({ statusCode: 400, message: 'Invalid signup' })
   }
+
+  const ip = getRequestHeader(event, 'cf-connecting-ip')
+  if (!await verifyTurnstile(turnstileToken, ip))
+    throw createError({ statusCode: 403, message: 'Bot check failed' })
 
   const D1 = event.context.cloudflare?.env?.D1
   if (!D1)
@@ -37,10 +41,10 @@ export default defineEventHandler(async (event) => {
 
   let signup
   try {
-    signup = await signUp(D1, { sessionId, name: cleanName, email: cleanEmail, token, now })
+    signup = await signUp(D1, { eventId, name: cleanName, email: cleanEmail, token, now })
   }
   catch (error) {
-    if (!(error instanceof FastlaneSignupError))
+    if (!(error instanceof EventSignupError))
       throw error
     throw createError({
       statusCode: { not_found: 404, not_open: 403, already_signed_up: 409 }[error.code],
@@ -48,23 +52,20 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const session = await D1.prepare(
-    'SELECT date FROM fastlane_sessions WHERE id = ?',
-  ).bind(sessionId).first()
-
+  const details = await getEventDetails(D1, eventId)
   const origin = new URL(getRequestURL(event)).origin
   const buildEmail = signup.status === 'confirmed' ? confirmedEmail : waitlistEmail
 
   try {
     await sendEmail({
       to: cleanEmail,
-      ...buildEmail({ name: cleanName, date: session.date, token: signup.token, origin }),
+      ...buildEmail({ ...details, name: cleanName, token: signup.token, origin }),
     })
   }
   catch (error) {
     // A mail failure must not lose an otherwise valid signup. Log the message
     // only: no recipient or token.
-    console.error('Failed to send Fastlane signup email:', error.message)
+    console.error('Failed to send event signup email:', error.message)
   }
 
   if (signup.status === 'confirmed')
@@ -72,9 +73,9 @@ export default defineEventHandler(async (event) => {
 
   const { position } = await D1.prepare(`
     SELECT COUNT(*) AS position
-    FROM fastlane_signups waitlisted
-    JOIN fastlane_signups me ON me.token = ?
-    WHERE waitlisted.session_id = me.session_id
+    FROM signups waitlisted
+    JOIN signups me ON me.token = ?
+    WHERE waitlisted.event_id = me.event_id
       AND waitlisted.status = 'waitlist'
       AND (waitlisted.created_at < me.created_at
         OR (waitlisted.created_at = me.created_at AND waitlisted.id <= me.id))
