@@ -64,16 +64,10 @@
         <textarea v-model="form.details" rows="3" />
       </label>
 
-      <div class="grid gap-[0.75em] sm:grid-cols-2">
-        <label class="field">
-          <span>Start time</span>
-          <input v-model="form.startTime" type="time" required>
-        </label>
-        <label class="field">
-          <span>Waitlist moves up until (event day)</span>
-          <input v-model="promoteTime" type="time" required @input="promoteRaw = ''">
-        </label>
-      </div>
+      <label class="field">
+        <span>Start time</span>
+        <input v-model="form.startTime" type="time" required>
+      </label>
 
       <div class="grid gap-[0.75em] sm:grid-cols-3">
         <label class="field">
@@ -96,6 +90,11 @@
           <input v-model="opensTime" type="time" required @input="opensRaw = ''">
         </label>
       </div>
+
+      <label class="field">
+        <span>Waitlist moves up until (event day)</span>
+        <input v-model="promoteTime" type="time" required @input="promoteRaw = ''">
+      </label>
 
       <p v-if="rawRuleNote" class="error">
         {{ rawRuleNote }}
