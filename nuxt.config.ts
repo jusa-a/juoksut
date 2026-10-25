@@ -59,6 +59,9 @@ export default defineNuxtConfig({
     '/orders': { redirect: { to: '/terms-and-conditions', statusCode: 301 } },
     '/success': { ssr: false },
     '/nb-order-form': { ssr: false },
+    // Crew screens are an app behind Cloudflare Access, not pages for crawlers.
+    '/crew': { ssr: false },
+    '/crew/**': { ssr: false },
   },
 
   app: {

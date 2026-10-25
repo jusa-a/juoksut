@@ -1,6 +1,8 @@
 // Signup emails are built only from the event page and its event row, so the
 // same code serves every event page.
 
+import { sendEmail } from './email'
+import { getEventDetails } from './events'
 import { unixToHelsinki } from './helsinkiTime'
 
 function formatWhen(startsAt) {
@@ -65,5 +67,27 @@ ${event.details}
 Can't make it? Cancel here so someone on the waitlist gets your spot: ${cancelLink(origin, token)}.
 
 ${signOff()}`,
+  }
+}
+
+// Crew actions that free or add places tell the promoted people. A mail
+// failure is logged and never undoes the promotion.
+export async function sendPromotedEmails(D1, promoted, origin) {
+  if (!promoted.length)
+    return
+  const details = await getEventDetails(D1, promoted[0].event_id)
+  if (!details)
+    return
+
+  for (const person of promoted) {
+    try {
+      await sendEmail({
+        to: person.email,
+        ...promotedEmail({ ...details, name: person.name, token: person.token, origin }),
+      })
+    }
+    catch (error) {
+      console.error('Failed to send event promotion email:', error.message)
+    }
   }
 }
