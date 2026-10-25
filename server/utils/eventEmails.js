@@ -56,6 +56,10 @@ function cancelButton(url, label) {
 function layout({ origin, heading, page, event, paragraphs, cancelUrl, cancelLabel }) {
   return `<!doctype html>
 <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body style="margin:0;padding:32px 16px;background:#FFFFFF;font-family:${font};color:${pink}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;margin:0 auto;background:#FFFFFF;color:${pink}">
 <tr><td align="center">
