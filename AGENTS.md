@@ -11,13 +11,12 @@ advice.
 ## What this project is
 
 JUOKSUT Run Club website + shop (Helsinki). A Nuxt 4 (Vue 3 + Nitro) SSR app deployed on
-**Cloudflare Pages**, backed by **Cloudflare D1** (SQLite — holds only product/stock + a couple of
-Instagram bookkeeping rows) and **Cloudflare R2** served via the `cdn.juoksut.run` CDN (all images
+**Cloudflare Pages**, backed by **Cloudflare D1** (SQLite — product/stock, Instagram bookkeeping
+rows, and free event signups) and **Cloudflare R2** served via the `cdn.juoksut.run` CDN (all images
 and videos). **Stripe Checkout** handles merch payments and is the **system of record** for
-payments, orders and customer PII — no personal/member data is stored in this app's own infra.
-
-Event registration/ticketing is **not** first-party: it runs through third-party embeds
-(Ticket Tailor, Tally, Google Forms — see "Event registration / ticketing" below).
+payments, orders and customer PII. The one exception is free event signups (name, email), kept in
+D1 and purged a week after the event (`docs/event-signups.md`). Other registrations run through
+third-party embeds (Tally, Google Forms — see "Event registration" below).
 
 The codebase is deliberately hand-rolled and sparsely commented — built solo, need-by-need, over
 years. Prefer documenting and proposing over rewriting; don't swap hand-rolled solutions for
@@ -47,15 +46,18 @@ corepack yarn db:seed:local        # seed only
 Local secrets live in `.dev.vars` (gitignored): `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
 `BASE_URL`. **`BASE_URL` is currently unused by the code** (redirect URLs are derived from the
 request origin — `server/api/checkout.js`). Production secrets are set in the Cloudflare Pages
-dashboard (Settings → Environment variables). Only `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`
-are read by server code.
+dashboard (Settings → Environment variables). Server secrets: `STRIPE_SECRET_KEY`,
+`STRIPE_WEBHOOK_SECRET`, `TURNSTILE_SECRET_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`,
+`GOOGLE_REFRESH_TOKEN`. Non-secret vars (`CF_ACCESS_*`, `TURNSTILE_SITE_KEY`, `EMAIL_*`) are in
+`wrangler.toml`, per environment.
 
 ## Repo structure
 
 ```
 pages/          → routes (see table below)
-server/api/     → Nitro API handlers (D1 + Stripe + Instagram)
-server/utils/   → productUtils.js (shared D1 query + transform logic)
+server/api/     → Nitro API handlers (D1 + Stripe + Instagram; events/ public signups, crew/ crew page)
+server/utils/   → productUtils.js (products), events.js + helsinkiTime.js (signup rules, times),
+                  email.js + eventEmails.js (Gmail API), crewAuth.js (Access token), turnstile.js
 stores/         → Pinia: cart.js (persisted to localStorage), products.js
 components/     → Nav, LandingNav, Cart, Footer, FooterVideo, LoadingScreen, Divider
 layouts/        → default.vue (Nav + Cart + Footer), landing.vue (LandingNav + FooterVideo + Footer)
@@ -77,7 +79,9 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 | `/join`                 | `join.vue`                 | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered**                                                                                                                                                                                                    |
 | `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc) + a Fastlane Friday card. SSR                                                                                                                                                                                                                        |
 | `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                                        |
-| `/fastlane-friday`      | `fastlane-friday.vue`      | Weekly speed session. **Ticket Tailor** widget injected on click (5s fallback link)                                                                                                                                                                                                   |
+| `/events/[slug]`        | `events/[slug].vue`        | Event page with dated events, signup form (Turnstile) and waitlist. SSR. `/fastlane-friday` 301s to `/events/fastlane-friday`                                                                                                                                                         |
+| `/signup/cancel`        | `signup/cancel.vue`        | Cancel link from the signup emails (`?token=`); a button cancels. `noindex`                                                                                                                                                                                                           |
+| `/crew`, `/crew/**`     | `crew/`                    | Crew page: event pages, events, signup lists. Behind Cloudflare Access; CSR (`ssr: false`), `noindex`                                                                                                                                                                                 |
 | `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                                                                                                                  |
 | `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                                                                                                                |
 | `/terms-and-conditions` | `terms-and-conditions.vue` | Terms & Conditions: order policy, preorder info, and trip terms. `robots: noindex`; `/orders` permanently redirects here.                                                                                                                                                             |
@@ -94,13 +98,16 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 '/shop':          { prerender: false }   // SSR on demand — products change
 '/shop/**':       { prerender: false }   // SSR on demand — OG/meta for crawlers
 '/archive':       { prerender: false }   // SSR for meta tags
+'/fastlane-friday': { redirect: '/events/fastlane-friday' (301) }
+'/events/**':     { prerender: false }
+'/crew', '/crew/**': { ssr: false }
 '/success':       { ssr: false }
 '/nb-order-form': { ssr: false }
 ```
 
 ## D1 database (`juoksut-products`, binding `D1`)
 
-Defined in committed `d1/schema.sql`. Six tables:
+Defined in committed `d1/schema.sql`. Nine tables:
 
 - **products** — `id, slug (UNIQUE), title, material (JSON), sizing (JSON), size_chart (JSON),
 description, price (INTEGER cents), stripe_product_id, stripe_price_id, checkout_fields, reserve_stock,
@@ -117,6 +124,9 @@ sales_start_at`.
   decrements when Stripe retries delivery.
 - **checkout_reservations** — short-lived capacity holds for products with `reserve_stock = 1`;
   contains product/stock references and Stripe's random checkout reference, never buyer PII.
+- **event_pages**, **events**, **signups** — free event signups: a public page, its dated events
+  (capacity, opening and promotion times) and the signups (name, email, status, cancel token).
+  Signups are deleted a week after their event. Spec: `docs/event-signups.md`.
 
 `server/utils/productUtils.js`:
 
@@ -160,6 +170,8 @@ navigation uses `$fetch`/`useFetch` to the real API routes normally.
 | `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id`; returns only name and email for the success page                     |
 | `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, finalises/releases reservations, updates merch stock on completion                       |
 | `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss                    |
+| `/api/events/*`                   | `events/`                   | Public event page data, signup (Turnstile), cancel by token. `docs/event-signups.md`                         |
+| `/api/crew/*`                     | `crew/`                     | Crew page CRUD; each handler verifies the Cloudflare Access token (`crewAuth.js`)                            |
 
 ## Stripe flow
 
@@ -200,10 +212,11 @@ order note remains for unstructured information.
 - `sales_start_at` is an optional Unix timestamp. The product page displays a countdown and the
   server rejects checkout before that instant, so sales can open automatically without a cron job.
 
-## Event registration / ticketing (third-party — not first-party)
+## Event registration
 
-- **Fastlane Friday** (`fastlane-friday.vue`): Ticket Tailor widget script
-  (`cdn.tickettailor.com/js/widgets/min/widget.js`) injected on "Sign Up" click; 5s fallback link.
+- **Free events** (Fastlane Friday first): first-party event pages at `/events/<slug>`, created on
+  the crew page; capacity, waitlist, Gmail API emails sent as `crew@juoksut.run`. Spec and rules:
+  `docs/event-signups.md`.
 - **nb-order-form** (`nb-order-form.vue`): Tally form iframe (`tally.so/embed/…`).
 - **live-love-lightspeed** (legacy): posts to a Google Form via a hidden iframe.
 - Trip registrations can use first-party Stripe Checkout. Required structured answers belong in the
@@ -226,7 +239,7 @@ is public-by-design (only public marketing assets). `products/[slug]/images.js` 
 - Default social image: `https://cdn.juoksut.run/og-image.jpg` (1200×630).
 - Product pages emit JSON-LD Product schema (`shop/[...slug].vue`).
 - **Sitemap is the static, hand-maintained `public/sitemap.xml`** (lists `/`, `/shop`, `/join`,
-  `/fastlane-friday`, `/archive`). The `@nuxtjs/sitemap` module was removed (git history); update
+  `/events/fastlane-friday`, `/archive`). The `@nuxtjs/sitemap` module was removed (git history); update
   the file by hand when routes change.
 - `public/robots.txt` and `public/sitemap.xml` are static, hand-maintained files. The sitemap and
   robots Nuxt modules are not installed.
@@ -250,7 +263,7 @@ Login product — no Facebook Page).
 
 ## Secrets and config
 
-- `wrangler.toml` is committed — **D1 binding config only** (db name/id), no secrets.
+- `wrangler.toml` is committed — D1 bindings and non-secret vars per environment, no secrets.
 - `.dev.vars` and `.env*` are gitignored; no secret value is in git history or the client bundle
   (verified). `runtimeConfig.public` exposes only non-secret values (siteUrl, siteName, siteImage).
 - Security headers are configured for all routes in `nuxt.config.ts`:
@@ -299,7 +312,8 @@ git checkout main && git merge feat/my-change && git push
   Cloudflare Pages, D1, R2, and Stripe Checkout. Prefer a small change that fits
   the existing implementation over introducing a library or framework.
 - Stripe is the payment, order, and customer-PII system of record. Do not add
-  customer or payment data to D1 without explicit approval.
+  customer or payment data to D1 without explicit approval. Free event signups
+  are the one approved exception, scoped and purged as `docs/event-signups.md` says.
 - Prices are stored as integer cents in D1 and shown as euros in the UI. Never
   trust browser-supplied pricing.
 - Product and stock changes have real commercial consequences. Do not write to
@@ -327,6 +341,12 @@ git checkout main && git merge feat/my-change && git push
   Nuxt auto-imports (`useFetch`, `createError`, `$fetch`) are false positives.
 
 ## Database and deployment safety
+
+- Pages bindings come from `wrangler.toml`, not the dashboard. Production uses the top-level
+  `[[d1_databases]]`; every non-`main` branch uses `[[env.preview.d1_databases]]`, the test database
+  `test-juoksut-products`. The test database is migrated by hand with `--remote`; it needs the same
+  structure as production (apply structural migrations, not the product-data ones).
+- Preview URLs (`<branch>.juoksut.pages.dev`) sit behind Cloudflare Access.
 
 - `d1/schema.sql` drops tables for local development. Never execute the full
   schema file against `--remote`.

@@ -34,7 +34,7 @@
         <div class="flex justify-between items-center w-full py-[0.5em]">
           <div class="flex flex-col">
             <div>Friday</div>
-            <NuxtLink to="/fastlane-friday" class="text-[1.8em] underline decoration-[0.05em]">Fastlane Friday</NuxtLink>
+            <NuxtLink to="/events/fastlane-friday" class="text-[1.8em] underline decoration-[0.05em]">Fastlane Friday</NuxtLink>
           </div>
           <div class="flex flex-col items-end">
             <div>

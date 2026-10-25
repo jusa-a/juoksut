@@ -6,13 +6,13 @@
 // because Nuxt injects inline hydration scripts/styles without nonces.
 const csp = [
   'default-src \'self\'',
-  'script-src \'self\' \'unsafe-inline\' https://cdn.tickettailor.com https://tally.so',
+  'script-src \'self\' \'unsafe-inline\' https://tally.so https://challenges.cloudflare.com',
   'style-src \'self\' \'unsafe-inline\'',
-  'img-src \'self\' data: https://cdn.juoksut.run https://*.cdninstagram.com https://*.tickettailor.com https://tally.so',
+  'img-src \'self\' data: https://cdn.juoksut.run https://*.cdninstagram.com https://tally.so',
   'media-src \'self\' https://cdn.juoksut.run https://*.cdninstagram.com',
   'font-src \'self\'',
   'connect-src \'self\'',
-  'frame-src https://tally.so https://*.tickettailor.com https://docs.google.com',
+  'frame-src https://tally.so https://docs.google.com https://challenges.cloudflare.com',
   'frame-ancestors \'none\'',
   'base-uri \'self\'',
   'form-action \'self\' https://docs.google.com',
@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     // Ensure SSR deploy targets Cloudflare Pages runtime (needed for D1 bindings)
     preset: 'cloudflare_pages',
     cloudflare: {
-      deployConfig: true,
+      deployConfig: false,
       nodeCompat: true,
     },
   },
@@ -57,8 +57,14 @@ export default defineNuxtConfig({
     '/archive': { prerender: false },
     // Keep old shared links working after the terms page moved to its own URL.
     '/orders': { redirect: { to: '/terms-and-conditions', statusCode: 301 } },
+    // Keep old shared links working after Fastlane Friday moved to /events.
+    '/fastlane-friday': { redirect: { to: '/events/fastlane-friday', statusCode: 301 } },
+    '/events/**': { prerender: false },
     '/success': { ssr: false },
     '/nb-order-form': { ssr: false },
+    // Crew screens are an app behind Cloudflare Access, not pages for crawlers.
+    '/crew': { ssr: false },
+    '/crew/**': { ssr: false },
   },
 
   app: {
