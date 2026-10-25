@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     // Ensure SSR deploy targets Cloudflare Pages runtime (needed for D1 bindings)
     preset: 'cloudflare_pages',
     cloudflare: {
-      deployConfig: true,
+      deployConfig: false,
       nodeCompat: true,
     },
   },

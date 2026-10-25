@@ -37,3 +37,6 @@ d1/seed.sql
 
 # Local-only event planning notes. Never commit unpublished event details.
 private/
+
+# Verification evidence (scripts/verify.mjs)
+.verify
