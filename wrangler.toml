@@ -16,7 +16,7 @@ database_id = "85dc51df-85fe-4b4a-871c-01a44a6e64b2" # prod (juoksut-products)
 # is the audience tag of the Access application in front of /crew.
 [vars]
 CF_ACCESS_TEAM_DOMAIN = "https://juoksut.cloudflareaccess.com"
-CF_ACCESS_AUD = ""
+CF_ACCESS_AUD = "df421383f0952167948ed45f28be0e621b007026101effb91f3c55be337885ab"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFlBk0KLWz2PyE7d"
 EMAIL_FROM = "JUOKSUT <crew@juoksut.run>"
 EMAIL_REPLY_TO = "crew@juoksut.run"
