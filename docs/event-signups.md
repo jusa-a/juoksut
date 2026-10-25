@@ -87,8 +87,10 @@ before the season opens.
 - `/fastlane-friday` 301-redirects to `/events/fastlane-friday` (route rule); the shop card and
   `/join` link to the new URL. `public/sitemap.xml` lists `/events/fastlane-friday`; other pages are
   added by hand when they matter for search.
-- `GET /api/events/<slug>` → the published page's fields and its upcoming events: `id, startsAt,
-venue, capacity, confirmed, waitlist, opensAt, state (not_open | open | full)`. No names or emails.
+- `GET /api/events/<slug>` → the published page's fields and its upcoming events:
+  `id, startsAt, venue, opensAt, state (not_open | open | full), spotsLeft`. No names, emails,
+  capacity, confirmed or waitlist counts: `spotsLeft` is `capacity - confirmed` while the session is
+  open and at most 10 places remain, otherwise `null`. (The crew API still returns the counts.)
 - `POST /api/events/signup` `{ eventId, name, email, website, turnstileToken }` →
   `{ status: 'confirmed' }` or `{ status: 'waitlist', position }`. Errors: 400 invalid, 403 not
   open / bot check failed, 404 no such event, 409 already signed up.

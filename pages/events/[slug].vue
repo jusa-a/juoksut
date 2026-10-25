@@ -12,7 +12,7 @@
       </div>
 
       <div class="flex-1 min-w-[300px] flex flex-col">
-        <div class="mb-auto flex flex-col px-[1em] py-[1.4em] pb-[2em] min-[500px]:sticky min-[500px]:top-[calc(var(--nav-height)+1px)]">
+        <div class="flex flex-col px-[1em] py-[1.4em] pb-[2em] min-[500px]:sticky min-[500px]:top-[calc(var(--nav-height)+1px)]">
           <div class="flex flex-col">
             <h2 class="text-[2em]">{{ page.title }}</h2>
           </div>
@@ -28,74 +28,75 @@
         </div>
 
         <!-- Signup -->
-        <div class="w-full pb-[1.4em] pt-[1em] px-[1em]">
+        <div class="w-full px-[1em] pb-[1.4em]">
           <p v-if="!page.events.length">
             No sessions open for signup yet. Check back soon.
           </p>
-          <ul v-else class="flex flex-col gap-[0.6em]">
-            <li v-for="event in page.events" :key="event.id" class="border border-pink">
-              <div class="flex flex-wrap items-center justify-between gap-[0.5em] p-[0.7em]">
-                <div class="m-0 text-[1em]">
-                  <p class="m-0">{{ formatStart(event.startsAt) }}</p>
+          <ul v-else class="flex flex-col border-t border-pink">
+            <li v-for="event in page.events" :key="event.id" class="border-b border-pink">
+              <div class="grid grid-cols-[4.5em_minmax(0,1fr)] items-center gap-x-[1em] gap-y-[0.6em] py-[0.9em] min-[500px]:grid-cols-[4.5em_minmax(0,1fr)_auto]">
+                <div>
+                  <p class="m-0 text-[0.75em] uppercase leading-none">{{ formatWeekday(event.startsAt) }}</p>
+                  <p class="m-0 font-serif font-medium text-[2em] tracking-[-0.03em] leading-[0.9]">{{ formatDate(event.startsAt) }}</p>
+                </div>
+
+                <div class="min-w-0">
+                  <p class="m-0 font-medium">{{ formatTime(event.startsAt) }}</p>
                   <p class="m-0 text-[0.8em]">{{ event.venue }}</p>
                 </div>
-                <div class="flex flex-wrap items-center gap-[0.7em]">
-                  <span class="text-[0.8em]">
-                    <template v-if="event.state === 'open'">
-                      {{ spotsLeft(event) }}
-                    </template>
-                    <template v-else-if="event.state === 'full'">
-                      Full · {{ event.waitlist }} on waitlist
-                    </template>
-                    <template v-else>
-                      Signup opens {{ formatOpens(event.opensAt) }}
-                    </template>
-                  </span>
+
+                <div class="col-start-2 flex flex-col items-start gap-[0.4em] min-[500px]:col-start-3 min-[500px]:items-end">
+                  <span v-if="event.state === 'full'" class="text-[0.8em]">Full</span>
+                  <span v-else-if="typeof event.spotsLeft === 'number'" class="text-[0.8em]">{{ spotsLeft(event.spotsLeft) }}</span>
                   <button
                     v-if="event.state !== 'not_open'"
                     type="button"
-                    :class="buttonClass"
+                    class="w-full min-[500px]:w-auto"
+                    :class="event.state === 'full' ? buttonSecondaryClass : buttonClass"
                     :aria-expanded="openId === event.id"
                     :aria-controls="`signup-${event.id}`"
                     @click="toggle(event.id)"
                   >
                     {{ event.state === 'full' ? 'Join waitlist' : 'Sign up' }}
                   </button>
+                  <span v-else class="text-[0.8em]">{{ formatOpens(event.opensAt) }}</span>
                 </div>
               </div>
 
               <form
                 v-if="openId === event.id"
                 :id="`signup-${event.id}`"
-                class="flex flex-col gap-[0.6em] border-t border-pink p-[0.7em]"
+                class="flex flex-col gap-[0.8em] pb-[1.2em]"
                 @submit.prevent="submit(event.id)"
               >
-                <div class="flex flex-col">
-                  <label :for="`name-${event.id}`" class="text-[0.8em] uppercase">Name</label>
-                  <input
-                    :id="`name-${event.id}`"
-                    v-model="name"
-                    type="text"
-                    name="name"
-                    autocomplete="name"
-                    maxlength="80"
-                    required
-                    :class="inputClass"
-                  >
-                </div>
+                <div class="grid grid-cols-1 gap-[0.6em] min-[640px]:grid-cols-2">
+                  <div class="flex flex-col">
+                    <label :for="`name-${event.id}`" class="text-[0.8em] uppercase">Name</label>
+                    <input
+                      :id="`name-${event.id}`"
+                      v-model="name"
+                      type="text"
+                      name="name"
+                      autocomplete="name"
+                      maxlength="80"
+                      required
+                      :class="inputClass"
+                    >
+                  </div>
 
-                <div class="flex flex-col">
-                  <label :for="`email-${event.id}`" class="text-[0.8em] uppercase">Email</label>
-                  <input
-                    :id="`email-${event.id}`"
-                    v-model="email"
-                    type="email"
-                    name="email"
-                    autocomplete="email"
-                    maxlength="254"
-                    required
-                    :class="inputClass"
-                  >
+                  <div class="flex flex-col">
+                    <label :for="`email-${event.id}`" class="text-[0.8em] uppercase">Email</label>
+                    <input
+                      :id="`email-${event.id}`"
+                      v-model="email"
+                      type="email"
+                      name="email"
+                      autocomplete="email"
+                      maxlength="254"
+                      required
+                      :class="inputClass"
+                    >
+                  </div>
                 </div>
 
                 <!-- Honeypot: off-screen, never filled by a real browser -->
@@ -114,11 +115,12 @@
                 <div v-if="page.turnstileSiteKey" ref="turnstileEl" />
 
                 <p class="m-0 text-[0.75em] leading-[1.4]">
-                  We store your name and email to run the session and delete them a week after. See our <NuxtLink to="/privacy-policy" class="underline">privacy policy</NuxtLink>.
+                  Only used for this session and deleted a week after. <NuxtLink to="/privacy-policy" class="underline">Privacy policy</NuxtLink>
                 </p>
 
                 <button
                   type="submit"
+                  class="w-full min-[640px]:w-auto min-[640px]:self-start"
                   :class="buttonClass"
                   :disabled="pending || (!!page.turnstileSiteKey && !turnstileToken)"
                 >
@@ -151,13 +153,19 @@ const { data: page, error, refresh } = await useFetch(`/api/events/${slug}`)
 if (error.value?.statusCode === 404)
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 
-const buttonClass = 'uppercase text-white bg-pink text-center border border-pink px-[1em] py-[0.7em] min-h-[44px] hover:bg-white hover:text-pink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink disabled:opacity-60'
+const buttonBase = 'uppercase text-center border border-pink px-[1em] py-[0.7em] min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink disabled:opacity-60'
+const buttonClass = `${buttonBase} text-white bg-pink hover:bg-white hover:text-pink`
+const buttonSecondaryClass = `${buttonBase} text-pink bg-white hover:bg-pink hover:text-white`
 const inputClass = 'border border-pink bg-white px-[0.6em] py-[0.5em] min-h-[44px] w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink'
 
-const dayFormat = new Intl.DateTimeFormat('en-GB', {
-  weekday: 'long',
+const weekdayFormat = new Intl.DateTimeFormat('en-GB', {
+  weekday: 'short',
+  timeZone: 'Europe/Helsinki',
+})
+// Finnish style, e.g. "6.11."
+const dateFormat = new Intl.DateTimeFormat('fi-FI', {
   day: 'numeric',
-  month: 'long',
+  month: 'numeric',
   timeZone: 'Europe/Helsinki',
 })
 const timeFormat = new Intl.DateTimeFormat('en-GB', {
@@ -167,13 +175,11 @@ const timeFormat = new Intl.DateTimeFormat('en-GB', {
 })
 
 const paragraphs = computed(() => eventParagraphs(page.value?.body))
-const formatStart = unix => `${dayFormat.format(new Date(unix * 1000))}, ${timeFormat.format(new Date(unix * 1000))}`
-const formatOpens = unix => `${formatStart(unix)} Helsinki`
-
-function spotsLeft({ capacity, confirmed }) {
-  const left = capacity - confirmed
-  return `${left} ${left === 1 ? 'spot' : 'spots'} left`
-}
+const formatWeekday = unix => weekdayFormat.format(new Date(unix * 1000))
+const formatDate = unix => dateFormat.format(new Date(unix * 1000))
+const formatTime = unix => timeFormat.format(new Date(unix * 1000))
+const formatOpens = unix => `Opens ${formatWeekday(unix)} ${formatDate(unix)} ${formatTime(unix)}`
+const spotsLeft = left => `${left} ${left === 1 ? 'spot' : 'spots'} left`
 
 const openId = ref(null)
 const name = ref('')
@@ -197,6 +203,7 @@ function renderTurnstile() {
     return
   widgetId = window.turnstile.render(el, {
     sitekey,
+    appearance: 'interaction-only',
     callback: (token) => { turnstileToken.value = token },
   })
 }

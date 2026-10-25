@@ -6,6 +6,10 @@
 import { createError } from 'h3'
 import { helsinkiToUnix, resolveEventTimes, unixToHelsinki } from './helsinkiTime'
 
+// The public page shows a count only when a session is nearly full; otherwise
+// it just says "Sign up" and the real capacity stays private.
+const PUBLIC_SPOTS_LIMIT = 10
+
 export class EventSignupError extends Error {
   constructor(code) {
     super(code)
@@ -40,16 +44,18 @@ export async function getPublishedPage(D1, slug, now) {
     body: page.body,
     imageUrl: page.image_url,
     summary: page.summary,
-    events: results.map(row => ({
-      id: row.id,
-      startsAt: row.starts_at,
-      venue: row.venue,
-      capacity: row.capacity,
-      confirmed: row.confirmed,
-      waitlist: row.waitlist,
-      opensAt: row.opens_at,
-      state: eventState(row, now),
-    })),
+    events: results.map((row) => {
+      const state = eventState(row, now)
+      const spotsLeft = row.capacity - row.confirmed
+      return {
+        id: row.id,
+        startsAt: row.starts_at,
+        venue: row.venue,
+        opensAt: row.opens_at,
+        state,
+        spotsLeft: state === 'open' && spotsLeft <= PUBLIC_SPOTS_LIMIT ? spotsLeft : null,
+      }
+    }),
   }
 }
 
