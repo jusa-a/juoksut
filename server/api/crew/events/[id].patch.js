@@ -4,7 +4,7 @@ import { sendPromotedEmails } from '../../../utils/eventEmails'
 import { updateEvent } from '../../../utils/events'
 
 export default defineEventHandler(async (event) => {
-  const _crew = await requireCrew(event)
+  await requireCrew(event)
   const D1 = crewDb(event)
   const { event: updated, promoted } = await updateEvent(
     D1,

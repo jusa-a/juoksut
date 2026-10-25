@@ -3,7 +3,7 @@ import { crewDb, requireCrew } from '../../../utils/crewAuth'
 import { createEvents } from '../../../utils/events'
 
 export default defineEventHandler(async (event) => {
-  const _crew = await requireCrew(event)
+  await requireCrew(event)
   const body = await readBody(event) || {}
   const pageId = Number(body.pageId)
   if (!Number.isInteger(pageId) || pageId <= 0)

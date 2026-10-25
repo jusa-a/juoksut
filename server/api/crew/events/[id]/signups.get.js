@@ -3,7 +3,7 @@ import { crewDb, requireCrew } from '../../../../utils/crewAuth'
 import { getCrewEvent, listEventSignups } from '../../../../utils/events'
 
 export default defineEventHandler(async (event) => {
-  const _crew = await requireCrew(event)
+  await requireCrew(event)
   const D1 = crewDb(event)
   const id = Number(event.context.params.id)
 
