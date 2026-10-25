@@ -3,7 +3,7 @@
     <section class="flex flex-row flex-wrap justify-around items-center w-full p-[1em] gap-[1em] m-0 mb-auto">
       <NuxtLink
         v-if="showFastlaneFriday"
-        to="/fastlane-friday"
+        to="/events/fastlane-friday"
         class="min-w-[290px] max-w-[26em]"
       >
         <div class="shopItem border-[1px] border-transparent hover:border-pink">
