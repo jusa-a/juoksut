@@ -32,6 +32,14 @@ function escapeHtml(value) {
   return value == null ? '' : String(value).replace(/[&<>"']/g, char => escapes[char])
 }
 
+// Mail apps turn bare URLs and addresses into blue links; make them pink ones
+// first. Runs on already escaped text.
+function linkify(html) {
+  return html
+    .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, url => `<a href="${url}" style="color:${pink}">${url}</a>`)
+    .replace(/\b[\w.+-]+@[\w-]+(\.[\w-]+)+\b/g, address => `<a href="mailto:${address}" style="color:${pink}">${address}</a>`)
+}
+
 function paragraph(content, style = '') {
   return `<p style="margin:0 0 16px;font-family:${font};font-size:15px;line-height:22px;color:${pink};text-align:center;${style}">${content}</p>`
 }
@@ -51,9 +59,10 @@ function cancelButton(url, label) {
 </table>`
 }
 
-// Centred, no rules or boxes; the wordmark sits only in the footer. Width and
+// Centred, no rules or boxes; the wordmark sits only in the footer, served from
+// the public CDN (preview hosts are behind Access). Width and
 // height are both set so no client rescales it out of proportion (600×104).
-function layout({ origin, heading, page, event, paragraphs, cancelUrl, cancelLabel }) {
+function layout({ heading, page, event, paragraphs, cancelUrl, cancelLabel }) {
   return `<!doctype html>
 <html>
 <head>
@@ -65,11 +74,11 @@ function layout({ origin, heading, page, event, paragraphs, cancelUrl, cancelLab
 <tr><td align="center">
 ${paragraph(heading, 'font-size:24px;font-weight:600;line-height:30px;margin:0 0 24px')}
 ${eventBlock(page, event)}
-${paragraphs.map(text => paragraph(escapeHtml(text).replace(/\n/g, '<br>'))).join('\n')}
+${paragraphs.map(text => paragraph(linkify(escapeHtml(text)).replace(/\n/g, '<br>'))).join('\n')}
 ${cancelButton(cancelUrl, cancelLabel)}
 ${paragraph('Lightspeed regards,<br>Juoksut Crew', 'margin:0 0 40px')}
-<img src="${escapeHtml(origin)}/img/email-wordmark.png" width="150" height="26" alt="JUOKSUT" style="display:block;width:150px;height:26px;margin:0 auto 10px;border:0">
-${paragraph('<a href="https://juoksut.run" style="color:#FF639A">juoksut.run</a> · crew@juoksut.run', 'font-size:12px;margin:0')}
+<img src="https://cdn.juoksut.run/email-wordmark.png" width="150" height="26" alt="JUOKSUT" style="display:block;width:150px;height:26px;margin:0 auto 10px;border:0">
+${paragraph(`<a href="https://juoksut.run" style="color:${pink}">juoksut.run</a> · <a href="mailto:crew@juoksut.run" style="color:${pink}">crew@juoksut.run</a>`, 'font-size:12px;margin:0')}
 </td></tr>
 </table>
 </body>
@@ -90,7 +99,6 @@ Can't make it? Cancel here so someone on the waitlist gets your spot: ${cancelLi
 
 ${signOff()}`,
     html: layout({
-      origin,
       heading: 'You\'re in',
       page,
       event,
@@ -117,7 +125,6 @@ Changed your mind? Cancel here: ${cancelLink(origin, token)}.
 
 ${signOff()}`,
     html: layout({
-      origin,
       heading: 'You\'re on the waitlist',
       page,
       event,
@@ -145,7 +152,6 @@ Can't make it? Cancel here so someone on the waitlist gets your spot: ${cancelLi
 
 ${signOff()}`,
     html: layout({
-      origin,
       heading: 'A spot opened up',
       page,
       event,

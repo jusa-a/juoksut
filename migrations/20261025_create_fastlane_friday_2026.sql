@@ -3,7 +3,7 @@
 -- start 17:00, signups open Monday 16:00, waitlist promotion until Friday 12:00.
 
 INSERT INTO event_pages (slug, title, body, image_url, summary, published, venue, details, capacity, start_time, opens_rule, promote_rule)
-VALUES ('fastlane-friday', 'Fastlane Friday', 'Powered by Suunto🔺
+VALUES ('fastlane-friday', 'FASTLANE FRIDAY', 'Powered by Suunto🔺
 
 Every Friday at the Olympic Stadium''s tunnel
 

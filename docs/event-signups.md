@@ -111,9 +111,9 @@ spot-opened only), the cancel link `<origin>/signup/cancel?token=…` and the si
 regards, / Juoksut Crew".
 
 The HTML part is the same mail in the site's look: white background, pink (`#FF639A`) text, centred,
-no rules or boxes; the cancel link is a pink button (the plain-text part carries the URL); the wordmark (`<origin>/img/email-wordmark.png`, served from `public/img/`, with width and
+no rules or boxes; the cancel link is a pink button (the plain-text part carries the URL); the wordmark (`https://cdn.juoksut.run/email-wordmark.png`, public even from preview hosts, with width and
 height set) sits only in the footer. Table layout, inline styles, 520px wide. Every interpolated value
-is HTML-escaped; `<details>` line breaks become `<br>`.
+is HTML-escaped; `<details>` line breaks become `<br>`, and URLs and email addresses in it become pink links.
 
 Sent with the Gmail API (`users.messages.send`, scope `gmail.send`) as the sender account:
 exchange the refresh token for an access token at `oauth2.googleapis.com/token`, then send a raw

@@ -12,7 +12,7 @@
       </div>
 
       <div class="flex-1 min-w-[300px] flex flex-col">
-        <div class="flex flex-col px-[1em] py-[1.4em] pb-[2em] min-[500px]:sticky min-[500px]:top-[calc(var(--nav-height)+1px)]">
+        <div class="flex flex-col px-[1em] py-[1.4em] pb-[2em]">
           <div class="flex flex-col">
             <h2 class="text-[2em]">{{ page.title }}</h2>
           </div>

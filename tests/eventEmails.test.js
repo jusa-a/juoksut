@@ -25,7 +25,7 @@ describe('event email html', () => {
     const { html } = build(input)
 
     expect(html).toContain(heading)
-    expect(html).toContain('https://juoksut.run/img/email-wordmark.png')
+    expect(html).toContain('https://cdn.juoksut.run/email-wordmark.png')
     expect(html).toContain('max-width:520px')
     expect(html).toContain('Test Event')
     expect(html).toContain('Friday 6 November at 16:30')
