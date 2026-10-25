@@ -17,21 +17,46 @@ function header(name, value) {
   return `${name}: ${value.replace(/[\r\n]/g, '')}`
 }
 
-function message({ from, to, replyTo, subject, text }) {
+function encoded(text) {
+  return base64(text).match(/.{1,76}/g) || []
+}
+
+function part(type, text) {
+  return [
+    `Content-Type: ${type}; charset=UTF-8`,
+    'Content-Transfer-Encoding: base64',
+    '',
+    ...encoded(text),
+  ].join('\r\n')
+}
+
+function message({ from, to, replyTo, subject, text, html }) {
   const headers = [
     header('From', from),
     header('To', to),
     ...(replyTo ? [header('Reply-To', replyTo)] : []),
     `Subject: =?UTF-8?B?${base64(subject)}?=`,
     'MIME-Version: 1.0',
-    'Content-Type: text/plain; charset=UTF-8',
-    'Content-Transfer-Encoding: base64',
   ]
-  const body = base64(text).match(/.{1,76}/g) || []
+
+  if (!html) {
+    headers.push('Content-Type: text/plain; charset=UTF-8', 'Content-Transfer-Encoding: base64')
+    return `${headers.join('\r\n')}\r\n\r\n${encoded(text).join('\r\n')}`
+  }
+
+  const boundary = `=_juoksut_${crypto.randomUUID()}`
+  headers.push(`Content-Type: multipart/alternative; boundary="${boundary}"`)
+  const body = [
+    `--${boundary}`,
+    part('text/plain', text),
+    `--${boundary}`,
+    part('text/html', html),
+    `--${boundary}--`,
+  ]
   return `${headers.join('\r\n')}\r\n\r\n${body.join('\r\n')}`
 }
 
-export async function sendEmail({ to, subject, text }) {
+export async function sendEmail({ to, subject, text, html }) {
   const {
     GOOGLE_CLIENT_ID: clientId,
     GOOGLE_CLIENT_SECRET: clientSecret,
@@ -66,7 +91,7 @@ export async function sendEmail({ to, subject, text }) {
       'Authorization': `Bearer ${token.access_token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ raw: base64Url(message({ from, to, replyTo, subject, text })) }),
+    body: JSON.stringify({ raw: base64Url(message({ from, to, replyTo, subject, text, html })) }),
   })
   if (!sendResponse.ok)
     throw new Error(`Gmail send failed: HTTP ${sendResponse.status}`)
