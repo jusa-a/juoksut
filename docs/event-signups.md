@@ -110,11 +110,11 @@ spot-opened mails, each with the page `<title>`, the date and time, `<venue>`, `
 spot-opened only), the cancel link `<origin>/signup/cancel?token=…` and the sign-off "Lightspeed
 regards, / Juoksut Crew".
 
-The HTML part is the same mail in the site's look: white background, pink (`#FF639A`) text, the
-wordmark from `<origin>/img/email-wordmark.png` (served from `public/img/`), the event in a 1px pink
-bordered block, and the cancel link as a pink button with the same URL under it for clients that strip
-buttons. Table layout, inline styles, 560px wide, no images beyond the wordmark. Every interpolated
-value is HTML-escaped; `<details>` line breaks become `<br>`.
+The HTML part is the same mail in the site's look: white background, pink (`#FF639A`) text, centred,
+no rules or boxes; the cancel link is a pink button with the same URL under it for clients that strip
+buttons; the wordmark (`<origin>/img/email-wordmark.png`, served from `public/img/`, with width and
+height set) sits only in the footer. Table layout, inline styles, 520px wide. Every interpolated value
+is HTML-escaped; `<details>` line breaks become `<br>`.
 
 Sent with the Gmail API (`users.messages.send`, scope `gmail.send`) as the sender account:
 exchange the refresh token for an access token at `oauth2.googleapis.com/token`, then send a raw
