@@ -60,6 +60,8 @@ a pink fill. No greys, no second accent. Error text is the only exception (`text
 - Product and event pages: image left, text right, wrapping to one column on phones; the text
   column is sticky below the nav on wider screens.
 - The nav is sticky with a 1px pink divider under it; height `--nav-height`.
+- Dividers always run edge to edge of their column or the screen, like the nav's; never inset by
+  the side padding. Content inside carries its own padding (list rows, forms).
 
 ## Elevation & Depth
 

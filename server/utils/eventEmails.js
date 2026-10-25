@@ -33,51 +33,41 @@ function escapeHtml(value) {
 }
 
 function paragraph(content, style = '') {
-  return `<p style="margin:0 0 16px;font-family:${font};font-size:14px;line-height:20px;color:${pink};${style}">${content}</p>`
-}
-
-function rule() {
-  return `<hr style="border:0;border-top:1px solid ${pink};margin:16px 0">`
+  return `<p style="margin:0 0 16px;font-family:${font};font-size:15px;line-height:22px;color:${pink};text-align:center;${style}">${content}</p>`
 }
 
 function eventBlock(page, event) {
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${pink}">
-<tr><td style="padding:16px">
-${paragraph(escapeHtml(page.title), 'font-size:16px;font-weight:600;line-height:22px;margin:0 0 4px')}
-${paragraph(escapeHtml(formatWhen(event.startsAt)), 'margin:0 0 4px')}
-${paragraph(escapeHtml(event.venue), 'margin:0')}
-</td></tr>
-</table>`
+  return `${paragraph(escapeHtml(page.title), 'font-size:17px;font-weight:600;margin:0 0 2px')}
+${paragraph(escapeHtml(formatWhen(event.startsAt)), 'margin:0 0 2px')}
+${paragraph(escapeHtml(event.venue), 'margin:0 0 28px')}`
 }
 
 // The same URL stays under the button for clients that strip or refuse it.
 function cancelButton(url, label) {
   const href = escapeHtml(url)
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px">
-<tr><td style="background:${pink};padding:12px 20px">
+  return `<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:8px auto 10px">
+<tr><td style="background:${pink};padding:13px 22px">
 <a href="${href}" style="display:inline-block;font-family:${font};font-size:14px;font-weight:600;line-height:18px;letter-spacing:0.04em;text-transform:uppercase;color:#FFFFFF;text-decoration:none">${escapeHtml(label)}</a>
 </td></tr>
 </table>
-${paragraph(`<a href="${href}" style="color:${pink}">${href}</a>`, 'font-size:12px')}`
+${paragraph(`<a href="${href}" style="color:${pink};word-break:break-all">${href}</a>`, 'font-size:12px;line-height:16px;margin:0 0 28px')}`
 }
 
+// Centred, no rules or boxes; the wordmark sits only in the footer. Width and
+// height are both set so no client rescales it out of proportion (960×184).
 function layout({ origin, heading, page, event, paragraphs, cancelUrl, cancelLabel }) {
   return `<!doctype html>
 <html>
-<body style="margin:0;padding:24px 12px;background:#FFFFFF;font-family:${font};color:${pink}">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;margin:0 auto;background:#FFFFFF;color:${pink}">
-<tr><td>
-<img src="${escapeHtml(origin)}/img/email-wordmark.png" width="240" alt="JUOKSUT" style="display:block;max-width:100%;border:0">
-${rule()}
-${paragraph(heading, 'font-size:20px;font-weight:600;line-height:26px')}
+<body style="margin:0;padding:32px 16px;background:#FFFFFF;font-family:${font};color:${pink}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;margin:0 auto;background:#FFFFFF;color:${pink}">
+<tr><td align="center">
+${paragraph(heading, 'font-size:24px;font-weight:600;line-height:30px;margin:0 0 24px')}
 ${eventBlock(page, event)}
-</td></tr>
-<tr><td style="padding:16px 0 0">
 ${paragraphs.map(text => paragraph(escapeHtml(text).replace(/\n/g, '<br>'))).join('\n')}
 ${cancelButton(cancelUrl, cancelLabel)}
-${paragraph('Lightspeed regards,<br>Juoksut Crew')}
-${rule()}
-${paragraph('JUOKSUT · <a href="https://juoksut.run" style="color:#FF639A">juoksut.run</a> · crew@juoksut.run', 'font-size:12px;margin:0')}
+${paragraph('Lightspeed regards,<br>Juoksut Crew', 'margin:0 0 40px')}
+<img src="${escapeHtml(origin)}/img/email-wordmark.png" width="150" height="29" alt="JUOKSUT" style="display:block;width:150px;height:29px;margin:0 auto 10px;border:0">
+${paragraph('<a href="https://juoksut.run" style="color:#FF639A">juoksut.run</a> · crew@juoksut.run', 'font-size:12px;margin:0')}
 </td></tr>
 </table>
 </body>

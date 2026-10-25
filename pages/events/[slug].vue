@@ -28,13 +28,14 @@
         </div>
 
         <!-- Signup -->
-        <div class="w-full px-[1em] pb-[1.4em]">
-          <p v-if="!page.events.length">
+        <!-- Rules run edge to edge of the column, so rows carry their own side padding. -->
+        <div class="w-full pb-[1.4em]">
+          <p v-if="!page.events.length" class="px-[1em]">
             No sessions open for signup yet. Check back soon.
           </p>
           <ul v-else class="flex flex-col border-t border-pink">
             <li v-for="event in page.events" :key="event.id" class="border-b border-pink">
-              <div class="grid grid-cols-[4.5em_minmax(0,1fr)] items-center gap-x-[1em] gap-y-[0.6em] py-[0.9em] min-[500px]:grid-cols-[4.5em_minmax(0,1fr)_auto]">
+              <div class="grid grid-cols-[4.5em_minmax(0,1fr)_auto] items-center gap-x-[1em] gap-y-[0.7em] px-[1em] py-[0.9em] min-[500px]:grid-cols-[4.5em_minmax(0,1fr)_auto_auto]">
                 <div>
                   <p class="m-0 text-[0.75em] uppercase leading-none">{{ formatWeekday(event.startsAt) }}</p>
                   <p class="m-0 font-serif font-medium text-[2em] tracking-[-0.03em] leading-[0.9]">{{ formatDate(event.startsAt) }}</p>
@@ -45,11 +46,14 @@
                   <p class="m-0 text-[0.8em]">{{ event.venue }}</p>
                 </div>
 
-                <div class="col-start-2 flex flex-col items-start gap-[0.4em] min-[500px]:col-start-3 min-[500px]:items-end">
-                  <span v-if="event.state === 'full'" class="text-[0.8em]">Full</span>
-                  <span v-else-if="typeof event.spotsLeft === 'number'" class="text-[0.8em]">{{ spotsLeft(event.spotsLeft) }}</span>
+                <span class="text-[0.8em] text-right" :class="{ 'min-[500px]:col-span-2': event.state === 'not_open' }">
+                  <template v-if="event.state === 'not_open'">{{ formatOpens(event.opensAt) }}</template>
+                  <template v-else-if="event.state === 'full'">Full</template>
+                  <template v-else-if="typeof event.spotsLeft === 'number'">{{ spotsLeft(event.spotsLeft) }}</template>
+                </span>
+
+                <div v-if="event.state !== 'not_open'" class="col-span-3 min-[500px]:col-span-1">
                   <button
-                    v-if="event.state !== 'not_open'"
                     type="button"
                     class="w-full min-[500px]:w-auto"
                     :class="event.state === 'full' ? buttonSecondaryClass : buttonClass"
@@ -59,14 +63,13 @@
                   >
                     {{ openId === event.id ? 'Close' : event.state === 'full' ? 'Join waitlist' : 'Sign up' }}
                   </button>
-                  <span v-else class="text-[0.8em]">{{ formatOpens(event.opensAt) }}</span>
                 </div>
               </div>
 
               <form
                 v-if="openId === event.id"
                 :id="`signup-${event.id}`"
-                class="flex flex-col gap-[0.8em] pb-[1.2em]"
+                class="flex flex-col gap-[0.8em] px-[1em] pb-[1.2em]"
                 @submit.prevent="submit(event.id)"
               >
                 <div class="grid grid-cols-1 gap-[0.6em] min-[640px]:grid-cols-2">
@@ -114,25 +117,26 @@
 
                 <div v-if="page.turnstileSiteKey" ref="turnstileEl" />
 
-                <p class="m-0 text-[0.75em] leading-[1.4]">
-                  Only used for this session and deleted a week after. <NuxtLink to="/privacy-policy" class="underline">Privacy policy</NuxtLink>
-                </p>
-
-                <button
-                  type="submit"
-                  class="w-full min-[640px]:w-auto min-[640px]:self-start"
-                  :class="buttonClass"
-                  :disabled="pending || (!!page.turnstileSiteKey && !turnstileToken)"
-                >
-                  {{ pending ? 'Sending…' : event.state === 'full' ? 'Join waitlist' : 'Sign up' }}
-                </button>
+                <div class="flex flex-col gap-[0.8em] min-[640px]:flex-row min-[640px]:items-center min-[640px]:justify-end">
+                  <p v-if="formError" role="alert" class="m-0 font-medium text-red-500 min-[640px]:mr-auto">
+                    {{ formError }}
+                  </p>
+                  <button
+                    type="submit"
+                    class="w-full min-[640px]:w-auto"
+                    :class="buttonClass"
+                    :disabled="pending || (!!page.turnstileSiteKey && !turnstileToken)"
+                  >
+                    {{ pending ? 'Sending…' : event.state === 'full' ? 'Join waitlist' : 'Sign up' }}
+                  </button>
+                </div>
               </form>
+
+              <p v-if="done?.eventId === event.id" role="status" class="m-0 mx-[1em] mb-[0.9em] px-[1em] py-[0.8em] bg-pink text-white">
+                {{ done.text }}
+              </p>
             </li>
           </ul>
-
-          <p role="status" aria-live="polite" class="m-0 pt-[0.3em] text-[0.9em]">
-            {{ message }}
-          </p>
         </div>
       </div>
     </section>
@@ -186,7 +190,8 @@ const name = ref('')
 const email = ref('')
 const website = ref('')
 const pending = ref(false)
-const message = ref('')
+const formError = ref('')
+const done = ref(null)
 
 // Turnstile: one widget in whichever form is open. The token is single-use,
 // so every submit attempt gets a fresh one. The container sits inside the
@@ -247,7 +252,8 @@ watch(openId, async (id) => {
 
 function toggle(id) {
   openId.value = openId.value === id ? null : id
-  message.value = ''
+  formError.value = ''
+  done.value = null
 }
 
 async function submit(eventId) {
@@ -255,7 +261,8 @@ async function submit(eventId) {
     return
 
   pending.value = true
-  message.value = ''
+  formError.value = ''
+  done.value = null
 
   try {
     const result = await $fetch('/api/events/signup', {
@@ -269,9 +276,12 @@ async function submit(eventId) {
       },
     })
 
-    message.value = result.status === 'waitlist'
-      ? `You're number ${result.position} on the waitlist. We'll email you if a spot opens.`
-      : 'You\'re in! Check your email for the details.'
+    done.value = {
+      eventId,
+      text: result.status === 'waitlist'
+        ? `You're number ${result.position} on the waitlist. We'll email you if a spot opens.`
+        : 'You\'re in! Check your email for the details.',
+    }
 
     openId.value = null
     name.value = ''
@@ -283,18 +293,18 @@ async function submit(eventId) {
   catch (err) {
     const code = err?.statusCode ?? err?.status
     if (code === 409) {
-      message.value = 'You\'re already signed up for this session.'
+      formError.value = 'You\'re already signed up for this session.'
     }
     else if (code === 403) {
-      message.value = err?.data?.message === 'Bot check failed'
+      formError.value = err?.data?.message === 'Bot check failed'
         ? 'Couldn\'t verify you\'re human. Try again.'
         : 'Signup isn\'t open yet.'
     }
     else if (code === 400) {
-      message.value = 'Check your name and email.'
+      formError.value = 'Check your name and email.'
     }
     else {
-      message.value = 'Something went wrong. Try again or email crew@juoksut.run.'
+      formError.value = 'Something went wrong. Try again or email crew@juoksut.run.'
     }
   }
   finally {
