@@ -6,13 +6,13 @@
 // because Nuxt injects inline hydration scripts/styles without nonces.
 const csp = [
   'default-src \'self\'',
-  'script-src \'self\' \'unsafe-inline\' https://tally.so https://challenges.cloudflare.com',
+  'script-src \'self\' \'unsafe-inline\' https://challenges.cloudflare.com',
   'style-src \'self\' \'unsafe-inline\'',
-  'img-src \'self\' data: https://cdn.juoksut.run https://*.cdninstagram.com https://tally.so',
+  'img-src \'self\' data: https://cdn.juoksut.run https://*.cdninstagram.com',
   'media-src \'self\' https://cdn.juoksut.run https://*.cdninstagram.com',
   'font-src \'self\'',
   'connect-src \'self\'',
-  'frame-src https://tally.so https://docs.google.com https://challenges.cloudflare.com',
+  'frame-src https://docs.google.com https://challenges.cloudflare.com',
   'frame-ancestors \'none\'',
   'base-uri \'self\'',
   'form-action \'self\' https://docs.google.com',
@@ -61,7 +61,6 @@ export default defineNuxtConfig({
     '/fastlane-friday': { redirect: { to: '/events/fastlane-friday', statusCode: 301 } },
     '/events/**': { prerender: false },
     '/success': { ssr: false },
-    '/nb-order-form': { ssr: false },
     // Crew screens are an app behind Cloudflare Access, not pages for crawlers.
     '/crew': { ssr: false },
     '/crew/**': { ssr: false },

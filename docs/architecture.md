@@ -21,7 +21,7 @@ matter, and prerenders selected stable pages.
 | Client state               | Pinia; cart persists only in browser localStorage               |
 
 `/` and `/join` are prerendered. `/shop`, `/shop/**`, `/archive` and
-`/events/**` render on demand. `/success`, `/nb-order-form` and `/crew/**` are
+`/events/**` render on demand. `/success` and `/crew/**` are
 client-only. `/orders` permanently redirects to `/terms-and-conditions`,
 `/fastlane-friday` to `/events/fastlane-friday`.
 
@@ -137,8 +137,8 @@ Stripe access only for an explicitly approved production action.
 - Instagram Graph API feeds the homepage video and archive. The token is stored
   server-side in D1; a 30-minute D1 cache reduces API calls.
 - Free event signups (Fastlane Friday first) send email through the Gmail API
-  as `crew@juoksut.run` and check signups with Cloudflare Turnstile. The legacy
-  NB order-form route remains as a Tally-form reference. `live-love-lightspeed` is a legacy Google Forms page.
+  as `crew@juoksut.run` and check signups with Cloudflare Turnstile.
+  `live-love-lightspeed` is a legacy Google Forms page.
 - All product and marketing media are public R2 assets. Do not put private
   customer documents in that bucket.
 

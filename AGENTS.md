@@ -16,7 +16,7 @@ rows, and free event signups) and **Cloudflare R2** served via the `cdn.juoksut.
 and videos). **Stripe Checkout** handles merch payments and is the **system of record** for
 payments, orders and customer PII. The one exception is free event signups (name, email), kept in
 D1 and purged a week after the event (`docs/event-signups.md`). Other registrations run through
-third-party embeds (Tally, Google Forms — see "Event registration" below).
+Google Forms (see "Event registration" below).
 
 The codebase is deliberately hand-rolled and sparsely commented — built solo, need-by-need, over
 years. Prefer documenting and proposing over rewriting; don't swap hand-rolled solutions for
@@ -73,22 +73,21 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 
 ## Pages
 
-| Route                   | File                       | Notes                                                                                                                                                                                                                                                                                 |
-| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (only `nb-order-form` and `live-love-lightspeed` use the landing layout) |
-| `/join`                 | `join.vue`                 | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered**                                                                                                                                                                                                    |
-| `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc). SSR                                                                                                                                                                                                                                                 |
-| `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                                        |
-| `/events/[slug]`        | `events/[slug].vue`        | Event page with dated events, signup form (Turnstile) and waitlist. SSR. `/fastlane-friday` 301s to `/events/fastlane-friday`                                                                                                                                                         |
-| `/signup/cancel`        | `signup/cancel.vue`        | Cancel link from the signup emails (`?token=`); a button cancels. `noindex`                                                                                                                                                                                                           |
-| `/crew`, `/crew/**`     | `crew/`                    | Crew page: event pages, events, signup lists. Behind Cloudflare Access; CSR (`ssr: false`), `noindex`                                                                                                                                                                                 |
-| `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                                                                                                                  |
-| `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                                                                                                                |
-| `/terms-and-conditions` | `terms-and-conditions.vue` | Terms & Conditions: order policy, preorder info, and trip terms. `robots: noindex`; `/orders` permanently redirects here.                                                                                                                                                             |
-| `/archive`              | `archive.vue`              | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags                                                                                                                                                                                                           |
-| `/privacy-policy`       | `privacy-policy.vue`       | Privacy policy. `robots: noindex`                                                                                                                                                                                                                                                     |
-| `/nb-order-form`        | `nb-order-form.vue`        | **Tally** iframe embed, landing layout, `noindex`. CSR (`ssr: false`)                                                                                                                                                                                                                 |
-| `/live-love-lightspeed` | `live-love-lightspeed.vue` | Legacy event page (Google Forms hidden-iframe POST). Not actively used; contains dead/commented code                                                                                                                                                                                  |
+| Route                   | File                       | Notes                                                                                                                                                                                                                                                              |
+| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (only `live-love-lightspeed` uses the landing layout) |
+| `/join`                 | `join.vue`                 | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered**                                                                                                                                                                                 |
+| `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc). SSR                                                                                                                                                                                                                              |
+| `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                     |
+| `/events/[slug]`        | `events/[slug].vue`        | Event page with dated events, signup form (Turnstile) and waitlist. SSR. `/fastlane-friday` 301s to `/events/fastlane-friday`                                                                                                                                      |
+| `/signup/cancel`        | `signup/cancel.vue`        | Cancel link from the signup emails (`?token=`); a button cancels. `noindex`                                                                                                                                                                                        |
+| `/crew`, `/crew/**`     | `crew/`                    | Crew page: event pages, events, signup lists. Behind Cloudflare Access; CSR (`ssr: false`), `noindex`                                                                                                                                                              |
+| `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                                                                                               |
+| `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                                                                                             |
+| `/terms-and-conditions` | `terms-and-conditions.vue` | Terms & Conditions: order policy, preorder info, and trip terms. `robots: noindex`; `/orders` permanently redirects here.                                                                                                                                          |
+| `/archive`              | `archive.vue`              | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags                                                                                                                                                                                        |
+| `/privacy-policy`       | `privacy-policy.vue`       | Privacy policy. `robots: noindex`                                                                                                                                                                                                                                  |
+| `/live-love-lightspeed` | `live-love-lightspeed.vue` | Legacy event page (Google Forms hidden-iframe POST). Not actively used; contains dead/commented code                                                                                                                                                               |
 
 ## Route rules (`nuxt.config.ts`)
 
@@ -102,7 +101,6 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 '/events/**':     { prerender: false }
 '/crew', '/crew/**': { ssr: false }
 '/success':       { ssr: false }
-'/nb-order-form': { ssr: false }
 ```
 
 ## D1 database (`juoksut-products`, binding `D1`)
@@ -217,7 +215,6 @@ order note remains for unstructured information.
 - **Free events** (Fastlane Friday first): first-party event pages at `/events/<slug>`, created on
   the crew page; capacity, waitlist, Gmail API emails sent as `crew@juoksut.run`. Spec and rules:
   `docs/event-signups.md`.
-- **nb-order-form** (`nb-order-form.vue`): Tally form iframe (`tally.so/embed/…`).
 - **live-love-lightspeed** (legacy): posts to a Google Form via a hidden iframe.
 - Trip registrations can use first-party Stripe Checkout. Required structured answers belong in the
   product's `checkout_fields` JSON configuration, not the free-text order note or stock sizes.
