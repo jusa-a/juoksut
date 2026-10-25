@@ -57,7 +57,7 @@
                     :aria-controls="`signup-${event.id}`"
                     @click="toggle(event.id)"
                   >
-                    {{ event.state === 'full' ? 'Join waitlist' : 'Sign up' }}
+                    {{ openId === event.id ? 'Close' : event.state === 'full' ? 'Join waitlist' : 'Sign up' }}
                   </button>
                   <span v-else class="text-[0.8em]">{{ formatOpens(event.opensAt) }}</span>
                 </div>
