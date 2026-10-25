@@ -208,8 +208,19 @@ function renderTurnstile() {
     return
   widgetId = window.turnstile.render(el, {
     sitekey,
-    appearance: 'interaction-only',
-    callback: (token) => { turnstileToken.value = token },
+    'appearance': 'interaction-only',
+    'callback': (token) => {
+      turnstileToken.value = token
+      formError.value = ''
+    },
+    // Invisible mode shows nothing, so a failed check would otherwise leave the
+    // button disabled with no reason given.
+    'error-callback': () => {
+      turnstileToken.value = ''
+      formError.value = 'Couldn\'t check that you\'re not a bot. Reload the page and try again, or email crew@juoksut.run.'
+      return true
+    },
+    'expired-callback': () => { turnstileToken.value = '' },
   })
 }
 
