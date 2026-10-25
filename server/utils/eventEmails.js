@@ -42,19 +42,17 @@ ${paragraph(escapeHtml(formatWhen(event.startsAt)), 'margin:0 0 2px')}
 ${paragraph(escapeHtml(event.venue), 'margin:0 0 28px')}`
 }
 
-// The same URL stays under the button for clients that strip or refuse it.
 function cancelButton(url, label) {
   const href = escapeHtml(url)
-  return `<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:8px auto 10px">
+  return `<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:8px auto 28px">
 <tr><td style="background:${pink};padding:13px 22px">
 <a href="${href}" style="display:inline-block;font-family:${font};font-size:14px;font-weight:600;line-height:18px;letter-spacing:0.04em;text-transform:uppercase;color:#FFFFFF;text-decoration:none">${escapeHtml(label)}</a>
 </td></tr>
-</table>
-${paragraph(`<a href="${href}" style="color:${pink};word-break:break-all">${href}</a>`, 'font-size:12px;line-height:16px;margin:0 0 28px')}`
+</table>`
 }
 
 // Centred, no rules or boxes; the wordmark sits only in the footer. Width and
-// height are both set so no client rescales it out of proportion (960×184).
+// height are both set so no client rescales it out of proportion (600×104).
 function layout({ origin, heading, page, event, paragraphs, cancelUrl, cancelLabel }) {
   return `<!doctype html>
 <html>
@@ -66,7 +64,7 @@ ${eventBlock(page, event)}
 ${paragraphs.map(text => paragraph(escapeHtml(text).replace(/\n/g, '<br>'))).join('\n')}
 ${cancelButton(cancelUrl, cancelLabel)}
 ${paragraph('Lightspeed regards,<br>Juoksut Crew', 'margin:0 0 40px')}
-<img src="${escapeHtml(origin)}/img/email-wordmark.png" width="150" height="29" alt="JUOKSUT" style="display:block;width:150px;height:29px;margin:0 auto 10px;border:0">
+<img src="${escapeHtml(origin)}/img/email-wordmark.png" width="150" height="26" alt="JUOKSUT" style="display:block;width:150px;height:26px;margin:0 auto 10px;border:0">
 ${paragraph('<a href="https://juoksut.run" style="color:#FF639A">juoksut.run</a> · crew@juoksut.run', 'font-size:12px;margin:0')}
 </td></tr>
 </table>
