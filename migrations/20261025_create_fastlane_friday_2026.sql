@@ -16,60 +16,96 @@ Sign up as fast as you can every Monday 16:00
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, '17:00', 'monday 16:00', 'same-day 12:00');
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, '17:00', 'monday 16:00', 'same-day 12:00');
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1793372400, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1793023200, 1793354400 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1793023200, 1793354400 FROM event_pages WHERE slug = 'fastlane-friday';
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1793977200, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1793628000, 1793959200 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1793628000, 1793959200 FROM event_pages WHERE slug = 'fastlane-friday';
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1794582000, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1794232800, 1794564000 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1794232800, 1794564000 FROM event_pages WHERE slug = 'fastlane-friday';
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1795186800, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1794837600, 1795168800 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1794837600, 1795168800 FROM event_pages WHERE slug = 'fastlane-friday';
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1795791600, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1795442400, 1795773600 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1795442400, 1795773600 FROM event_pages WHERE slug = 'fastlane-friday';
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1796396400, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1796047200, 1796378400 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1796047200, 1796378400 FROM event_pages WHERE slug = 'fastlane-friday';
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1797001200, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1796652000, 1796983200 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1796652000, 1796983200 FROM event_pages WHERE slug = 'fastlane-friday';
 
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, 1797606000, 'Olympic Stadium tunnel', '17:00 Outdoor warmup
 17:30 Indoor track session
 + optional afters at Zuhat
 
-We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join', 45, 1797256800, 1797588000 FROM event_pages WHERE slug = 'fastlane-friday';
+Bring clothes and shoes for both outdoor and indoor running. The stadium has locker rooms with showers downstairs where you can change and leave your stuff. The lockers have code locks, so no need to bring your own. First time at the stadium? Ask our pacers, other runners or the reception.
+
+We''re many runners with different levels of experience, so let''s keep it positive, respectful and safe for everyone. Our Safer Space guidelines: https://juoksut.run/join
+
+See you at the tunnel!', 45, 1797256800, 1797588000 FROM event_pages WHERE slug = 'fastlane-friday';
