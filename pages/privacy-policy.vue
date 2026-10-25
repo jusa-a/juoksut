@@ -12,7 +12,7 @@
 
       <h3>WHAT WE PROCESS</h3>
       <ul>
-        <li><strong>Website use:</strong> Cloudflare hosts and protects the site and may process technical request data, such as IP address, device/browser information, and security logs, to deliver and secure the service.</li>
+        <li><strong>Website use:</strong> Cloudflare hosts and protects the site and may process technical request data, such as IP address, device/browser information, and security logs, to deliver and secure the service. Cloudflare Web Analytics counts page views without cookies and without following you across other sites.</li>
         <li><strong>Shopping cart:</strong> The cart stores selected products, sizes, and quantities in your browser’s LocalStorage. When you start checkout, those selections are sent to our checkout endpoint so we can create the payment session.</li>
         <li><strong>Webshop purchases and first-party registrations:</strong> Stripe Checkout collects your name, email address, phone number, payment and billing information where required, the purchased items, and any information you provide in an optional order note or required registration field (for example, camp shirt size). Stripe also creates a Stripe Customer for the purchase.</li>
         <li><strong>Order fulfilment:</strong> Juoksut can access the order, registration, name, email address, and phone number in the Stripe Dashboard to arrange registrations, deliveries, pickups, refunds, and customer support. Apart from the free event signups described below, our own D1 database stores product, stock, and technical webhook records only; it is not used as a customer database.</li>
@@ -31,16 +31,16 @@
         <li><a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a> for hosting, security, delivery of the website and public media, the signup database, and the Turnstile bot check.</li>
         <li><a href="https://policies.google.com/privacy">Google</a> (Google Workspace) for sending event signup emails from our club email address.</li>
         <li><a href="https://policies.google.com/privacy">Google Forms</a> and <a href="https://tally.so/help/privacy-policy">Tally</a> where you choose to use their forms.</li>
-        <li><a href="https://privacycenter.instagram.com/policy/">Instagram/Meta</a> when you visit our Instagram profile or load Instagram-hosted media in the site archive.</li>
+        <li><a href="https://privacycenter.instagram.com/policy/">Instagram/Meta</a>: the videos on the home page and in the archive load from Instagram's servers, which see your IP address and browser details.</li>
       </ul>
       <p>These providers may process data outside Finland or the European Economic Area. Where required, they use the transfer mechanisms and safeguards described in their own privacy documentation.</p>
 
       <h3>RETENTION</h3>
-      <p>Apart from free event signups, we do not keep customer records in the website database. Event signups are deleted automatically a week after the event. Stripe retains payment and customer records under its service and retention settings; Juoksut keeps access to information only for as long as needed to manage the purchase or registration, provide support, and meet legal obligations. Third-party form providers retain submissions under their own settings.</p>
+      <p>Apart from free event signups, we do not keep customer records in the website database. Event signups are deleted automatically a week after the event; copies of the emails we sent you stay in the club's email account. Stripe retains payment and customer records under its service and retention settings; Juoksut keeps access to information only for as long as needed to manage the purchase or registration, provide support, and meet legal obligations. Third-party form providers retain submissions under their own settings.</p>
 
       <h3>COOKIES AND LOCALSTORAGE</h3>
       <ul>
-        <li>We do not intentionally use analytics or advertising cookies on this site.</li>
+        <li>We do not use analytics, advertising or tracking cookies. Our page view counts come from Cloudflare Web Analytics, which uses no cookies.</li>
         <li>Our shopping cart uses LocalStorage as described above.</li>
         <li>Cloudflare and third-party forms, payment, or social-media services may use cookies or similar technology necessary for their own services. Their policies explain those technologies.</li>
       </ul>
