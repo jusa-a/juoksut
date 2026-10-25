@@ -13,8 +13,9 @@
 
 
 -- Dev reset: drop existing tables (safe locally)
-DROP TABLE IF EXISTS fastlane_signups;
-DROP TABLE IF EXISTS fastlane_sessions;
+DROP TABLE IF EXISTS signups;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS event_pages;
 DROP TABLE IF EXISTS checkout_reservations;
 DROP TABLE IF EXISTS stock;
 DROP TABLE IF EXISTS products;
@@ -121,28 +122,52 @@ CREATE TABLE IF NOT EXISTS processed_events (
 );
 
 
--- FASTLANE FRIDAY SIGNUPS
+-- EVENT SIGNUPS
 
--- Free weekly sessions. Confirmed signups fill up to capacity; the rest wait
--- on a waitlist. Dates are Helsinki local days ('YYYY-MM-DD').
-CREATE TABLE IF NOT EXISTS fastlane_sessions (
+-- One public page (published at /events/<slug>) with one or more dated events.
+-- Free signups fill confirmed spots up to capacity; the rest wait on a
+-- waitlist. All times are Unix seconds.
+CREATE TABLE IF NOT EXISTS event_pages (
     id INTEGER PRIMARY KEY,
-    date TEXT NOT NULL UNIQUE,
+    slug TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,         -- plain text; rendered as text, never HTML
+    image_url TEXT,             -- https://cdn.juoksut.run/... or NULL
+    summary TEXT NOT NULL,
+    published INTEGER NOT NULL DEFAULT 0,
+    -- Defaults copied into new events by the crew page.
+    venue TEXT NOT NULL,
+    details TEXT NOT NULL,
     capacity INTEGER NOT NULL CHECK (capacity > 0),
-    opens_at INTEGER NOT NULL -- Unix seconds; signups are rejected before this
+    start_time TEXT NOT NULL,   -- HH:MM Europe/Helsinki
+    opens_rule TEXT NOT NULL,   -- monday HH:MM | days-before N HH:MM
+    promote_rule TEXT NOT NULL  -- same-day HH:MM
 );
 
-CREATE TABLE IF NOT EXISTS fastlane_signups (
+CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY,
-    session_id INTEGER NOT NULL,
+    page_id INTEGER NOT NULL,
+    starts_at INTEGER NOT NULL,
+    venue TEXT NOT NULL,
+    details TEXT NOT NULL,
+    capacity INTEGER NOT NULL CHECK (capacity > 0),
+    opens_at INTEGER NOT NULL,      -- signups rejected before this
+    promote_until INTEGER NOT NULL CHECK (promote_until <= starts_at),
+    UNIQUE (page_id, starts_at),
+    FOREIGN KEY (page_id) REFERENCES event_pages(id)
+);
+
+CREATE TABLE IF NOT EXISTS signups (
+    id INTEGER PRIMARY KEY,
+    event_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     email TEXT NOT NULL,        -- stored lowercase
     status TEXT NOT NULL CHECK (status IN ('confirmed', 'waitlist', 'cancelled')),
     token TEXT NOT NULL UNIQUE, -- 32 hex chars; used in the cancel link
     created_at INTEGER NOT NULL,
-    UNIQUE (session_id, email),
-    FOREIGN KEY (session_id) REFERENCES fastlane_sessions(id) ON DELETE CASCADE
+    UNIQUE (event_id, email),
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_fastlane_signups_session_status
-ON fastlane_signups(session_id, status, created_at);
+CREATE INDEX IF NOT EXISTS idx_signups_event_status
+ON signups(event_id, status, created_at);

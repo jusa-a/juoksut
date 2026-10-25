@@ -1,7 +1,7 @@
 import { createError, defineEventHandler, getRequestURL, readBody } from 'h3'
 import { sendEmail } from '../../utils/email'
-import { cancelSignup } from '../../utils/fastlane'
-import { promotedEmail } from '../../utils/fastlaneEmails'
+import { promotedEmail } from '../../utils/eventEmails'
+import { cancelSignup, getEventDetails } from '../../utils/events'
 
 const tokenPattern = /^[0-9a-f]{32}$/
 
@@ -16,22 +16,21 @@ export default defineEventHandler(async (event) => {
 
   const { cancelled, promoted } = await cancelSignup(D1, token)
 
-  if (promoted) {
+  if (promoted.length) {
+    const details = await getEventDetails(D1, promoted[0].event_id)
     const origin = new URL(getRequestURL(event)).origin
-    try {
-      await sendEmail({
-        to: promoted.email,
-        ...promotedEmail({
-          name: promoted.name,
-          date: promoted.date,
-          token: promoted.token,
-          origin,
-        }),
-      })
-    }
-    catch (error) {
-      // The promotion already stands; a mail failure must not undo it.
-      console.error('Failed to send Fastlane promotion email:', error.message)
+
+    for (const person of details ? promoted : []) {
+      try {
+        await sendEmail({
+          to: person.email,
+          ...promotedEmail({ ...details, name: person.name, token: person.token, origin }),
+        })
+      }
+      catch (error) {
+        // The promotion already stands; a mail failure must not undo it.
+        console.error('Failed to send event promotion email:', error.message)
+      }
     }
   }
 
