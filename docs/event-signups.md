@@ -19,29 +19,29 @@ Fastlane Friday, or a one-off with a single date). Creating a page on the crew p
 
 `event_pages`
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | INTEGER PK | |
-| `slug` | TEXT NOT NULL UNIQUE | `^[a-z0-9]+(-[a-z0-9]+)*$`, e.g. `fastlane-friday` |
-| `title` | TEXT NOT NULL | Page heading, email subject, crew page |
-| `body` | TEXT NOT NULL | Plain text; blank line = paragraph, line break kept. Rendered as text, never HTML |
-| `image_url` | TEXT | Must start with `https://cdn.juoksut.run/`; no image when NULL |
-| `summary` | TEXT NOT NULL | One line; SEO/OG description |
-| `published` | INTEGER NOT NULL DEFAULT 0 | Unpublished pages 404 publicly; crew can still see them |
-| `venue`, `details`, `capacity`, `start_time`, `opens_rule`, `promote_rule` | | Defaults copied into new events (see below) |
+| Column                                                                     | Type                       | Notes                                                                             |
+| -------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------- |
+| `id`                                                                       | INTEGER PK                 |                                                                                   |
+| `slug`                                                                     | TEXT NOT NULL UNIQUE       | `^[a-z0-9]+(-[a-z0-9]+)*$`, e.g. `fastlane-friday`                                |
+| `title`                                                                    | TEXT NOT NULL              | Page heading, email subject, crew page                                            |
+| `body`                                                                     | TEXT NOT NULL              | Plain text; blank line = paragraph, line break kept. Rendered as text, never HTML |
+| `image_url`                                                                | TEXT                       | Must start with `https://cdn.juoksut.run/`; no image when NULL                    |
+| `summary`                                                                  | TEXT NOT NULL              | One line; SEO/OG description                                                      |
+| `published`                                                                | INTEGER NOT NULL DEFAULT 0 | Unpublished pages 404 publicly; crew can still see them                           |
+| `venue`, `details`, `capacity`, `start_time`, `opens_rule`, `promote_rule` |                            | Defaults copied into new events (see below)                                       |
 
 `events`
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | INTEGER PK | |
-| `page_id` | INTEGER NOT NULL | FK → `event_pages.id` |
-| `starts_at` | INTEGER NOT NULL | Unix seconds; the first time on the schedule (warm-up) |
-| `venue` | TEXT NOT NULL | |
-| `details` | TEXT NOT NULL | Plain-text paragraph(s) for the confirmation email |
-| `capacity` | INTEGER NOT NULL | `CHECK (capacity > 0)` |
-| `opens_at` | INTEGER NOT NULL | Unix seconds; signups rejected before this |
-| `promote_until` | INTEGER NOT NULL | Unix seconds; `CHECK (promote_until <= starts_at)` |
+| Column          | Type             | Notes                                                  |
+| --------------- | ---------------- | ------------------------------------------------------ |
+| `id`            | INTEGER PK       |                                                        |
+| `page_id`       | INTEGER NOT NULL | FK → `event_pages.id`                                  |
+| `starts_at`     | INTEGER NOT NULL | Unix seconds; the first time on the schedule (warm-up) |
+| `venue`         | TEXT NOT NULL    |                                                        |
+| `details`       | TEXT NOT NULL    | Plain-text paragraph(s) for the confirmation email     |
+| `capacity`      | INTEGER NOT NULL | `CHECK (capacity > 0)`                                 |
+| `opens_at`      | INTEGER NOT NULL | Unix seconds; signups rejected before this             |
+| `promote_until` | INTEGER NOT NULL | Unix seconds; `CHECK (promote_until <= starts_at)`     |
 
 `UNIQUE (page_id, starts_at)`. Deleting a page with events is refused.
 
@@ -88,7 +88,7 @@ before the season opens.
   `/join` link to the new URL. `public/sitemap.xml` lists `/events/fastlane-friday`; other pages are
   added by hand when they matter for search.
 - `GET /api/events/<slug>` → the published page's fields and its upcoming events: `id, startsAt,
-  venue, capacity, confirmed, waitlist, opensAt, state (not_open | open | full)`. No names or emails.
+venue, capacity, confirmed, waitlist, opensAt, state (not_open | open | full)`. No names or emails.
 - `POST /api/events/signup` `{ eventId, name, email, website, turnstileToken }` →
   `{ status: 'confirmed' }` or `{ status: 'waitlist', position }`. Errors: 400 invalid, 403 not
   open / bot check failed, 404 no such event, 409 already signed up.

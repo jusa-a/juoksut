@@ -81,10 +81,12 @@ Square corners everywhere. Borders are 1px pink.
 ## Do's and Don'ts
 
 ### Do:
+
 - **Do** use only pink and white, Inter for UI text, square 1px-bordered controls.
 - **Do** let crew screens (`/crew`) be denser and more app-like (lists, tables, inline actions)
   with the same colors, type and borders.
 
 ### Don't:
+
 - **Don't** add rounded corners, shadows, gradients, greys or a second brand color.
 - **Don't** use Garamond for body text, labels or controls.
