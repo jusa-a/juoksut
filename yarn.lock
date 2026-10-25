@@ -8541,6 +8541,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jose@npm:^6.2.13":
+  version: 6.2.13
+  resolution: "jose@npm:6.2.13"
+  checksum: 10c0/a7a175057fd42e129200026320d535deba5c869e764bdb130d4aecb7cc2a22c07eab2bf9fc848188b45b89d95f8e0ba4ce01a8259a4fa45c84bec34f66f2918e
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^10.0.0":
   version: 10.0.0
   resolution: "js-tokens@npm:10.0.0"
@@ -10568,6 +10575,7 @@ __metadata:
     "@pinia/nuxt": "npm:^0.11.3"
     eslint: "npm:^10.5.0"
     eslint-plugin-format: "npm:^2.0.1"
+    jose: "npm:^6.2.13"
     nitro-cloudflare-dev: "npm:^0.2.2"
     nuxt: "npm:~4.5.2"
     pinia: "npm:^3.0.4"

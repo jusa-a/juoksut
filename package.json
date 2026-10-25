@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^2.2.0",
+    "jose": "^6.2.13",
     "pinia-plugin-persistedstate": "^4.7.1",
     "stripe": "^22.6.2"
   },
