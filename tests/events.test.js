@@ -96,14 +96,32 @@ describe('event signups', () => {
       id: eventId,
       startsAt: 10000,
       venue: 'Test Hall',
-      capacity: 2,
-      confirmed: 2,
-      waitlist: 1,
       opensAt: 0,
       state: 'full',
+      spotsLeft: null,
     }])
-    // The public listing never exposes signup rows.
+    // The public listing never exposes signup rows or the real capacity.
     expect(JSON.stringify(result)).not.toContain('@')
+  })
+
+  it('shows spots left only within ten of capacity', async () => {
+    const page = await addPage()
+    const nearFull = await addEvent({ page, capacity: 40, startsAt: 5000 })
+    const roomy = await addEvent({ page, capacity: 40, startsAt: 6000 })
+    const full = await addEvent({ page, capacity: 40, startsAt: 7000 })
+
+    for (let person = 1; person <= 30; person++)
+      await signUpPerson(nearFull.eventId, person)
+    for (let person = 31; person <= 59; person++)
+      await signUpPerson(roomy.eventId, person)
+    for (let person = 60; person <= 99; person++)
+      await signUpPerson(full.eventId, person)
+
+    const result = await getPublishedPage(db, page.slug, 1000)
+    expect(result.events.map(event => [event.spotsLeft, event.state]))
+      .toEqual([[10, 'open'], [null, 'open'], [null, 'full']])
+    expect(Object.keys(result.events[0]))
+      .toEqual(['id', 'startsAt', 'venue', 'opensAt', 'state', 'spotsLeft'])
   })
 
   it('never exceeds capacity under 60 concurrent signups', async () => {
@@ -263,7 +281,7 @@ describe('event signups', () => {
 
     const result = await getPublishedPage(db, page.slug, 1000)
     expect(result.events.map(entry => entry.id)).toEqual([upcoming.eventId, later.eventId])
-    expect(result.events[0]).toMatchObject({ confirmed: 1, waitlist: 0, state: 'open' })
+    expect(result.events[0]).toMatchObject({ spotsLeft: 1, state: 'open' })
     expect(result.events[1].state).toBe('not_open')
     expect(JSON.stringify(result)).not.toContain('@')
     expect(JSON.stringify(result)).not.toMatch(/"(?:name|email)"/)
