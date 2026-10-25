@@ -44,7 +44,7 @@ export function waitlistEmail({ page, event, name, token, origin }) {
     subject: `${page.title}: you are on the waitlist for ${when}`,
     text: `Hi ${name},
 
-You are on the waitlist for ${page.title} on ${when} at ${event.venue}. We email you immediately if a spot opens up.
+You are on the waitlist for ${page.title} on ${when} at ${event.venue}. If a spot opens up before ${formatWhen(event.promoteUntil)}, you get it automatically and we email you.
 
 Changed your mind? Cancel here: ${cancelLink(origin, token)}.
 
