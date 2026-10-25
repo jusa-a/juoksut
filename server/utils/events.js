@@ -126,7 +126,7 @@ export async function getSignupByToken(D1, token) {
 
 export async function getEventDetails(D1, eventId) {
   const row = await D1.prepare(`
-    SELECT p.title, e.starts_at AS startsAt, e.venue, e.details
+    SELECT p.title, e.starts_at AS startsAt, e.venue, e.details, e.promote_until AS promoteUntil
     FROM events e
     JOIN event_pages p ON p.id = e.page_id
     WHERE e.id = ?
@@ -136,7 +136,7 @@ export async function getEventDetails(D1, eventId) {
     return null
   return {
     page: { title: row.title },
-    event: { startsAt: row.startsAt, venue: row.venue, details: row.details },
+    event: { startsAt: row.startsAt, venue: row.venue, details: row.details, promoteUntil: row.promoteUntil },
   }
 }
 

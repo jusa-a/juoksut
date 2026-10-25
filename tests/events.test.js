@@ -379,6 +379,7 @@ describe('event emails', () => {
     page: { title: 'Test Event' },
     event: {
       startsAt: 1793975400,
+      promoteUntil: 1793959200,
       venue: 'Test Hall',
       details: 'Meet at the north door.',
     },
@@ -409,8 +410,10 @@ describe('event emails', () => {
       expect(build(input).text).toContain('Meet at the north door.')
   })
 
-  it('tells a waitlisted person that a spot opens up', () => {
-    expect(waitlistEmail(input).text).toContain('if a spot opens up')
+  it('tells a waitlisted person when promotions stop', () => {
+    expect(waitlistEmail(input).text).toContain(
+      'If a spot opens up before Friday 6 November at 12:00, you get it automatically and we email you.',
+    )
   })
 
   it('uses the event\'s own venue instead of a hardcoded one', () => {
