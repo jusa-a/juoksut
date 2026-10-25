@@ -43,8 +43,8 @@ function rule() {
 function eventBlock(page, event) {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${pink}">
 <tr><td style="padding:16px">
-${paragraph(escapeHtml(page.title), 'font-size:16px;font-weight:600;line-height:22px')}
-${paragraph(escapeHtml(formatWhen(event.startsAt)))}
+${paragraph(escapeHtml(page.title), 'font-size:16px;font-weight:600;line-height:22px;margin:0 0 4px')}
+${paragraph(escapeHtml(formatWhen(event.startsAt)), 'margin:0 0 4px')}
 ${paragraph(escapeHtml(event.venue), 'margin:0')}
 </td></tr>
 </table>`
@@ -104,7 +104,7 @@ ${signOff()}`,
       event,
       paragraphs: [
         `Hi ${name},`,
-        `You are confirmed for ${page.title} on ${when} at ${event.venue}.`,
+        'Your spot is confirmed. See you there.',
         event.details,
       ],
       cancelUrl: cancelLink(origin, token),
@@ -131,7 +131,7 @@ ${signOff()}`,
       event,
       paragraphs: [
         `Hi ${name},`,
-        `You are on the waitlist for ${page.title} on ${when} at ${event.venue}. If a spot opens up before ${formatWhen(event.promoteUntil)}, you get it automatically and we email you.`,
+        `If a spot opens up before ${formatWhen(event.promoteUntil)}, you get it automatically and we email you.`,
       ],
       cancelUrl: cancelLink(origin, token),
       cancelLabel: 'Leave the waitlist',
@@ -159,7 +159,7 @@ ${signOff()}`,
       event,
       paragraphs: [
         `Hi ${name},`,
-        `A spot opened up, so you are now confirmed for ${page.title} on ${when} at ${event.venue}.`,
+        'A spot opened up, so you are now confirmed. See you there.',
         event.details,
       ],
       cancelUrl: cancelLink(origin, token),
