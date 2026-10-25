@@ -64,20 +64,42 @@
         <textarea v-model="form.details" rows="3" />
       </label>
 
-      <div class="grid gap-[0.75em] sm:grid-cols-3">
+      <div class="grid gap-[0.75em] sm:grid-cols-2">
         <label class="field">
           <span>Start time</span>
           <input v-model="form.startTime" type="time" required>
         </label>
         <label class="field">
-          <span>Signups open</span>
-          <input v-model="form.opensRule" type="text" required placeholder="monday 12:00">
-        </label>
-        <label class="field">
-          <span>Promote until</span>
-          <input v-model="form.promoteRule" type="text" required placeholder="same-day 12:00">
+          <span>Waitlist moves up until (event day)</span>
+          <input v-model="promoteTime" type="time" required @input="promoteRaw = ''">
         </label>
       </div>
+
+      <div class="grid gap-[0.75em] sm:grid-cols-3">
+        <label class="field">
+          <span>Signups open</span>
+          <select v-model="opensKind" @change="opensRaw = ''">
+            <option value="monday">
+              Monday of the event week
+            </option>
+            <option value="days-before">
+              Days before the event
+            </option>
+          </select>
+        </label>
+        <label v-if="opensKind === 'days-before'" class="field">
+          <span>Days before the event</span>
+          <input v-model.number="opensDays" type="number" min="0" step="1" required @input="opensRaw = ''">
+        </label>
+        <label class="field">
+          <span>Opens at</span>
+          <input v-model="opensTime" type="time" required @input="opensRaw = ''">
+        </label>
+      </div>
+
+      <p v-if="rawRuleNote" class="error">
+        {{ rawRuleNote }}
+      </p>
 
       <label class="flex items-center gap-[0.5em] min-h-[44px] uppercase text-[0.8em]">
         <input v-model="form.published" type="checkbox" class="w-[22px] h-[22px] accent-[#ff639a]">
@@ -177,48 +199,51 @@
       <p v-if="!events.length" class="note px-[0.75em]">
         No events yet.
       </p>
-      <table v-else class="w-full text-left text-[0.9em]">
-        <thead class="text-[0.75em] uppercase">
-          <tr class="border-b border-pink">
-            <th class="px-[0.75em] py-[0.35em] font-normal">
-              Date
-            </th>
-            <th class="font-normal">
-              Time
-            </th>
-            <th class="font-normal">
-              Confirmed
-            </th>
-            <th class="font-normal">
-              Waitlist
-            </th>
-            <th class="font-normal">
-              &nbsp;
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="entry in events" :key="entry.id" class="border-b border-pink last:border-b-0">
-            <td class="px-[0.75em] py-[0.4em]">
-              {{ unixToHelsinki(entry.startsAt).date }}
-            </td>
-            <td>{{ unixToHelsinki(entry.startsAt).time }}</td>
-            <td>{{ entry.confirmed }}/{{ entry.capacity }}</td>
-            <td>{{ entry.waitlist }}</td>
-            <td class="text-right pr-[0.75em] text-[0.8em] uppercase">
-              <NuxtLink :to="`/crew/events/${entry.id}`" class="underline">
-                Open
-              </NuxtLink>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="events.length" class="overflow-x-auto">
+        <table class="w-full text-left text-[0.9em]">
+          <thead class="text-[0.75em] uppercase">
+            <tr class="border-b border-pink">
+              <th class="px-[0.75em] py-[0.35em] font-normal">
+                Date
+              </th>
+              <th class="font-normal">
+                Time
+              </th>
+              <th class="font-normal">
+                Confirmed
+              </th>
+              <th class="font-normal">
+                Waitlist
+              </th>
+              <th class="font-normal">
+                &nbsp;
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="entry in events" :key="entry.id" class="border-b border-pink last:border-b-0">
+              <td class="px-[0.75em] py-[0.4em]">
+                {{ unixToHelsinki(entry.startsAt).date }}
+              </td>
+              <td>{{ unixToHelsinki(entry.startsAt).time }}</td>
+              <td>{{ entry.confirmed }}/{{ entry.capacity }}</td>
+              <td>{{ entry.waitlist }}</td>
+              <td class="text-right pr-[0.75em] text-[0.8em] uppercase">
+                <NuxtLink :to="`/crew/events/${entry.id}`" class="underline">
+                  Open
+                </NuxtLink>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
 </template>
 
 <script setup>
 import { unixToHelsinki } from '~/server/utils/helsinkiTime'
+import { composeOpensRule, composePromoteRule, parseOpensRule, parsePromoteRule } from '~/utils/eventRules'
 
 definePageMeta({
   layout: false,
@@ -263,6 +288,42 @@ const events = computed(() => (eventData.value?.events || []).filter(entry => St
 if (page.value)
   Object.assign(form, page.value)
 
+// The pickers compose form.opensRule/promoteRule. A saved rule they can't
+// show is kept verbatim (and shown) instead of being rewritten on the next save.
+const opensKind = ref('monday')
+const opensDays = ref(0)
+const opensTime = ref('12:00')
+const promoteTime = ref('12:00')
+const opensRaw = ref('')
+const promoteRaw = ref('')
+
+const savedOpens = parseOpensRule(form.opensRule)
+if (savedOpens) {
+  opensKind.value = savedOpens.kind
+  opensDays.value = savedOpens.days
+  opensTime.value = savedOpens.time
+}
+else {
+  opensRaw.value = form.opensRule
+}
+
+const savedPromote = parsePromoteRule(form.promoteRule)
+if (savedPromote)
+  promoteTime.value = savedPromote
+else
+  promoteRaw.value = form.promoteRule
+
+const rawRuleNote = computed(() => {
+  const parts = []
+  if (opensRaw.value)
+    parts.push(`signups open "${opensRaw.value}"`)
+  if (promoteRaw.value)
+    parts.push(`promote until "${promoteRaw.value}"`)
+  return parts.length
+    ? `Kept as saved: ${parts.join(' and ')}. The pickers above replace it once you change them.`
+    : ''
+})
+
 const busy = ref(false)
 const confirmingRemove = ref(false)
 const message = ref('')
@@ -290,10 +351,15 @@ async function savePage() {
   const creating = isNew.value
   busy.value = true
   showMessage(null)
+  const body = {
+    ...form,
+    opensRule: opensRaw.value || composeOpensRule({ kind: opensKind.value, days: opensDays.value, time: opensTime.value }),
+    promoteRule: promoteRaw.value || composePromoteRule(promoteTime.value),
+  }
   try {
     const saved = creating
-      ? await $fetch('/api/crew/pages', { method: 'POST', body: { ...form } })
-      : await $fetch(`/api/crew/pages/${id.value}`, { method: 'PATCH', body: { ...form } })
+      ? await $fetch('/api/crew/pages', { method: 'POST', body })
+      : await $fetch(`/api/crew/pages/${id.value}`, { method: 'PATCH', body })
     Object.assign(form, saved)
     if (creating) {
       await refreshPages()
@@ -412,6 +478,7 @@ async function addDates() {
   font-size: 0.8em;
 }
 .field input,
+.field select,
 .field textarea {
   width: 100%;
   min-height: 44px;

@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="flex flex-col gap-[0.9em] px-[1em] py-[1.4em]">
     <h2 class="uppercase">
       Cancel your spot
     </h2>
@@ -32,7 +32,7 @@
 const route = useRoute()
 const token = typeof route.query.token === 'string' ? route.query.token : null
 
-const buttonClass = 'uppercase text-white bg-pink text-center border border-pink px-[1em] py-[0.7em] min-h-[44px] hover:bg-white hover:text-pink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink disabled:opacity-60'
+const buttonClass = 'uppercase text-white bg-pink text-center border border-pink px-[1em] py-[0.7em] min-h-[44px] self-start hover:bg-white hover:text-pink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink disabled:opacity-60'
 
 const loading = ref(true)
 const signup = ref(null)
