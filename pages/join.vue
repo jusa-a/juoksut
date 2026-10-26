@@ -55,18 +55,18 @@
       <Divider />
 
       <!--
-        Events: shop-sized cards on the left, the copy about them pinned on the
-        right. The copy is first in the DOM so phones read it before the cards.
+        Events: the copy about them pinned on the left, shop-style cards on the
+        right. Same order on phones, so the copy is read before the cards.
       -->
       <section class="flex flex-row flex-wrap w-full p-0 m-0">
-        <div class="flex flex-col flex-1 min-w-[300px] px-[1em] py-[1.4em] min-[900px]:order-2 min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
+        <div class="flex flex-col flex-1 min-w-[300px] px-[1em] py-[1.4em] min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
           <p class="mt-0">
             Camps, trips, races and the odd party. Each event page has the details, the dates and signup. If an event is full, join the waitlist.
           </p>
         </div>
 
-        <div class="w-full min-[900px]:w-auto min-[900px]:flex-1 flex flex-row flex-wrap justify-around items-center p-[1em] gap-[1em] min-[900px]:order-1">
-          <EventCard v-for="event in events" :key="event.slug" :event="event" class="min-w-[290px] max-w-[26em]" />
+        <div class="w-full min-[900px]:w-auto min-[900px]:flex-1 flex flex-row flex-wrap justify-around items-center p-[1em] gap-[1em]">
+          <EventCard v-for="event in events" :key="event.slug" :event="event" />
         </div>
       </section>
     </template>
@@ -91,8 +91,8 @@
         </p>
       </div>
 
-      <div class="px-[1em] mt-[1.5em] min-[900px]:px-0 min-[900px]:mt-0 min-[900px]:col-start-1 min-[900px]:row-start-2 min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
-        <div class="text-center text-[0.75em] border-pink border-[1px] pt-[0.5em] pb-[1.5em] px-[1.5em]">
+      <div class="p-[1em] mt-[0.5em] min-[900px]:mt-0 min-[900px]:col-start-1 min-[900px]:row-start-2 min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start flex flex-row flex-wrap justify-around items-center">
+        <div class="min-w-[290px] max-w-[26em] text-center text-[0.75em] border-pink border-[1px] pt-[0.5em] pb-[1.5em] px-[1.5em]">
           <p>
             <strong>RESPECT</strong>
             <br>

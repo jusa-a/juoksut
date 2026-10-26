@@ -61,8 +61,8 @@ a pink fill. No greys, no second accent. Error text is the only exception (`text
   column is sticky below the nav on wider screens.
 - `/join` is built like a product page: half-and-half columns with no gutter, each side running to
   its own edge. The month's cover fills the left half from under the nav, the copy and the schedule
-  fill the right; event cards sit at shop size on the left with the events copy pinned on the
-  right; the Safer Space values box fills the left half with its text on the right. From 900px up
+  fill the right; the events copy pins on the left with shop-style cards on the right; the Safer
+  Space values sit in a card of the same width on the left with the text on the right. From 900px up
   only the events copy and the values box stay put. On phones it is one column, the cover and the
   schedule run edge to edge, and nothing is pinned.
 - The nav is sticky with a 1px pink divider under it; height `--nav-height`.

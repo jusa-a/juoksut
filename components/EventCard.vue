@@ -1,26 +1,29 @@
 <template>
+  <!-- Same shape and hover as a shop product card (pages/shop/index.vue). -->
   <NuxtLink
     :to="`/events/${event.slug}`"
-    class="block hover:opacity-100"
+    class="min-w-[290px] max-w-[26em]"
   >
-    <div class="aspect-[4/5] flex items-center justify-center overflow-hidden">
-      <NuxtImg
-        v-if="event.imageUrl"
-        :src="event.imageUrl"
-        :alt="event.title"
-        height="1875"
-        width="1500"
-        class="w-full h-full object-cover"
-      />
-      <div v-else class="w-full h-full flex items-center justify-center border-[1px] border-pink p-[1em] text-center">
-        <span class="font-serif font-medium text-[1.5em] tracking-[-0.03em]">{{ event.title }}</span>
+    <div class="border-[1px] border-transparent hover:border-pink">
+      <div class="aspect-[4/5] flex items-center justify-center overflow-hidden">
+        <NuxtImg
+          v-if="event.imageUrl"
+          :src="event.imageUrl"
+          :alt="event.title"
+          height="1875"
+          width="1500"
+          class="w-full h-full object-cover"
+        />
+        <div v-else class="w-full h-full flex items-center justify-center border-[1px] border-pink p-[1em] text-center">
+          <span class="font-serif font-medium text-[1.5em] tracking-[-0.03em]">{{ event.title }}</span>
+        </div>
       </div>
-    </div>
 
-    <div class="whitespace-nowrap text-[0.95em] py-[0.5em] px-[0.5em]">
-      <div>{{ event.title }}</div>
-      <div class="uppercase">
-        {{ date }}
+      <div class="whitespace-nowrap text-[0.95em] py-[0.5em] px-[0.5em]">
+        <div>{{ event.title }}</div>
+        <div class="uppercase">
+          {{ date }}
+        </div>
       </div>
     </div>
   </NuxtLink>
@@ -46,3 +49,13 @@ const date = computed(() => {
   return first === last ? first : `${first}–${last}`
 })
 </script>
+
+<style scoped>
+a {
+  cursor: cell;
+}
+a:hover {
+  transition: 0s;
+  opacity: 1;
+}
+</style>
