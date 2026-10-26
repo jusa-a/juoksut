@@ -288,11 +288,13 @@ async function submit(eventId) {
       },
     })
 
+    // Showing the address back is how people catch a typo before the confirmation bounces.
+    const sentTo = `We sent the details to ${email.value.trim()}. Wrong address? Email crew@juoksut.run.`
     done.value = {
       eventId,
       text: result.status === 'waitlist'
-        ? `You're number ${result.position} on the waitlist. We'll email you if a spot opens.`
-        : 'You\'re in! Check your email for the details.',
+        ? `You're number ${result.position} on the waitlist. ${sentTo} We'll email you if a spot opens.`
+        : `You're in! ${sentTo}`,
     }
 
     openId.value = null
@@ -311,6 +313,9 @@ async function submit(eventId) {
       formError.value = err?.data?.message === 'Bot check failed'
         ? 'Couldn\'t verify you\'re human. Try again.'
         : 'Signup isn\'t open yet.'
+    }
+    else if (code === 422) {
+      formError.value = 'That email address can\'t receive mail. Check the spelling.'
     }
     else if (code === 400) {
       formError.value = 'Check your name and email.'

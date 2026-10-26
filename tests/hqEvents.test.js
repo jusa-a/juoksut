@@ -91,6 +91,7 @@ describe('signUpForEvent', () => {
       ['not_found', 404, 'No such event'],
       ['not_open', 403, 'Signups are not open yet'],
       ['already_signed_up', 409, 'You are already signed up'],
+      ['email_domain', 422, 'That email address can\'t receive mail'],
     ]
 
     for (const [error, statusCode, message] of cases) {
