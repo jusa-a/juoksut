@@ -22,9 +22,6 @@
       <div class="text-[0.8em] uppercase">
         {{ date }}
       </div>
-      <div class="text-[0.8em] uppercase">
-        {{ status }}
-      </div>
     </div>
   </NuxtLink>
 </template>
@@ -48,6 +45,4 @@ const date = computed(() => {
   const last = format(props.event.lastStartsAt)
   return first === last ? first : `${first}–${last}`
 })
-
-const status = computed(() => ({ current: 'Now on', upcoming: 'Coming up', past: 'Past' })[props.event.status])
 </script>
