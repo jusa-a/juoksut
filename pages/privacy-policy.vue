@@ -31,7 +31,7 @@
         <li><a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a> for hosting, security, delivery of the website and public media, the signup database, and the Turnstile bot check.</li>
         <li><a href="https://policies.google.com/privacy">Google</a> (Google Workspace) for sending event signup emails from our club email address.</li>
         <li><a href="https://policies.google.com/privacy">Google Forms</a> where you choose to use a form we link to.</li>
-        <li><a href="https://privacycenter.instagram.com/policy/">Instagram/Meta</a>: the videos on the home page and in the archive load from Instagram's servers, which see your IP address and browser details.</li>
+        <li><a href="https://privacycenter.instagram.com/policy/">Instagram/Meta</a>: the videos on the home page and in the archive, and this month's schedule on the join page, load from Instagram's servers, which see your IP address and browser details.</li>
       </ul>
       <p>These providers may process data outside Finland or the European Economic Area. Where required, they use the transfer mechanisms and safeguards described in their own privacy documentation.</p>
 
