@@ -85,8 +85,6 @@ Square corners everywhere. Borders are 1px pink.
 ### Do:
 
 - **Do** use only pink and white, Inter for UI text, square 1px-bordered controls.
-- **Do** let crew screens (`/crew`) be denser and more app-like (lists, tables, inline actions)
-  with the same colors, type and borders.
 
 ### Don't:
 

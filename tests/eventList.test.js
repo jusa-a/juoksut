@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { eventStatus } from '../server/utils/events'
+import { eventStatus } from '../server/utils/hqEvents'
 
 const now = 1000000
 

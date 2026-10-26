@@ -1,21 +1,14 @@
 import process from 'node:process'
 import { createError, defineEventHandler } from 'h3'
-import { getPublishedPage, purgeOldSignups } from '../../utils/events'
+import { getEventPage } from '../../utils/hqEvents'
 
 export default defineEventHandler(async (event) => {
-  const D1 = event.context.cloudflare?.env?.D1
-  if (!D1)
-    throw createError({ statusCode: 500, message: 'D1 not available' })
-
-  const now = Math.floor(Date.now() / 1000)
-  await purgeOldSignups(D1, now)
-
-  const page = await getPublishedPage(D1, event.context.params.slug, now)
-  if (!page)
-    throw createError({ statusCode: 404, message: 'No such event page' })
+  const HQ = event.context.cloudflare?.env?.HQ
+  if (!HQ)
+    throw createError({ statusCode: 500, message: 'HQ not available' })
 
   return {
-    ...page,
+    ...await getEventPage(HQ, event.context.params.slug),
     turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || null,
   }
 })

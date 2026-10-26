@@ -14,15 +14,17 @@ binding = "D1"
 database_name = "juoksut-products"
 database_id = "85dc51df-85fe-4b4a-871c-01a44a6e64b2" # prod (juoksut-products)
 
-# Public settings for event signups (docs/event-signups.md). Secrets
-# (GOOGLE_*, TURNSTILE_SECRET_KEY) are Pages secrets, never here. CF_ACCESS_AUD
-# is the audience tag of the Access application in front of /crew.
+# Event pages, sessions and signups are owned by Lightspeed HQ
+# (docs/event-signups.md).
+[[services]]
+binding = "HQ"
+service = "lightspeed-hq"
+entrypoint = "PublicEvents"
+
+# The Turnstile widget on the event pages; Lightspeed HQ verifies the token
+# with its own TURNSTILE_SECRET_KEY.
 [vars]
-CF_ACCESS_TEAM_DOMAIN = "https://juoksut.cloudflareaccess.com"
-CF_ACCESS_AUD = "df421383f0952167948ed45f28be0e621b007026101effb91f3c55be337885ab"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFlBk0KLWz2PyE7d"
-EMAIL_FROM = "JUOKSUT <crew@juoksut.run>"
-EMAIL_REPLY_TO = "crew@juoksut.run"
 
 # Preview deploys (non-main branches) use the test database, never production.
 [[env.preview.d1_databases]]
@@ -30,10 +32,10 @@ binding = "D1"
 database_name = "test-juoksut-products"
 database_id = "eb16c92e-e775-4c32-8f6c-a312301fd5c2"
 
-# Preview has its own Access application, so its own audience tag.
+[[env.preview.services]]
+binding = "HQ"
+service = "lightspeed-hq-preview"
+entrypoint = "PublicEvents"
+
 [env.preview.vars]
-CF_ACCESS_TEAM_DOMAIN = "https://juoksut.cloudflareaccess.com"
-CF_ACCESS_AUD = "708756cd1794efef3cfc18560df26c23abc74fca0abfa594e565072c424057ca"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFlBk0KLWz2PyE7d"
-EMAIL_FROM = "JUOKSUT <crew@juoksut.run>"
-EMAIL_REPLY_TO = "crew@juoksut.run"

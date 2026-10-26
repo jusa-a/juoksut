@@ -5,16 +5,16 @@
 
 ## Recently completed
 
-| Area                     | Status                                                                                                                                                             |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Webhook correctness      | Signed raw-payload verification fails loudly if its secret is absent; event IDs are idempotent; a failed stock update releases its claim for retry.                |
-| Stripe catalogue mapping | Reusable Stripe Prices map to a unique D1 product price ID; stock updates no longer depend on a manually set Stripe metadata slug.                                 |
-| Checkout data            | Checkout validates item shape and quantity, reads the real D1 price, collects name and phone, creates Stripe Customers, and returns generic unexpected errors.     |
-| Limited registration     | Thirty-minute capacity reservations, completion/expiry handling, required Stripe dropdown fields, and server-enforced scheduled sale starts are implemented.       |
-| Product data             | `d1/schema.sql` is committed; stock has a unique composite index; empty-stock phantom rows are filtered.                                                           |
-| Security and SEO         | Security headers are configured, static robots/sitemap and webmanifest are present, and JSON-LD escaping is fixed.                                                 |
-| Event signups            | Free event pages with capacity, waitlist and promotion, Gmail API emails, Turnstile, and an Access-protected crew page replace Ticket Tailor (`event-signups.md`). |
-| Reliability and tests    | Image probes run in parallel using global fetch; money-path unit tests exist; GitHub Actions runs lint, tests and a production build on every push.                |
+| Area                     | Status                                                                                                                                                         |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Webhook correctness      | Signed raw-payload verification fails loudly if its secret is absent; event IDs are idempotent; a failed stock update releases its claim for retry.            |
+| Stripe catalogue mapping | Reusable Stripe Prices map to a unique D1 product price ID; stock updates no longer depend on a manually set Stripe metadata slug.                             |
+| Checkout data            | Checkout validates item shape and quantity, reads the real D1 price, collects name and phone, creates Stripe Customers, and returns generic unexpected errors. |
+| Limited registration     | Thirty-minute capacity reservations, completion/expiry handling, required Stripe dropdown fields, and server-enforced scheduled sale starts are implemented.   |
+| Product data             | `d1/schema.sql` is committed; stock has a unique composite index; empty-stock phantom rows are filtered.                                                       |
+| Security and SEO         | Security headers are configured, static robots/sitemap and webmanifest are present, and JSON-LD escaping is fixed.                                             |
+| Event signups            | Free event pages with capacity, waitlist and promotion live in Lightspeed HQ, which also sends the emails and runs the Turnstile check (`event-signups.md`).   |
+| Reliability and tests    | Image probes run in parallel using global fetch; money-path unit tests exist; GitHub Actions runs lint, tests and a production build on every push.            |
 
 The All-Stars Camp 2026 launch uses the limited-registration path: 37 places,
 €199, a shirt-size checkout dropdown, 30-minute holds (Stripe Checkout's
@@ -37,10 +37,10 @@ at 24 August 2026 12:00 Europe/Helsinki.
 
 - **First-party order/CRM database:** Stripe is deliberately the order and PII
   system of record. Adding D1 order storage adds GDPR, retention, and access
-  control responsibilities. Free event signups are the scoped exception (name
-  and email, purged a week after the event).
+  control responsibilities. Free event signups are the scoped exception: name
+  and email live in Lightspeed HQ, purged a week after the event.
 - **Admin product UI:** targeted D1 commands are safer for the current editing
-  frequency than adding authenticated public mutation endpoints. The crew page
-  covers events and signups only.
+  frequency than adding authenticated public mutation endpoints. Event pages
+  and signups are managed in Lightspeed HQ.
 - **Automatic sitemap module:** the current static sitemap is intentionally
   simple; update it manually when public routes change.

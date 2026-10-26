@@ -61,9 +61,6 @@ export default defineNuxtConfig({
     '/fastlane-friday': { redirect: { to: '/events/fastlane-friday', statusCode: 301 } },
     '/events/**': { prerender: false },
     '/success': { ssr: false },
-    // Crew screens are an app behind Cloudflare Access, not pages for crawlers.
-    '/crew': { ssr: false },
-    '/crew/**': { ssr: false },
   },
 
   app: {

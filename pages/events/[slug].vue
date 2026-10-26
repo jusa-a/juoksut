@@ -47,12 +47,13 @@
                 </div>
 
                 <span class="text-[0.8em] text-right" :class="{ 'min-[500px]:col-span-2': event.state === 'not_open' }">
-                  <template v-if="event.state === 'not_open'">{{ formatOpens(event.opensAt) }}</template>
+                  <template v-if="event.state === 'cancelled'">Cancelled</template>
+                  <template v-else-if="event.state === 'not_open'">{{ formatOpens(event.opensAt) }}</template>
                   <template v-else-if="event.state === 'full'">Full</template>
                   <template v-else-if="typeof event.spotsLeft === 'number'">{{ spotsLeft(event.spotsLeft) }}</template>
                 </span>
 
-                <div v-if="event.state !== 'not_open'" class="col-span-3 min-[500px]:col-span-1">
+                <div v-if="event.state !== 'not_open' && event.state !== 'cancelled'" class="col-span-3 min-[500px]:col-span-1">
                   <button
                     type="button"
                     class="w-full min-[500px]:w-auto"

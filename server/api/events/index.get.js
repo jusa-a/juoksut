@@ -1,10 +1,10 @@
 import { createError, defineEventHandler } from 'h3'
-import { listPublishedEvents } from '../../utils/events'
+import { listEvents } from '../../utils/hqEvents'
 
 export default defineEventHandler(async (event) => {
-  const D1 = event.context.cloudflare?.env?.D1
-  if (!D1)
-    throw createError({ statusCode: 500, message: 'D1 not available' })
+  const HQ = event.context.cloudflare?.env?.HQ
+  if (!HQ)
+    throw createError({ statusCode: 500, message: 'HQ not available' })
 
-  return { events: await listPublishedEvents(D1, Math.floor(Date.now() / 1000)) }
+  return await listEvents(HQ, Math.floor(Date.now() / 1000))
 })

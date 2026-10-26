@@ -17,12 +17,11 @@ matter, and prerenders selected stable pages.
 | Database                   | Cloudflare D1 `juoksut-products`, bound as `D1`                 |
 | Media                      | Public Cloudflare R2 assets at `https://cdn.juoksut.run`        |
 | Payments and buyer records | Stripe Checkout and Stripe Customers                            |
-| Free event signups         | D1 tables, Gmail API emails, Turnstile, crew page behind Access |
+| Free event signups         | Lightspeed HQ, called over the `HQ` service binding             |
 | Client state               | Pinia; cart persists only in browser localStorage               |
 
 `/` and `/join` are prerendered. `/shop`, `/shop/**`, `/archive` and
-`/events/**` render on demand. `/success` and `/crew/**` are
-client-only. `/orders` permanently redirects to `/terms-and-conditions`,
+`/events/**` render on demand. `/success` is client-only. `/orders` permanently redirects to `/terms-and-conditions`,
 `/fastlane-friday` to `/events/fastlane-friday`.
 
 Security response headers are configured in `nuxt.config.ts` for every route:
@@ -43,7 +42,8 @@ schema file against remote D1 because its initial drops are for local reset.
 | `checkout_reservations`               | Thirty-minute, non-PII capacity holds for products using `reserve_stock = 1`.                                                                       |
 | `processed_events`                    | Stripe webhook event IDs, for at-least-once delivery idempotency.                                                                                   |
 | `instagram_token` / `instagram_cache` | One Instagram token and a cached media payload.                                                                                                     |
-| `event_pages` / `events` / `signups`  | Free event signups: public pages, dated events with capacity, signups (name, email, status). Signups purged a week after the event.                 |
+
+Free event pages, sessions and signups live in Lightspeed HQ, not D1.
 
 `products.checkout_fields` is JSON for structured registration choices, such
 as a camp shirt-size dropdown. This is deliberately separate from `stock`: the
@@ -106,8 +106,8 @@ manually entered Stripe metadata slug for inventory correctness.
 
 Stripe is the system of record for payments, orders, customers, names, phone
 numbers, and email addresses. D1 reservations contain no buyer PII. Free event
-signups are the one exception: name and email in `signups`, deleted a week after
-the event ([`event-signups.md`](event-signups.md)). The success
+signups are the one exception: name and email live in Lightspeed HQ, deleted a
+week after the event ([`event-signups.md`](event-signups.md)). The success
 endpoint returns the order's payment status plus only the name/email and order
 summary needed by its page, not phone or address.
 
@@ -115,9 +115,8 @@ summary needed by its page, not phone or address.
 
 Cloudflare Pages deploys `main`; other branches receive previews. Product and
 stock administration happens through targeted D1 commands, not a public admin
-API. Event pages and signups are managed on `/crew`, behind Cloudflare Access
-for `@juoksut.run` logins, with every `/api/crew/*` handler verifying the
-Access token itself. Images are uploaded to R2 and served from the public CDN.
+API. Event pages and signups are managed in Lightspeed HQ (`hq.juoksut.run`).
+Images are uploaded to R2 and served from the public CDN.
 
 For a remote command, use the wrappers rather than exporting credentials into a
 shell:
@@ -136,17 +135,17 @@ Stripe access only for an explicitly approved production action.
 
 - Instagram Graph API feeds the homepage video and archive. The token is stored
   server-side in D1; a 30-minute D1 cache reduces API calls.
-- Free event signups (Fastlane Friday first) send email through the Gmail API
-  as `crew@juoksut.run` and check signups with Cloudflare Turnstile.
-  `live-love-lightspeed` is a legacy Google Forms page.
+- Free event signups (Fastlane Friday first) are owned by Lightspeed HQ, which
+  sends the emails and runs the Turnstile check; the site renders them through
+  the `HQ` binding. `live-love-lightspeed` is a legacy Google Forms page.
 - All product and marketing media are public R2 assets. Do not put private
   customer documents in that bucket.
 
 ## Deliberate limitations
 
 - No first-party accounts, product admin UI, or order database: this keeps
-  customer PII and payment records in Stripe. The crew page manages events and
-  signups only.
+  customer PII and payment records in Stripe. Event pages and signups are managed
+  in Lightspeed HQ.
 - The static sitemap and robots file in `public/` must be updated manually when
   public routes change.
 - Product descriptions are trusted admin-authored HTML rendered with `v-html`.
