@@ -50,6 +50,7 @@ export default defineNuxtConfig({
     '/**': { headers: securityHeaders },
     '/': { prerender: true },
     '/join': { prerender: false }, // schedule and events change
+    '/safer-space': { prerender: true },
     // Keep shop pages server-rendered so OG/meta tags are available to crawlers
     '/shop': { prerender: false },
     '/shop/**': { prerender: false },
