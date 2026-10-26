@@ -19,9 +19,11 @@
 
     <div class="py-[0.5em] px-[0.5em]">
       <div class="font-serif font-medium text-[1.2em] tracking-[-0.03em]">{{ event.title }}</div>
-      <div class="flex justify-between gap-[1em] text-[0.8em] uppercase">
-        <span>{{ date }}</span>
-        <span>{{ status }}</span>
+      <div class="text-[0.8em] uppercase">
+        {{ date }}
+      </div>
+      <div class="text-[0.8em] uppercase">
+        {{ status }}
       </div>
     </div>
   </NuxtLink>

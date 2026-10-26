@@ -43,7 +43,7 @@
       </p>
       <div v-for="group in groups" :key="group.title" class="mt-[1em]">
         <h3 class="uppercase">{{ group.title }}</h3>
-        <div class="grid grid-cols-1 gap-[1em] min-[640px]:grid-cols-2 min-[1024px]:grid-cols-3">
+        <div class="grid grid-cols-2 gap-[1em]">
           <EventCard v-for="event in group.events" :key="event.slug" :event="event" />
         </div>
       </div>
