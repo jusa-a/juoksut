@@ -57,7 +57,7 @@
     <section>
       <h2>SAFER SPACE</h2>
       <p>
-        All welcome, always. Respect each other and each other's boundaries, and don't assume anything about anyone's background, body or pace. If something happens, talk to a pacer, send us a DM on <a href="https://www.instagram.com/juoksut/">Instagram</a> or use our anonymous form.
+        All welcome, always. Respect each other and each other's boundaries, and don't assume anything about anyone's background, body or pace. If something happens, talk to a pacer, send us a DM on <a href="https://www.instagram.com/juoksut/">Instagram</a> or use our <a href="https://docs.google.com/forms/d/e/1FAIpQLSfEXw0XS7aHmmV5wV9eRk1KxI9RvnP9OgDka_lpDvVyxNJ4Xw/viewform" target="_blank">anonymous form</a>.
       </p>
       <p>
         <NuxtLink to="/safer-space">Read our Safer Space guidelines</NuxtLink>
