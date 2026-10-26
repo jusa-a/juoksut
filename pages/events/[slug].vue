@@ -288,13 +288,13 @@ async function submit(eventId) {
       },
     })
 
-    // Showing the address back is how people catch a typo before the confirmation bounces.
-    const sentTo = `We sent the details to ${email.value.trim()}. Wrong address? Email crew@juoksut.run.`
+    // Showing the address back is how people catch a typo.
+    const address = email.value.trim()
     done.value = {
       eventId,
       text: result.status === 'waitlist'
-        ? `You're number ${result.position} on the waitlist. ${sentTo} We'll email you if a spot opens.`
-        : `You're in! ${sentTo}`,
+        ? `You're number ${result.position} on the waitlist. We'll email ${address} if a spot opens.`
+        : `You're in! Details sent to ${address}.`,
     }
 
     openId.value = null
