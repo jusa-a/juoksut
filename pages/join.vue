@@ -2,14 +2,13 @@
   <div>
     <!--
       About + this month: product-page split. Cover fills the left half from the
-      nav down, the copy and the schedule fill the right half.
+      nav down at its own ratio; the right half runs copy, schedule, copy.
     -->
     <section class="flex flex-row flex-wrap w-full p-0 m-0 mx-auto">
       <!--
         The cover holds under the nav while the right column scrolls, and only
         lets go when that column's last line reaches the bottom of the screen.
-        Capped to the screen height so the whole pin is visible; object-contain
-        rather than a crop, since a cover is a designed graphic.
+        Sized by its own width, never by the screen height.
       -->
       <div
         v-if="post"
@@ -18,36 +17,40 @@
         <img
           :src="post.cover"
           alt="Cover of this month's schedule"
-          class="block w-full h-auto min-[900px]:max-h-[calc(100vh-var(--nav-height)-1px)] min-[900px]:object-contain min-[900px]:object-left"
+          class="block w-full h-auto"
         >
       </div>
 
       <div
-        class="flex-1 min-w-[300px] flex flex-col px-[1em] py-[1.4em]"
+        class="flex-1 min-w-[300px] flex flex-col"
         :class="{ 'mx-auto max-w-[36em]': !post }"
       >
-        <p class="mt-0">
-          JUOKSUT is a Helsinki run club for every pace and distance. All welcome, always.
-        </p>
-        <p>
-          Our weekly runs are free and need no signup, except Fastlane Friday, which opens every Monday. Bring your friends.
-        </p>
-
-        <!-- Edge to edge of its column, like the cover is of the screen. -->
-        <template v-if="post">
-          <img
-            :src="post.schedule"
-            alt="This month's run schedule"
-            loading="lazy"
-            class="block -mx-[1em] w-[calc(100%+2em)] max-w-none h-auto mt-[1.5em]"
-          >
+        <!-- Copy keeps a reading measure; the schedule below runs the full column. -->
+        <div class="px-[1em] pt-[1.4em] pb-[1.5em] min-[900px]:px-[4em]">
+          <p class="mt-0">
+            JUOKSUT is a Helsinki run club for every pace and distance. All welcome, always.
+          </p>
           <p>
+            Our weekly runs are free and need no signup, except Fastlane Friday, which opens every Monday. Bring your friends.
+          </p>
+        </div>
+
+        <img
+          v-if="post"
+          :src="post.schedule"
+          alt="This month's run schedule"
+          loading="lazy"
+          class="block w-full h-auto"
+        >
+
+        <div class="px-[1em] pt-[1.4em] pb-[1.4em] min-[900px]:px-[4em]">
+          <p v-if="post" class="mt-0">
             Changes go up on <a href="https://www.instagram.com/juoksut/">Instagram</a> and <a href="https://www.strava.com/clubs/juoksut">Strava</a>.
           </p>
-        </template>
-        <p v-else>
-          This month's schedule is on our <a href="https://www.instagram.com/juoksut/">Instagram</a>.
-        </p>
+          <p v-else class="mt-0">
+            This month's schedule is on our <a href="https://www.instagram.com/juoksut/">Instagram</a>.
+          </p>
+        </div>
       </div>
     </section>
 
@@ -59,7 +62,7 @@
         right. Same order on phones, so the copy is read before the cards.
       -->
       <section class="flex flex-row flex-wrap w-full p-0 m-0">
-        <div class="flex flex-col flex-1 min-w-[300px] px-[1em] py-[1.4em] min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
+        <div class="flex flex-col flex-1 min-w-[300px] px-[1em] py-[1.4em] min-[900px]:px-[4em] min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
           <p class="mt-0">
             Camps, trips, races and the odd party. Each event page has the details, the dates and signup. If an event is full, join the waitlist.
           </p>
@@ -74,12 +77,12 @@
     <Divider />
 
     <!--
-      Safer Space: the values in a box on the left, the text on the right. On
-      phones the heading and intro come first, then the box, then the rest —
+      Safer Space: the text on the left, the values in a card on the right. On
+      phones the heading and intro come first, then the values, then the rest —
       hence the explicit grid rows.
     -->
     <section id="safer-space" class="grid grid-cols-1 w-full p-0 m-0 pt-[1.4em] pb-[1em] min-[900px]:grid-cols-2 min-[900px]:items-start">
-      <div class="flex flex-col px-[1em] min-[900px]:col-start-2 min-[900px]:row-start-1">
+      <div class="flex flex-col px-[1em] min-[900px]:px-[4em] min-[900px]:col-start-1 min-[900px]:row-start-1">
         <h2 class="mt-0">
           SAFER SPACE
         </h2>
@@ -91,7 +94,7 @@
         </p>
       </div>
 
-      <div class="p-[1em] mt-[0.5em] min-[900px]:mt-0 min-[900px]:col-start-1 min-[900px]:row-start-2 min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start flex flex-row flex-wrap justify-around items-center">
+      <div class="p-[1em] mt-[0.5em] min-[900px]:mt-0 min-[900px]:col-start-2 min-[900px]:row-start-2 min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start flex flex-row flex-wrap justify-around items-center">
         <div class="min-w-[290px] max-w-[26em] text-center text-[0.75em] border-pink border-[1px] pt-[0.5em] pb-[1.5em] px-[1.5em]">
           <p>
             <strong>RESPECT</strong>
@@ -111,7 +114,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col px-[1em] mt-[1.5em] min-[900px]:mt-0 min-[900px]:col-start-2 min-[900px]:row-start-2">
+      <div class="flex flex-col px-[1em] mt-[1.5em] min-[900px]:px-[4em] min-[900px]:mt-0 min-[900px]:col-start-1 min-[900px]:row-start-2">
         <h3>
           PHOTOS AND VIDEOS
         </h3>
