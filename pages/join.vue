@@ -5,11 +5,20 @@
       nav down, the copy and the schedule fill the right half.
     -->
     <section class="flex flex-row flex-wrap w-full p-0 m-0 mx-auto">
-      <div v-if="post" class="flex-1 min-w-[200px]">
+      <!--
+        The cover holds under the nav while the right column scrolls, and only
+        lets go when that column's last line reaches the bottom of the screen.
+        Capped to the screen height so the whole pin is visible; object-contain
+        rather than a crop, since a cover is a designed graphic.
+      -->
+      <div
+        v-if="post"
+        class="flex-1 min-w-[200px] min-[900px]:self-start min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)]"
+      >
         <img
           :src="post.cover"
           alt="Cover of this month's schedule"
-          class="block w-full h-auto"
+          class="block w-full h-auto min-[900px]:max-h-[calc(100vh-var(--nav-height)-1px)] min-[900px]:object-contain min-[900px]:object-left"
         >
       </div>
 
