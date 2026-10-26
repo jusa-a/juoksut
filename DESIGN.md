@@ -59,6 +59,10 @@ a pink fill. No greys, no second accent. Error text is the only exception (`text
 - Text pages sit in a centered `section`: `clamp(50%, 500px, 100%)` wide, `1em` side padding.
 - Product and event pages: image left, text right, wrapping to one column on phones; the text
   column is sticky below the nav on wider screens.
+- `/join` follows the same split from 900px up: the month's cover pinned on the left with the copy
+  and the schedule scrolling past on the right, event images on the left with the events copy
+  pinned on the right, and the Safer Space values box on the left with its text on the right. On
+  phones it is one column, the images run edge to edge, and nothing is pinned.
 - The nav is sticky with a 1px pink divider under it; height `--nav-height`.
 - Dividers always run edge to edge of their column or the screen, like the nav's; never inset by
   the side padding. Content inside carries its own padding (list rows, forms).

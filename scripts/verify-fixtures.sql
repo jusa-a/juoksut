@@ -94,3 +94,55 @@ VALUES (
 INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
 SELECT id, unixepoch() + 4 * 86400, 'Test venue', 'Test details.', 3, unixepoch() - 86400, unixepoch() + 2 * 86400
 FROM event_pages WHERE slug = 'draft-event';
+
+-- JOIN PAGE
+
+-- A fresh Instagram cache holding this month's two-image schedule carousel, so
+-- /join renders the schedule without an Instagram token. The cover and the
+-- schedule share the only 4:5 image on the CDN, which is the real aspect.
+INSERT INTO instagram_cache (id, videos, cached_at)
+VALUES (1, '[{"id":"schedule","caption":"October runs","media_type":"CAROUSEL_ALBUM","permalink":"https://www.instagram.com/p/schedule/","timestamp":"' || strftime('%Y-%m-%dT%H:%M:%S+0000', 'now') || '","children":{"data":[{"media_type":"IMAGE","media_url":"https://cdn.juoksut.run/fastlane-friday.jpg"},{"media_type":"IMAGE","media_url":"https://cdn.juoksut.run/fastlane-friday.jpg"}]}}]', datetime('now'));
+
+-- Two more published events so the events column has a list to scroll past its
+-- pinned copy: one with a landscape image, one with none (title fallback).
+INSERT INTO event_pages (slug, title, body, image_url, summary, published, venue, details, capacity, start_time, opens_rule, promote_rule)
+VALUES (
+  'summer-camp',
+  'Summer Camp',
+  'A weekend out of town.
+
+Trail, sauna, swim.',
+  'https://cdn.juoksut.run/og-image.jpg',
+  'A weekend of trail runs, sauna and swimming.',
+  1,
+  'Test venue',
+  'Test details.',
+  20,
+  '10:00',
+  'monday 12:00',
+  'same-day 12:00'
+);
+
+INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
+SELECT id, unixepoch() + 30 * 86400, 'Test venue', 'Test details.', 20, unixepoch() - 86400, unixepoch() + 30 * 86400
+FROM event_pages WHERE slug = 'summer-camp';
+
+INSERT INTO event_pages (slug, title, body, image_url, summary, published, venue, details, capacity, start_time, opens_rule, promote_rule)
+VALUES (
+  'city-relay',
+  'City Relay',
+  'Four legs around the city.',
+  NULL,
+  'A relay around the city.',
+  1,
+  'Test venue',
+  'Test details.',
+  40,
+  '14:00',
+  'monday 12:00',
+  'same-day 12:00'
+);
+
+INSERT INTO events (page_id, starts_at, venue, details, capacity, opens_at, promote_until)
+SELECT id, unixepoch() + 45 * 86400, 'Test venue', 'Test details.', 40, unixepoch() - 86400, unixepoch() + 45 * 86400
+FROM event_pages WHERE slug = 'city-relay';
