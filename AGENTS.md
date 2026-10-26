@@ -76,8 +76,7 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 | Route                   | File                       | Notes                                                                                                                                                                                                                                                              |
 | ----------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (only `live-love-lightspeed` uses the landing layout) |
-| `/join`                 | `join.vue`                 | Weekly runs intro, this month's schedule (Instagram carousel cover + schedule), events (now on / coming up / archive) under it, short Safer Space summary linking `/safer-space`. **SSR**                                                                           |
-| `/safer-space`          | `safer-space.vue`          | Values, what happens after a report, external Google Form for reports. **Prerendered**                                                                                                                                                                             |
+| `/join`                 | `join.vue`                 | Weekly runs intro, this month's schedule (Instagram carousel cover + schedule), free events under it, Safer Space (values, photos and videos, reports via an external Google Form). **SSR**                                                                        |
 | `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc). SSR                                                                                                                                                                                                                              |
 | `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                     |
 | `/events/[slug]`        | `events/[slug].vue`        | Event page with dated events, signup form (Turnstile) and waitlist. SSR. `/fastlane-friday` 301s to `/events/fastlane-friday`                                                                                                                                      |
@@ -95,7 +94,6 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 ```text
 '/':              { prerender: true }
 '/join':          { prerender: false }  // SSR on demand — schedule and events change
-'/safer-space':   { prerender: true }
 '/shop':          { prerender: false }   // SSR on demand — products change
 '/shop/**':       { prerender: false }   // SSR on demand — OG/meta for crawlers
 '/archive':       { prerender: false }   // SSR for meta tags

@@ -1,7 +1,7 @@
 <template>
   <NuxtLink
     :to="`/events/${event.slug}`"
-    class="block border-[1px] border-transparent hover:border-pink"
+    class="block hover:opacity-100"
   >
     <div class="aspect-[4/5] flex items-center justify-center overflow-hidden">
       <NuxtImg
@@ -17,9 +17,9 @@
       </div>
     </div>
 
-    <div class="py-[0.5em] px-[0.5em]">
-      <div class="font-serif font-medium text-[1.2em] tracking-[-0.03em]">{{ event.title }}</div>
-      <div class="text-[0.8em] uppercase">
+    <div class="whitespace-nowrap text-[0.95em] py-[0.5em] px-[0.5em]">
+      <div>{{ event.title }}</div>
+      <div class="uppercase">
         {{ date }}
       </div>
     </div>
