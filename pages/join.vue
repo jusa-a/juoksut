@@ -3,7 +3,7 @@
     <section>
       <h2>ABOUT</h2>
       <p>
-        JUOKSUT is a run club in Helsinki for every pace and distance. We run to feel good, fast and a little invincible, together. First-timer or a pro, we'll get there together.
+        JUOKSUT is a run club in Helsinki for every pace and distance. We run to feel good, fast and a little invincible. First-timer or a pro, we'll get there together.
       </p>
       <p>
         Come whenever you like. Our weekly runs are free and you don't need to commit. Only Fastlane Friday needs a signup, and those open every Monday. Bring your friends.
@@ -60,7 +60,7 @@
         Come for a run, stay for the vibes. At Juoksut, running is more than pace or performance. It's a community, and sport should be accessible, welcoming and safe for everyone, whatever your background, body or experience.
       </p>
       <p>
-        We're a non-profit, and we want what we do to show other clubs and organisations that a place like this is possible: where people feel safe, express themselves freely and treat each other with respect. Everyone is a Lightspeeder. We run at lightspeed, but we slow down for each other.
+        We're a non-profit, and we want what we do to show other clubs and organizations that a place like this is possible: where people feel safe, express themselves freely and treat each other with respect. Everyone is a Lightspeeder. We run at lightspeed, but we slow down for each other.
       </p>
 
       <div class="max-w-[37em] mx-auto text-center text-[0.75em] border-pink border-[1px] my-[2em] pt-[0.5em] pb-[1.5em] px-[1.5em]">
@@ -131,7 +131,7 @@
 
       <h3>IF SOMETHING HAPPENS</h3>
       <p>
-        No one at Juoksut should face discrimination, bullying, inappropriate comments or any other unwanted behaviour. If you experience or see it, you can talk to a pacer on the run, send us a DM on <a href="https://www.instagram.com/juoksut/">Instagram</a>, or use the confidential form below, anonymously if you like.
+        No one at Juoksut should face discrimination, bullying, inappropriate comments or any other unwanted behavior. If you experience or see it, you can talk to a pacer on the run, send us a DM on <a href="https://www.instagram.com/juoksut/">Instagram</a>, or use the confidential form below, anonymously if you like.
       </p>
       <p>
         Our safety team handles every report in confidence, and anonymously if you ask. We look at how serious it is, agree on what happens next and, if you want us to and it feels safe, get back to you.
