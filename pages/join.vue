@@ -3,67 +3,52 @@
     <section>
       <h2>ABOUT</h2>
       <p>
-        JUOKSUT is a running club in Helsinki for everyone, from beginners to advanced runners who want to run together, challenge themselves and have a blast at the same time.
+        JUOKSUT is a run club in Helsinki for every pace and distance. We run to feel good, fast and a little invincible, together. First-timer or a pro, we'll get there together.
       </p>
       <p>
-        We run on Tuesdays, Fridays, and Sundays with varying paces and distances. Join us and bring your friends too! You will be welcomed by our fun, friendly, and fast team.
+        Come whenever you like. Our weekly runs are free and you don't need to commit. Only Fastlane Friday needs a signup, and those open every Monday. Bring your friends.
       </p>
     </section>
 
     <Divider sticky class="my-[1em]" />
 
     <section>
-      <h2>WEEKLY RUNS</h2>
-      <div class="max-w-[40em] w-full mx-auto font-serif font-medium tracking-[-0.03em] flex flex-col items-center justify-center">
-        <div class="flex justify-between items-center w-full py-[0.5em]">
-          <div class="flex flex-col">
-            <div>Tuesday</div>
-            <div class="text-[1.8em]">Tuesday Run</div>
-          </div>
-          <div class="flex flex-col items-end">
-            <div>
-              18:30 @
-              <a href="https://maps.app.goo.gl/vMkCqSCvomdDX1xf9" target="_blank" class="underline">Tokoinranta</a>
-            </div>
-            <div class="text-[1.2em]">
-              Social Run. 3 Pace Groups
-            </div>
-          </div>
-        </div>
+      <h2>THIS MONTH</h2>
+      <div v-if="post" class="w-full max-w-[60em] mx-auto flex flex-col min-[640px]:flex-row gap-[1px] bg-pink">
+        <img
+          :src="post.cover"
+          alt="Cover of this month's schedule"
+          class="w-full min-[640px]:w-1/2 block"
+        >
+        <img
+          :src="post.schedule"
+          alt="This month's run schedule"
+          class="w-full min-[640px]:w-1/2 block"
+        >
+      </div>
+      <p v-if="post">
+        Runs, places and pacers for the month, straight from our Instagram. Plans change sometimes, so follow us on <a href="https://www.instagram.com/juoksut/">Instagram</a> and <a href="https://www.strava.com/clubs/juoksut">Strava</a> for the latest.
+      </p>
+      <p v-else>
+        We run on Tuesdays, Fridays and Sundays. This month's schedule is on our <a href="https://www.instagram.com/juoksut/">Instagram</a>, and the runs are on <a href="https://www.strava.com/clubs/juoksut">Strava</a>.
+      </p>
+    </section>
 
-        <div class="flex justify-between items-center w-full py-[0.5em]">
-          <div class="flex flex-col">
-            <div>Friday</div>
-            <NuxtLink to="/events/fastlane-friday" class="text-[1.8em] underline decoration-[0.05em]">Fastlane Friday</NuxtLink>
-          </div>
-          <div class="flex flex-col items-end">
-            <div>
-              16:00 @ Olympic Stadium
-            </div>
-            <div class="text-[1.2em]">
-              Speed Session. All Levels.
-            </div>
-          </div>
-        </div>
+    <Divider sticky class="my-[1em]" />
 
-        <div class="flex justify-between items-center w-full py-[0.5em]">
-          <div class="flex flex-col">
-            <div>Sunday</div>
-            <div class="text-[1.8em]">Long Run</div>
-          </div>
-          <div class="flex flex-col items-end">
-            <div>
-              Varying Times & Locations
-            </div>
-            <div class="text-[1.2em]">
-              Varying Distances and Paces
-            </div>
-          </div>
+    <section>
+      <h2>EVENTS</h2>
+      <p>
+        Camps, trips, races and the odd party. What's on now, what's coming, and everything we've done so far.
+      </p>
+      <div v-for="group in groups" :key="group.title" class="mt-[1em]">
+        <h3 class="uppercase">{{ group.title }}</h3>
+        <div class="grid grid-cols-1 gap-[1em] min-[640px]:grid-cols-2 min-[1024px]:grid-cols-3">
+          <EventCard v-for="event in group.events" :key="event.slug" :event="event" />
         </div>
       </div>
-
-      <p>
-        We post more details about the weekly runs and other events on our social media. Make sure to follow us on <a href="https://www.strava.com/clubs/juoksut">Strava</a> and <a href="https://www.instagram.com/juoksut/">Instagram</a> to keep updated!
+      <p v-if="!events.length">
+        Nothing on the calendar yet. Watch our Instagram.
       </p>
     </section>
 
@@ -72,12 +57,41 @@
     <section>
       <h2>SAFER SPACE</h2>
       <p>
-        Since there are so so many people joining our weekly runs, it's crucial to ensure that we create a positive, respectful, and safe environment for everyone. Juoksut is for everyone, regardless of your background.
+        Come for a run, stay for the vibes. At Juoksut, running is more than pace or performance. It's a community, and sport should be accessible, welcoming and safe for everyone, whatever your background, body or experience.
       </p>
       <p>
-        We have established the following guidelines to ensure that everyone feels safe. It is absolutely essential that these are followed!
+        We're a non-profit, and we want what we do to show other clubs and organisations that a place like this is possible: where people feel safe, express themselves freely and treat each other with respect. Everyone is a Lightspeeder. We run at lightspeed, but we slow down for each other.
       </p>
+
       <div class="max-w-[37em] mx-auto text-center text-[0.75em] border-pink border-[1px] my-[2em] pt-[0.5em] pb-[1.5em] px-[1.5em]">
+        <p class="uppercase">
+          <strong>OUR VALUES</strong>
+        </p>
+        <p>
+          <strong>RESPECT</strong>
+          <br>
+          We value every runner as they are: listening, supporting and lifting each other up, on the track, on the trail and online. That includes the city and the nature we get to run in.
+        </p>
+        <p>
+          <strong>EQUALITY</strong>
+          <br>
+          Everyone has the same right to take part. Your first 5k or your next marathon, all levels meet here as equals.
+        </p>
+        <p>
+          <strong>OPENNESS</strong>
+          <br>
+          Diversity makes us stronger. We welcome people of every culture, identity and experience, and we're better for it.
+        </p>
+      </div>
+
+      <p>
+        To keep it that way, we ask everyone to follow these guidelines.
+      </p>
+
+      <div class="max-w-[37em] mx-auto text-center text-[0.75em] border-pink border-[1px] my-[2em] pt-[0.5em] pb-[1.5em] px-[1.5em]">
+        <p class="uppercase">
+          <strong>GUIDELINES</strong>
+        </p>
         <p>
           <strong>BE CONSIDERATE AND RESPECTFUL</strong>
           <br>
@@ -108,18 +122,26 @@
           <br>
           What matters is acknowledging them, apologizing, and learning from the mistakes.
         </p>
-      </div>
-      <div class="text-center flex flex-col items-center">
-        <p class="m-0">
-          IF YOU ENCOUNTER UNWANTED BEHAVIOR,
+        <p>
+          <strong>PHOTOS AND VIDEOS</strong>
           <br>
-          please don't hesitate to tell our pacers, or use this anonymous link to inform us.
+          We photograph and film our runs, and by joining you may appear in them. Filming people in secret, or posting photos or videos that show someone in a disrespectful or harmful way, is not allowed. Respect people's boundaries and privacy.
         </p>
+      </div>
 
-        <a class="mx-auto my-[1.5em] px-[5em] text-white uppercase bg-pink text-center border-[1px] border-pink py-[0.3em] hover:bg-white hover:text-pink active:opacity-50" href="https://docs.google.com/forms/d/e/1FAIpQLSfEXw0XS7aHmmV5wV9eRk1KxI9RvnP9OgDka_lpDvVyxNJ4Xw/viewform?fbclid=PAZXh0bgNhZW0CMTEAAaZMurDuaAKJinxI0v4NkcB-oQrfGU5lakZB_MOSWFfyVl_LDHu59SVQ8EU_aem_FKp8daadnB7-PR0AWyH7nA" target="_blank">LINK TO THE FORM</a>
+      <h3>IF SOMETHING HAPPENS</h3>
+      <p>
+        No one at Juoksut should face discrimination, bullying, inappropriate comments or any other unwanted behaviour. If you experience or see it, you can talk to a pacer on the run, send us a DM on <a href="https://www.instagram.com/juoksut/">Instagram</a>, or use the confidential form below, anonymously if you like.
+      </p>
+      <p>
+        Our safety team handles every report in confidence, and anonymously if you ask. We look at how serious it is, agree on what happens next and, if you want us to and it feels safe, get back to you.
+      </p>
+
+      <div class="text-center flex flex-col items-center">
+        <a class="mx-auto my-[1.5em] px-[5em] text-white uppercase bg-pink text-center border-[1px] border-pink py-[0.3em] hover:bg-white hover:text-pink active:opacity-50" href="https://docs.google.com/forms/d/e/1FAIpQLSfEXw0XS7aHmmV5wV9eRk1KxI9RvnP9OgDka_lpDvVyxNJ4Xw/viewform" target="_blank">OPEN THE FORM</a>
 
         <p class="text-[0.8em] m-0">
-          If you have any other questions or concerns, please reach out to us. We are here to help and make sure that everyone feels safe and welcome at Juoksut! &lt;3
+          Questions or ideas for making Juoksut better for everyone? Message us any time. We're here to make sure everyone feels safe and welcome.
         </p>
       </div>
     </section>
@@ -131,6 +153,19 @@
 </template>
 
 <script setup>
+// Both endpoints fall back to the copy instead of failing the page.
+const { data: schedule } = await useFetch('/api/instagram-schedule')
+const { data: eventsData } = await useFetch('/api/events')
+
+const post = computed(() => schedule.value?.post ?? null)
+const events = computed(() => eventsData.value?.events ?? [])
+
+const groups = computed(() => [
+  { title: 'Now on', events: events.value.filter(event => event.status === 'current') },
+  { title: 'Coming up', events: events.value.filter(event => event.status === 'upcoming') },
+  { title: 'Archive', events: events.value.filter(event => event.status === 'past') },
+].filter(group => group.events.length))
+
 useSeoMeta({
   title: 'Join',
   description: 'Join JUOKSUT weekly runs in Helsinki. All welcome.',

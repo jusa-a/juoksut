@@ -49,7 +49,7 @@ export default defineNuxtConfig({
     // Security headers on every response (CSP is Report-Only — see note above)
     '/**': { headers: securityHeaders },
     '/': { prerender: true },
-    '/join': { prerender: true },
+    '/join': { prerender: false }, // schedule and events change
     // Keep shop pages server-rendered so OG/meta tags are available to crawlers
     '/shop': { prerender: false },
     '/shop/**': { prerender: false },

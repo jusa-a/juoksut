@@ -59,6 +59,36 @@ export async function getPublishedPage(D1, slug, now) {
   }
 }
 
+export function eventStatus(firstStartsAt, lastStartsAt, now) {
+  if (firstStartsAt > now)
+    return 'upcoming'
+  if (lastStartsAt + 86400 < now)
+    return 'past'
+  return 'current'
+}
+
+// The public events gallery: one row per published page, dated by its events.
+// No signup counts: capacity stays private.
+export async function listPublishedEvents(D1, now) {
+  const { results } = await D1.prepare(`
+    SELECT p.slug, p.title, p.summary, p.image_url AS imageUrl,
+      MIN(e.starts_at) AS firstStartsAt,
+      MAX(e.starts_at) AS lastStartsAt
+    FROM event_pages p
+    JOIN events e ON e.page_id = p.id
+    WHERE p.published = 1
+    GROUP BY p.id
+  `).all()
+
+  const order = { current: 0, upcoming: 1, past: 2 }
+
+  return results
+    .map(row => ({ ...row, status: eventStatus(row.firstStartsAt, row.lastStartsAt, now) }))
+    .sort((a, b) => order[a.status] - order[b.status]
+      || (a.status === 'upcoming' ? a.firstStartsAt - b.firstStartsAt : 0)
+      || (a.status === 'past' ? b.lastStartsAt - a.lastStartsAt : 0))
+}
+
 export async function signUp(D1, { eventId, name, email, token, now }) {
   // One statement decides confirmed vs waitlist from the current confirmed
   // count, so two racing signups cannot both take the last place. A cancelled

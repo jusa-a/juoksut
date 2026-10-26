@@ -76,7 +76,7 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 | Route                   | File                       | Notes                                                                                                                                                                                                                                                              |
 | ----------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (only `live-love-lightspeed` uses the landing layout) |
-| `/join`                 | `join.vue`                 | Weekly runs, safer-space policy, external Google Form for reports. **Prerendered**                                                                                                                                                                                 |
+| `/join`                 | `join.vue`                 | Weekly runs intro, this month's schedule (Instagram carousel cover + schedule), events gallery (now on / coming up / archive), safer-space policy, external Google Form for reports. **SSR**                                                                       |
 | `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc). SSR                                                                                                                                                                                                                              |
 | `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                     |
 | `/events/[slug]`        | `events/[slug].vue`        | Event page with dated events, signup form (Turnstile) and waitlist. SSR. `/fastlane-friday` 301s to `/events/fastlane-friday`                                                                                                                                      |
@@ -93,7 +93,7 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 
 ```text
 '/':              { prerender: true }
-'/join':          { prerender: true }
+'/join':          { prerender: false }  // SSR on demand — schedule and events change
 '/shop':          { prerender: false }   // SSR on demand — products change
 '/shop/**':       { prerender: false }   // SSR on demand — OG/meta for crawlers
 '/archive':       { prerender: false }   // SSR for meta tags
@@ -117,7 +117,7 @@ sales_start_at`.
   `(product_slug, size)` index prevents duplicate stock rows and speeds stock reads/updates.
 - **instagram_token** — single row (`id=1`): `token, expires_at, updated_at`. Long-lived IG token;
   auto-refreshed when within 7 days of expiry.
-- **instagram_cache** — single row (`id=1`): `videos (JSON blob), cached_at`. 30-min TTL.
+- **instagram_cache** — single row (`id=1`): `videos (JSON blob of all media, not only videos), cached_at`. 30-min TTL.
 - **processed_events** — Stripe event ids already applied by the webhook, preventing duplicate stock
   decrements when Stripe retries delivery.
 - **checkout_reservations** — short-lived capacity holds for products with `reserve_stock = 1`;
@@ -168,6 +168,8 @@ navigation uses `$fetch`/`useFetch` to the real API routes normally.
 | `GET /api/order-details`          | `order-details.js`          | Fetches Stripe session by `session_id`; returns only name and email for the success page                     |
 | `POST /api/stripe-webhook`        | `stripe-webhook.js`         | Verifies signature, finalises/releases reservations, updates merch stock on completion                       |
 | `GET /api/instagram`              | `instagram.js`              | Paginated videos from D1 cache (`?offset=N`); refreshes token + repopulates cache on miss                    |
+| `GET /api/instagram-schedule`     | `instagram-schedule.get.js` | This month's schedule carousel (`{ post }`, `null` when none)                                                |
+| `GET /api/events`                 | `events/index.get.js`       | Published event pages for the gallery: `{ events }` with `status` current/upcoming/past, no signup data      |
 | `/api/events/*`                   | `events/`                   | Public event page data, signup (Turnstile), cancel by token. `docs/event-signups.md`                         |
 | `/api/crew/*`                     | `crew/`                     | Crew page CRUD; each handler verifies the Cloudflare Access token (`crewAuth.js`)                            |
 
@@ -251,12 +253,13 @@ Login product — no Facebook Page).
 - **Token setup (one-time):** create a Meta app → Instagram Login for Business → generate a
   long-lived user token (`instagram_basic` + `user_media`) → store in D1:
   `wrangler d1 execute --remote juoksut-products --command "INSERT OR REPLACE INTO instagram_token (id, token, expires_at) VALUES (1, '<token>', '<ISO-date>')"`.
-- **Auto-refresh:** `instagram.js` checks expiry on every cache-miss; within 7 days it calls
+- **Auto-refresh:** `server/utils/instagram.js` checks expiry on every cache-miss; within 7 days it calls
   `graph.instagram.com/refresh_access_token` and updates D1. The token is stored in D1 as plaintext
   and passed as a URL query param to the Graph API (server-side only; never sent to the client).
-- **Caching:** all videos fetched and stored as one JSON blob in `instagram_cache` (id=1), 30-min
-  TTL. Pagination is in-memory by `offset` (`PAGE_SIZE = 12`). Cache-miss has no request coalescing
-  (thundering-herd possible) and paginates the IG API unbounded.
+- **Caching:** all media (videos and image carousels) fetched and stored as one JSON blob in
+  `instagram_cache` (id=1), 30-min TTL; `/api/instagram` filters videos on read. Pagination is
+  in-memory by `offset` (`PAGE_SIZE = 12`). Cache-miss has no request coalescing (thundering-herd
+  possible) and paginates the IG API unbounded.
 
 ## Secrets and config
 
