@@ -31,7 +31,7 @@
     </div>
 
     <div class="mt-[2em] mb-[1em] flex justify-between text-[0.6em] font-light">
-      <div> © JUOKSUT RY 2025 </div>
+      <div> © JUOKSUT RY {{ new Date().getFullYear() }} </div>
       <NuxtLink to="/privacy-policy">privacy policy</NuxtLink>
       <div><a href="mailto:crew@juoksut.run">crew@juoksut.run</a></div>
     </div>
