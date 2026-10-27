@@ -110,7 +110,16 @@ export async function getCachedMedia(event) {
   return await refreshCache(D1)
 }
 
-const MONTH_IN_CAPTION = /\b(?:january|february|march|april|may|june|july|august|september|october|november|december|month\w*)\b/i
+const MONTH_NAMES = /\b(?:january|february|march|april|june|july|august|september|october|november|december)\b/gi
+const MAY = /\bMay\b/g // capitalised only: "may" is also an ordinary word
+const MONTH_WORD = /\bmonth\w*\b/i
+
+// A schedule caption names its one month ("It's July"), or just says "month".
+// Two months ("From November to March") is an announcement, not a schedule.
+function isScheduleCaption(caption = '') {
+  const months = new Set([...caption.matchAll(MONTH_NAMES), ...caption.matchAll(MAY)].map(m => m[0].toLowerCase()))
+  return months.size === 1 || (months.size === 0 && MONTH_WORD.test(caption))
+}
 
 // The monthly schedule is a two-image carousel (cover, then schedule), with a
 // caption that changes every month, so match its shape instead of the text.
@@ -119,7 +128,7 @@ function isSchedulePost(post) {
   return post.media_type === 'CAROUSEL_ALBUM'
     && children?.length === 2
     && children.every(child => child.media_type === 'IMAGE' && child.media_url)
-    && MONTH_IN_CAPTION.test(post.caption || '')
+    && isScheduleCaption(post.caption || '')
 }
 
 // Every month's schedule cover, as an image item for the archive.

@@ -47,6 +47,26 @@ describe('pickSchedulePost', () => {
     expect(pickSchedulePost([post], now)).not.toBeNull()
   })
 
+  it('rejects a caption naming two months', () => {
+    const post = carousel({
+      timestamp: '2026-10-08T10:27:00+0000',
+      caption: 'Juoksut presents: FASTLANE FRIDAY. Starting 7.11. From November to March.',
+      children: twoImages(),
+    })
+
+    expect(pickSchedulePost([post], now)).toBeNull()
+  })
+
+  it('counts May only with a capital', () => {
+    const june = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'June is here, you may join any run', children: twoImages() })
+    const may = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'May\u2019s agenda here for you', children: twoImages() })
+    const verbOnly = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'You may like these', children: twoImages() })
+
+    expect(pickSchedulePost([june], now)).not.toBeNull()
+    expect(pickSchedulePost([may], now)).not.toBeNull()
+    expect(pickSchedulePost([verbOnly], now)).toBeNull()
+  })
+
   it('matches month, months and monthly', () => {
     for (const caption of ['This month', 'Two months in', 'The MONTHLY plan']) {
       const post = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption, children: twoImages() })
