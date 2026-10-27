@@ -68,6 +68,11 @@ nuxtApp.hook('page:loading:start', () => {
   isVisible.value = true
   hiddenAt = Date.now()
   spinnerTimer = setTimeout(() => spinner.value = true, SPINNER_DELAY_MS)
+  // The router awaits this hook: start the fade now (useHead writes the
+  // attribute later) and let its first frames paint before the navigation's
+  // work holds up the main thread, or the fade starts with a jump.
+  document.documentElement.dataset.loading = 'page'
+  return new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
 })
 
 nuxtApp.hook('page:loading:end', () => {
@@ -106,6 +111,11 @@ router.beforeEach(() => {
 #__nuxt > :not(.loading-screen),
 main ~ * {
   transition: var(--fade-in);
+}
+/* Safari builds main's layer ahead of time; built when the fade starts, it
+   costs ~60ms on an image-heavy page and the fade jumps. */
+main {
+  will-change: opacity;
 }
 html[data-loading] #__nuxt > :not(.loading-screen),
 html[data-loading='page'] main,
