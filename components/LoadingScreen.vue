@@ -2,7 +2,7 @@
   <!--
     Centred on svh, which holds still while iOS Safari's toolbar grows and
     shrinks. On a navigation the nav stays, so the spinner centres in the area
-    below it and waits for the page to fade out first.
+    below it.
   -->
   <Transition name="fade">
     <div
@@ -23,13 +23,13 @@ defineProps({
 </script>
 
 <style scoped>
-/* Waits out the page's own 0.25s fade (app.vue), so it never sits on the old page. */
+/* In step with the page's 0.3s fades (app.vue). */
 .fade-enter-active {
-  transition: opacity 0.2s ease-out 0.25s;
+  transition: opacity 0.3s ease;
 }
 
 .fade-leave-active {
-  transition: opacity 0.25s ease-in;
+  transition: opacity 0.3s ease;
 }
 .fade-enter-from,
 .fade-leave-to {

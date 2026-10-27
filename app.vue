@@ -1,7 +1,7 @@
 <template>
-  <LoadingScreen :is-visible="isVisible" :below-nav="!pageReload" />
+  <LoadingScreen :is-visible="spinner" :below-nav="!pageReload" />
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage :transition="pageTransition" />
   </NuxtLayout>
 </template>
 
@@ -23,6 +23,7 @@ useSeoMeta({
 
 const isVisible = ref(true) // Shown from the server render until the app is ready
 const pageReload = ref(true)
+const spinner = ref(true)
 
 // Loading hides the page instead of covering it: iOS Safari paints a fixed
 // full-screen layer into its status bar and toolbar. A reload hides the whole
@@ -33,23 +34,57 @@ useHead({
   },
 })
 
-const { isLoading } = useLoadingIndicator({
-  throttle: 100,
-})
-
 onMounted(() => {
   setTimeout(() => {
     pageReload.value = false
     isVisible.value = false
+    spinner.value = false
   }, 600)
 })
 
-watch(isLoading, (newVal) => {
-  if (newVal)
-    isVisible.value = true
-  else
-    setTimeout(() => isVisible.value = false, 200)
+// A navigation fades the page out at once, in step with the page transition
+// (0.3s); the spinner only comes if the next page is still loading after that.
+// The next page's own enter transition brings the page back.
+const FADE_MS = 300
+const nuxtApp = useNuxtApp()
+let spinnerTimer: ReturnType<typeof setTimeout> | undefined
+let fallback: ReturnType<typeof setTimeout> | undefined
+let hiddenAt = 0
+
+function endLoading() {
+  clearTimeout(spinnerTimer)
+  clearTimeout(fallback)
+  if (pageReload.value)
+    return
+  isVisible.value = false
+  spinner.value = false
+}
+
+nuxtApp.hook('page:loading:start', () => {
+  if (pageReload.value)
+    return
+  clearTimeout(fallback)
+  isVisible.value = true
+  hiddenAt = Date.now()
+  spinnerTimer = setTimeout(() => spinner.value = true, FADE_MS)
 })
+
+nuxtApp.hook('page:loading:end', () => {
+  clearTimeout(spinnerTimer)
+  // A navigation that renders no new page (same page, aborted) has no enter.
+  fallback = setTimeout(endLoading, 1000)
+})
+
+// The old page is already fading out with `main`, so its leave only waits for
+// the rest of that fade instead of starting a second one.
+const pageTransition = {
+  name: 'page',
+  mode: 'out-in' as const,
+  onLeave: (_el: Element, done: () => void) => {
+    setTimeout(done, isVisible.value ? Math.max(0, FADE_MS - (Date.now() - hiddenAt)) : FADE_MS)
+  },
+  onBeforeEnter: endLoading,
+}
 
 const router = useRouter()
 const cart = useCartStore()
@@ -60,10 +95,12 @@ router.beforeEach(() => {
 </script>
 
 <style>
+/* Loading (see app.vue script). `main` fades out with the page transition and
+   comes back at once: the next page's enter transition does the fade-in. */
 #__nuxt > :not(.loading-screen),
-main,
-main ~ * {
-  transition: opacity 0.25s ease-in;
+main ~ *,
+html[data-loading='page'] main {
+  transition: opacity 0.3s ease;
 }
 html[data-loading='reload'] #__nuxt > :not(.loading-screen),
 html[data-loading='page'] main,
