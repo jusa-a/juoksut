@@ -96,22 +96,35 @@ router.beforeEach(() => {
 </script>
 
 <style>
-/* Loading (see app.vue script). `main` fades out with the page transition and
-   comes back at once: the next page's enter transition does the fade-in. */
-#__nuxt > :not(.loading-screen),
-main ~ *,
-html[data-loading='page'] main {
-  transition: opacity 0.3s ease;
+/* Fades out quickly, comes in a little slower and softer. Loading (see the
+   script): `main` fades out with the page transition and comes back at once,
+   the next page's enter transition doing the fade-in. */
+:root {
+  --fade-out: opacity 0.3s ease;
+  --fade-in: opacity 0.5s ease-in-out;
 }
-html[data-loading='reload'] #__nuxt > :not(.loading-screen),
+#__nuxt > :not(.loading-screen),
+main ~ * {
+  transition: var(--fade-in);
+}
+html[data-loading] #__nuxt > :not(.loading-screen),
 html[data-loading='page'] main,
 html[data-loading='page'] main ~ * {
+  transition: var(--fade-out);
+}
+/* The footer waits for the next page to start its fade-in, so they come in together. */
+html[data-loading='reload'] #__nuxt > :not(.loading-screen),
+html[data-loading='page'] main,
+html[data-loading='page'] main ~ *,
+main:has(> .page-enter-from) ~ * {
   opacity: 0;
 }
 
-.page-enter-active,
+.page-enter-active {
+  transition: var(--fade-in);
+}
 .page-leave-active {
-  transition: all 0.3s;
+  transition: var(--fade-out);
 }
 .page-enter-from,
 .page-leave-to {

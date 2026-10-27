@@ -23,13 +23,14 @@ defineProps({
 </script>
 
 <style scoped>
-/* In step with the page's 0.3s fades (app.vue). */
+/* Comes in like the page fades out and leaves in step with the next page's
+   fade-in (timings in app.vue). */
 .fade-enter-active {
-  transition: opacity 0.3s ease;
+  transition: var(--fade-out);
 }
 
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: var(--fade-in);
 }
 .fade-enter-from,
 .fade-leave-to {
