@@ -2,7 +2,8 @@
   <div>
     <img class="fixed selectDisable w-[calc(var(--nav-height)+75vh)] px-[1em] z-50 top-[calc(var(--nav-height)+30vh)] left-1/2 -translate-x-1/2 -translate-y-1/3  mix-blend-plus-lighter blur-[0.5em] opacity-50" src="/logo-circle.svg" alt="">
 
-    <div>
+    <!-- flow-root contains the floated values, so the page scrolls as long as they are tall. -->
+    <div class="flow-root">
       <div class="wrapper selectDisable">
         <div class="values">
           <div><span>U</span>nity in <span>R</span>unning</div>
@@ -30,8 +31,6 @@
           muted
         />
       </div>
-
-      <div class="h-[calc(100vh-var(--nav-height))]"></div>
     </div>
   </div>
 </template>

@@ -27,6 +27,10 @@ defineProps({
 .fix {
   position: fixed;
   inset: 0;
+  /* iOS Safari paints a fixed surface that touches the top edge into its
+     status bar and keeps that colour after the overlay is gone. Starting
+     just below the edge keeps the status bar transparent. */
+  top: 10px;
   background: rgba(255, 255, 255, 0.998) !important;
   z-index: 803;
 }
