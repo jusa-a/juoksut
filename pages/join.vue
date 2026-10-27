@@ -52,12 +52,15 @@
       <Divider />
 
       <!--
-        Events: the copy about them pinned on the left, shop-style cards on the
+        Events: the heading and copy pinned on the left, shop-style cards on the
         right. Same order on phones, so the copy is read before the cards.
       -->
       <section class="flex flex-row flex-wrap w-full p-0 m-0">
         <div class="flex flex-col flex-1 min-w-[300px] px-[1em] py-[1.4em] min-[900px]:px-[4em] min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
-          <p class="mt-0">
+          <h2 class="mt-0">
+            EVENTS
+          </h2>
+          <p>
             Sessions and events with limited spots. Sign up as fast as you can, and if it's full, join the waitlist.
           </p>
         </div>
