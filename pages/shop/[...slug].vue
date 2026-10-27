@@ -128,9 +128,9 @@
           </div>
         </div>
 
-        <!-- Held 0.5em off the screen bottom: iOS Safari paints its toolbar solid from
-             sticky chrome whose bottom edge sits at the screen edge. Same total gap. -->
-        <div class="w-full sticky bottom-[0.5em] pb-[0.9em] pt-[1em] px-[1em] z-10">
+        <!-- Pinned only beside the images. On phones it stays in flow: a pinned bar
+             sliding through iOS Safari's toolbar turns the toolbar solid. -->
+        <div class="w-full pb-[1.4em] pt-[1em] px-[1em] z-10 min-[500px]:sticky min-[500px]:bottom-0">
           <button
             class="w-full text-white uppercase bg-pink text-center border-[1px] border-pink py-[1em] hover:bg-white hover:text-pink"
             :class="{
