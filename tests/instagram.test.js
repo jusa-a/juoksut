@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { pickSchedulePost } from '../server/utils/instagram'
+import { pickSchedulePost, scheduleCovers } from '../server/utils/instagram'
 
 const now = Date.parse('2026-10-26T12:00:00Z')
 
@@ -99,5 +99,20 @@ describe('pickSchedulePost', () => {
 
   it('returns null for an empty media list', () => {
     expect(pickSchedulePost([], now)).toBeNull()
+  })
+})
+
+describe('scheduleCovers', () => {
+  it('gives every schedule post\'s cover as an image item', () => {
+    const october = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'October', children: twoImages('october') })
+    const photos = carousel({ timestamp: '2026-10-10T10:00:00+0000', caption: 'Race day', children: twoImages('race') })
+
+    expect(scheduleCovers([october, photos])).toEqual([{
+      id: undefined,
+      media_type: 'IMAGE',
+      media_url: 'https://cdninstagram.com/october/1',
+      permalink: october.permalink,
+      timestamp: october.timestamp,
+    }])
   })
 })

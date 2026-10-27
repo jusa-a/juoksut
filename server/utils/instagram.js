@@ -114,14 +114,27 @@ const MONTH_IN_CAPTION = /\b(?:january|february|march|april|may|june|july|august
 
 // The monthly schedule is a two-image carousel (cover, then schedule), with a
 // caption that changes every month, so match its shape instead of the text.
+function isSchedulePost(post) {
+  const children = post.children?.data
+  return post.media_type === 'CAROUSEL_ALBUM'
+    && children?.length === 2
+    && children.every(child => child.media_type === 'IMAGE' && child.media_url)
+    && MONTH_IN_CAPTION.test(post.caption || '')
+}
+
+// Every month's schedule cover, as an image item for the archive.
+export function scheduleCovers(media) {
+  return media.filter(isSchedulePost).map(post => ({
+    id: post.id,
+    media_type: 'IMAGE',
+    media_url: post.children.data[0].media_url,
+    permalink: post.permalink,
+    timestamp: post.timestamp,
+  }))
+}
+
 export function pickSchedulePost(media, now) {
-  const candidates = media.filter((post) => {
-    const children = post.children?.data
-    return post.media_type === 'CAROUSEL_ALBUM'
-      && children?.length === 2
-      && children.every(child => child.media_type === 'IMAGE' && child.media_url)
-      && MONTH_IN_CAPTION.test(post.caption || '')
-  })
+  const candidates = media.filter(isSchedulePost)
 
   if (!candidates.length)
     return null

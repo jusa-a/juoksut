@@ -18,17 +18,23 @@
             :class="cell.align === 'end' ? 'flex justify-end items-start' : cell.align === 'start' ? 'flex justify-start items-start' : ''"
           >
             <a
-              v-if="cell.video"
-              :href="cell.video.permalink"
+              v-if="cell.item"
+              :href="cell.item.permalink"
               target="_blank"
               rel="noopener"
               class="block bg-gray-100 hover:opacity-90 transition-opacity"
               :style="`width: ${cell.size === 'sm' ? '75%' : cell.size === 'md' ? '79%' : '83%'}`"
             >
+              <img
+                v-if="cell.item.media_type === 'IMAGE'"
+                :src="cell.item.media_url"
+                alt="Monthly schedule cover"
+                class="w-full block"
+              >
               <video
-                v-if="cell.video.media_url"
-                :src="cell.video.media_url"
-                :poster="cell.video.thumbnail_url"
+                v-else-if="cell.item.media_url"
+                :src="cell.item.media_url"
+                :poster="cell.item.thumbnail_url"
                 autoplay
                 muted
                 loop
@@ -37,7 +43,7 @@
               />
               <img
                 v-else
-                :src="cell.video.thumbnail_url"
+                :src="cell.item.thumbnail_url"
                 alt=""
                 class="w-full block"
               >
@@ -78,13 +84,10 @@ const mobileConfigs = [
 
 const isMobile = ref(false)
 
-function buildRows(videos) {
+// Items stay in order, newest first; only the row shapes are random.
+function buildRows(items) {
   const configs = isMobile.value ? mobileConfigs : rowConfigs
-  const pool = [...videos]
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]]
-  }
+  const pool = [...items]
   const result = []
   let lastConfig = null
   while (pool.length > 0) {
@@ -101,7 +104,7 @@ function buildRows(videos) {
     const cells = config.cells.map((cellDef) => {
       if (!cellDef || pool.length === 0)
         return {}
-      return { ...cellDef, video: pool.shift() }
+      return { ...cellDef, item: pool.shift() }
     })
     result.push({ cols: config.cols, cells })
   }
