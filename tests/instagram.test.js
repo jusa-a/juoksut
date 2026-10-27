@@ -60,11 +60,11 @@ describe('pickSchedulePost', () => {
   it('counts May only with a capital', () => {
     const june = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'June is here, you may join any run', children: twoImages() })
     const may = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'May\u2019s agenda here for you', children: twoImages() })
-    const verbOnly = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'You may like these', children: twoImages() })
+    const twoMonths = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'From May to June', children: twoImages() })
 
     expect(pickSchedulePost([june], now)).not.toBeNull()
     expect(pickSchedulePost([may], now)).not.toBeNull()
-    expect(pickSchedulePost([verbOnly], now)).toBeNull()
+    expect(pickSchedulePost([twoMonths], now)).toBeNull()
   })
 
   it('matches month, months and monthly', () => {
@@ -84,14 +84,14 @@ describe('pickSchedulePost', () => {
     expect(pickSchedulePost([post], now)).toBeNull()
   })
 
-  it('rejects a carousel without a month caption', () => {
+  it('takes a caption that names no month', () => {
     const post = carousel({
       timestamp: '2026-10-08T10:27:00+0000',
-      caption: 'Summer 👍',
+      caption: 'Dreams come true at Tokoinranta',
       children: twoImages(),
     })
 
-    expect(pickSchedulePost([post], now)).toBeNull()
+    expect(pickSchedulePost([post], now)).not.toBeNull()
   })
 
   it('rejects a carousel whose second child is a video', () => {
@@ -125,7 +125,7 @@ describe('pickSchedulePost', () => {
 describe('scheduleCovers', () => {
   it('gives every schedule post\'s cover as an image item', () => {
     const october = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption: 'October', children: twoImages('october') })
-    const photos = carousel({ timestamp: '2026-10-10T10:00:00+0000', caption: 'Race day', children: twoImages('race') })
+    const photos = carousel({ timestamp: '2026-10-10T10:00:00+0000', caption: 'Race day', children: [...twoImages('race'), image('https://cdninstagram.com/race/3')] })
 
     expect(scheduleCovers([october, photos])).toEqual([{
       id: undefined,

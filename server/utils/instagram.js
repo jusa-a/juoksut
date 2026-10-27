@@ -112,13 +112,12 @@ export async function getCachedMedia(event) {
 
 const MONTH_NAMES = /\b(?:january|february|march|april|june|july|august|september|october|november|december)\b/gi
 const MAY = /\bMay\b/g // capitalised only: "may" is also an ordinary word
-const MONTH_WORD = /\bmonth\w*\b/i
 
-// A schedule caption names its one month ("It's July"), or just says "month".
-// Two months ("From November to March") is an announcement, not a schedule.
+// Schedule captions are free-form ("Feb💘", "Santa's coming") and name one
+// month at most; one naming two ("From November to March") is an announcement.
 function isScheduleCaption(caption = '') {
   const months = new Set([...caption.matchAll(MONTH_NAMES), ...caption.matchAll(MAY)].map(m => m[0].toLowerCase()))
-  return months.size === 1 || (months.size === 0 && MONTH_WORD.test(caption))
+  return months.size <= 1
 }
 
 // The monthly schedule is a two-image carousel (cover, then schedule), with a

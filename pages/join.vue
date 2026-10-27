@@ -14,11 +14,7 @@
         v-if="post"
         class="flex-1 min-w-[200px] min-[900px]:self-start min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)]"
       >
-        <img
-          :src="post.cover"
-          alt="Cover of this month's schedule"
-          class="block w-full h-auto"
-        >
+        <FadeInImage :src="post.cover" alt="Cover of this month's schedule" />
       </div>
 
       <div
@@ -38,13 +34,7 @@
           </p>
         </div>
 
-        <img
-          v-if="post"
-          :src="post.schedule"
-          alt="This month's run schedule"
-          loading="lazy"
-          class="block w-full h-auto"
-        >
+        <FadeInImage v-if="post" :src="post.schedule" alt="This month's run schedule" />
       </div>
     </section>
 
