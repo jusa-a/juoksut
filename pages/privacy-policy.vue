@@ -2,7 +2,7 @@
   <div>
     <section>
       <h2>PRIVACY POLICY</h2>
-      <p class="font-[500]">Last updated: 25.10.2026</p>
+      <p class="font-[500]">Last updated: 27.10.2026</p>
 
       <h3>INTRODUCTION</h3>
       <p>This Privacy Policy explains how Juoksut ry (“Juoksut”, “we”, “our”, or “us”) processes personal data when you use <a href="https://juoksut.run">juoksut.run</a>, buy from our webshop, or register for an event through a service linked from the site.</p>
@@ -18,7 +18,7 @@
         <li><strong>Order fulfilment:</strong> Juoksut can access the order, registration, name, email address, and phone number in the Stripe Dashboard to arrange registrations, deliveries, pickups, refunds, and customer support. Our own D1 database stores product, stock, and technical webhook records only; it is not used as a customer database.</li>
         <li><strong>Checkout confirmation:</strong> After checkout, the site retrieves a limited order summary from Stripe to show the confirmation page. This includes the name, email address, items, amount, currency, and payment status for that checkout session.</li>
         <li><strong>Free event signups:</strong> When you sign up for a free event on this site, Lightspeed HQ, our event system, stores your name, email address and signup status and emails you about your signup. Only Juoksut crew can see the signup list, and signups are deleted a week after the event. We use this only to run that event. A Cloudflare Turnstile check stops automated signups (see Cloudflare's <a href="https://www.cloudflare.com/turnstile-privacy-policy/">Turnstile Privacy Addendum</a>).</li>
-        <li><strong>Third-party forms:</strong> Some pages link to or use Google Forms. Information you submit there is processed by that provider and according to the form. We may receive the information needed to run the event or respond to the form.</li>
+        <li><strong>Third-party forms:</strong> Some pages link to Google Forms. Information you submit there is processed by that provider and according to the form. We may receive the information needed to run the event or respond to the form.</li>
       </ul>
 
       <h3>WHY WE USE THIS DATA</h3>

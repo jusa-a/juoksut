@@ -137,7 +137,7 @@ Stripe access only for an explicitly approved production action.
   server-side in D1; a 30-minute D1 cache reduces API calls.
 - Free event signups (Fastlane Friday first) are owned by Lightspeed HQ, which
   sends the emails and runs the Turnstile check; the site renders them through
-  the `HQ` binding. `live-love-lightspeed` is a legacy Google Forms page.
+  the `HQ` binding.
 - All product and marketing media are public R2 assets. Do not put private
   customer documents in that bucket.
 

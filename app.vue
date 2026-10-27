@@ -43,9 +43,10 @@ onMounted(() => {
 })
 
 // A navigation fades the page out at once, in step with the page transition
-// (0.3s); the spinner only comes if the next page is still loading after that.
-// The next page's own enter transition brings the page back.
+// (0.3s); the spinner only comes for a load slow enough to notice, so a quick
+// one never flickers it. The next page's own enter transition brings it back.
 const FADE_MS = 300
+const SPINNER_DELAY_MS = 600
 const nuxtApp = useNuxtApp()
 let spinnerTimer: ReturnType<typeof setTimeout> | undefined
 let fallback: ReturnType<typeof setTimeout> | undefined
@@ -66,7 +67,7 @@ nuxtApp.hook('page:loading:start', () => {
   clearTimeout(fallback)
   isVisible.value = true
   hiddenAt = Date.now()
-  spinnerTimer = setTimeout(() => spinner.value = true, FADE_MS)
+  spinnerTimer = setTimeout(() => spinner.value = true, SPINNER_DELAY_MS)
 })
 
 nuxtApp.hook('page:loading:end', () => {
@@ -114,15 +115,6 @@ html[data-loading='page'] main ~ * {
 }
 .page-enter-from,
 .page-leave-to {
-  opacity: 0;
-}
-
-.layout-enter-active,
-.layout-leave-active {
-  transition: all 0.4s;
-}
-.layout-enter-from,
-.layout-leave-to {
   opacity: 0;
 }
 </style>

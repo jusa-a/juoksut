@@ -57,8 +57,8 @@ pages/          → routes (see table below)
 server/api/     → Nitro API handlers (D1 + Stripe + Instagram; events/ public signups via HQ)
 server/utils/   → productUtils.js (products), hqEvents.js (event pages and signups through `HQ`)
 stores/         → Pinia: cart.js (persisted to localStorage), products.js
-components/     → Nav, LandingNav, Cart, Footer, FooterVideo, LoadingScreen, Divider
-layouts/        → default.vue (Nav + Cart + Footer), landing.vue (LandingNav + FooterVideo + Footer)
+components/     → Nav, Cart, Footer, FooterVideo, LoadingScreen, Divider
+layouts/        → default.vue (Nav + Cart + Footer)
 assets/css/     → tailwind.css (fonts, base styles, --nav-height CSS var, global cursor)
 d1/             → schema.sql (committed) + seed.sql (local-only, ignored)
 public/         → static assets, favicons, sitemap.xml, site.webmanifest
@@ -71,20 +71,19 @@ error.vue       → error page (statusCode/statusMessage + "go home")
 
 ## Pages
 
-| Route                   | File                       | Notes                                                                                                                                                                                                                                                              |
-| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. Default layout; `titleTemplate: null` renders plain `JUOKSUT` (only `live-love-lightspeed` uses the landing layout) |
-| `/join`                 | `join.vue`                 | Weekly runs intro, this month's schedule (Instagram carousel cover + schedule), free events under it, Safer Space (values, photos and videos, reports via an external Google Form). **SSR**                                                                        |
-| `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc). SSR                                                                                                                                                                                                                              |
-| `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                                                                                                     |
-| `/events/[slug]`        | `events/[slug].vue`        | Event page with dated events, signup form (Turnstile) and waitlist. SSR. `/fastlane-friday` 301s to `/events/fastlane-friday`                                                                                                                                      |
-| `/signup/cancel`        | `signup/cancel.vue`        | Cancel link from the signup emails (`?token=`); a button cancels. `noindex`                                                                                                                                                                                        |
-| `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                                                                                               |
-| `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                                                                                             |
-| `/terms-and-conditions` | `terms-and-conditions.vue` | Terms & Conditions: order policy, preorder info, and trip terms. `robots: noindex`; `/orders` permanently redirects here.                                                                                                                                          |
-| `/archive`              | `archive.vue`              | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags                                                                                                                                                                                        |
-| `/privacy-policy`       | `privacy-policy.vue`       | Privacy policy. `robots: noindex`                                                                                                                                                                                                                                  |
-| `/live-love-lightspeed` | `live-love-lightspeed.vue` | Legacy event page (Google Forms hidden-iframe POST). Not actively used; contains dead/commented code                                                                                                                                                               |
+| Route                   | File                       | Notes                                                                                                                                                                                        |
+| ----------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                     | `index.vue`                | Hero video (random latest Instagram VIDEO, client-side via `onMounted`; falls back to `cdn.juoksut.run/juoksut.mp4`), values. **Prerendered**. `titleTemplate: null` renders plain `JUOKSUT` |
+| `/join`                 | `join.vue`                 | Weekly runs intro, this month's schedule (Instagram carousel cover + schedule), free events under it, Safer Space (values, photos and videos, reports via an external Google Form). **SSR**  |
+| `/shop`                 | `shop/index.vue`           | Product grid (sorted by id desc). SSR                                                                                                                                                        |
+| `/shop/[slug]`          | `shop/[...slug].vue`       | Product detail, size picker, add-to-cart, JSON-LD Product schema. SSR. Catch-all (`[...slug]`); uses `slug[0]`                                                                               |
+| `/events/[slug]`        | `events/[slug].vue`        | Event page with dated events, signup form (Turnstile) and waitlist. SSR. `/fastlane-friday` 301s to `/events/fastlane-friday`                                                                |
+| `/signup/cancel`        | `signup/cancel.vue`        | Cancel link from the signup emails (`?token=`); a button cancels. `noindex`                                                                                                                  |
+| `/success`              | `success.vue`              | Post-checkout. `useFetch('/api/order-details')` by `session_id`. **CSR** (`ssr: false`); clears cart                                                                                         |
+| `/cancel`               | `cancel.vue`               | Payment cancelled. Static. **Does not clear the cart**                                                                                                                                       |
+| `/terms-and-conditions` | `terms-and-conditions.vue` | Terms & Conditions: order policy, preorder info, and trip terms. `robots: noindex`; `/orders` permanently redirects here.                                                                    |
+| `/archive`              | `archive.vue`              | Instagram video gallery, editorial grid, infinite scroll. SSR for meta tags                                                                                                                  |
+| `/privacy-policy`       | `privacy-policy.vue`       | Privacy policy. `robots: noindex`                                                                                                                                                            |
 
 ## Route rules (`nuxt.config.ts`)
 
@@ -212,7 +211,6 @@ order note remains for unstructured information.
 - **Free events** (Fastlane Friday first): first-party event pages at `/events/<slug>`, created and
   administered in Lightspeed HQ (`hq.juoksut.run`). HQ owns capacity, the waitlist, the emails and
   the purge; the site calls it over the `HQ` binding. Spec and rules: `docs/event-signups.md`.
-- **live-love-lightspeed** (legacy): posts to a Google Form via a hidden iframe.
 - Trip registrations can use first-party Stripe Checkout. Required structured answers belong in the
   product's `checkout_fields` JSON configuration, not the free-text order note or stock sizes.
 
