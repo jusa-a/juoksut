@@ -111,6 +111,7 @@ export async function listEvents(HQ, now) {
         imageUrl: event.imageUrl,
         firstStartsAt: event.firstStartsAt,
         lastStartsAt: event.lastStartsAt,
+        next: event.next ?? null,
         status: eventStatus(event.firstStartsAt, event.lastStartsAt, now),
       }))
       .sort((a, b) => order[a.status] - order[b.status]

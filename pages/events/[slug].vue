@@ -152,6 +152,7 @@
 
 <script setup>
 import { eventParagraphs } from '~/utils/eventBody'
+import { formatDate, formatOpens, formatTime, formatWeekday } from '~/utils/eventDates'
 
 const route = useRoute()
 const slug = String(route.params.slug)
@@ -165,27 +166,7 @@ const buttonClass = `${buttonBase} text-white bg-pink hover:bg-white hover:text-
 const buttonSecondaryClass = `${buttonBase} text-pink bg-white hover:bg-pink hover:text-white`
 const inputClass = 'border border-pink bg-white px-[0.6em] py-[0.5em] min-h-[44px] w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink'
 
-const weekdayFormat = new Intl.DateTimeFormat('en-GB', {
-  weekday: 'short',
-  timeZone: 'Europe/Helsinki',
-})
-// Finnish style, e.g. "6.11."
-const dateFormat = new Intl.DateTimeFormat('fi-FI', {
-  day: 'numeric',
-  month: 'numeric',
-  timeZone: 'Europe/Helsinki',
-})
-const timeFormat = new Intl.DateTimeFormat('en-GB', {
-  hour: '2-digit',
-  minute: '2-digit',
-  timeZone: 'Europe/Helsinki',
-})
-
 const paragraphs = computed(() => eventParagraphs(page.value?.body))
-const formatWeekday = unix => weekdayFormat.format(new Date(unix * 1000))
-const formatDate = unix => dateFormat.format(new Date(unix * 1000))
-const formatTime = unix => timeFormat.format(new Date(unix * 1000))
-const formatOpens = unix => `Opens ${formatWeekday(unix)} ${formatDate(unix)} ${formatTime(unix)}`
 const spotsLeft = left => `${left} ${left === 1 ? 'spot' : 'spots'} left`
 
 const openId = ref(null)

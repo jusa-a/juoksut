@@ -24,7 +24,7 @@
           {{ event.title }}
         </div>
         <div class="uppercase">
-          {{ date }}
+          {{ line }}
         </div>
       </div>
     </div>
@@ -32,22 +32,23 @@
 </template>
 
 <script setup>
+import { formatDate, formatOpens } from '~/utils/eventDates'
+
 const props = defineProps({
   event: { type: Object, required: true },
 })
 
-// Finnish style, e.g. "16.10."
-const dateFormat = new Intl.DateTimeFormat('fi-FI', {
-  day: 'numeric',
-  month: 'numeric',
-  timeZone: 'Europe/Helsinki',
-})
-
-const format = unix => dateFormat.format(new Date(unix * 1000))
-
-const date = computed(() => {
-  const first = format(props.event.firstStartsAt)
-  const last = format(props.event.lastStartsAt)
+// Like a shop card's price: what you can do about the next session.
+const line = computed(() => {
+  const { next, firstStartsAt, lastStartsAt } = props.event
+  if (next?.state === 'open')
+    return 'Sign up'
+  if (next?.state === 'full')
+    return 'Full · Join waitlist'
+  if (next?.state === 'not_open')
+    return formatOpens(next.opensAt)
+  const first = formatDate(firstStartsAt)
+  const last = formatDate(lastStartsAt)
   return first === last ? first : `${first}–${last}`
 })
 </script>

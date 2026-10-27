@@ -176,7 +176,7 @@ describe('listEvents', () => {
     const list = vi.fn().mockResolvedValue([
       { slug: 'past', title: 'Past', shareText: 'p', imageUrl: null, firstStartsAt: 1780000000, lastStartsAt: 1780000000 },
       { slug: 'now', title: 'Now', shareText: 'n', imageUrl: null, firstStartsAt: 1793372400, lastStartsAt: 1795186800 },
-      { slug: 'later', title: 'Later', shareText: 'l', imageUrl: null, firstStartsAt: 1797148800, lastStartsAt: 1797148800 },
+      { slug: 'later', title: 'Later', shareText: 'l', imageUrl: null, firstStartsAt: 1797148800, lastStartsAt: 1797148800, next: { startsAt: 1797148800, opensAt: 1796799600, state: 'not_open' } },
     ])
 
     const { events } = await listEvents({ listEvents: list }, now)
@@ -184,5 +184,6 @@ describe('listEvents', () => {
     expect(events.map(event => event.slug)).toEqual(['now', 'later', 'past'])
     expect(events.map(event => event.status)).toEqual(['current', 'upcoming', 'past'])
     expect(events.map(event => event.summary)).toEqual(['n', 'l', 'p'])
+    expect(events.map(event => event.next)).toEqual([null, { startsAt: 1797148800, opensAt: 1796799600, state: 'not_open' }, null])
   })
 })

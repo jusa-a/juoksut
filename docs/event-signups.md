@@ -13,7 +13,9 @@ The site reads and writes all of it through the `HQ` service binding — Lightsp
   `waitlist` with a position. HQ checks the honeypot and Cloudflare Turnstile and sends the mail.
 - `getSignup(token)` and `cancel({ token })` for the 32-hex token in the email. HQ promotes the
   oldest waitlisted person and mails them.
-- `listEvents()` → published pages with their first and last session times.
+- `listEvents()` → published pages with their first and last session times and the next session
+  that isn't cancelled (`startsAt`, `opensAt`, `state`), which the `/join` card turns into its
+  second line: "Sign up", "Full · Join waitlist" or "Opens <day> <date> <time>".
 
 The handlers in `server/api/events/` stay thin; `server/utils/hqEvents.js` maps HQ's answers onto
 the JSON the pages read.
