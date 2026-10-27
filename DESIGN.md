@@ -64,7 +64,8 @@ a pink fill. No greys, no second accent. Error text is the only exception (`text
   fill the right, the copy inset to a reading measure and the schedule full width; the events copy
   pins on the left with shop-style cards on the right; the Safer Space text runs on the left with
   the values in a card of the same width as an event card on the right. From 900px up
-  only the events copy and the values box stay put. On phones it is one column, the cover and the
+  only the events copy and the values box stay put; the dividers between sections stick under the
+  nav's line (`<Divider sticky />`). On phones it is one column, the cover and the
   schedule run edge to edge, and nothing is pinned.
 - The nav is sticky with a 1px pink divider under it; height `--nav-height`.
 - Dividers always run edge to edge of their column or the screen, like the nav's; never inset by
