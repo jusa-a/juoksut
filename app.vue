@@ -42,10 +42,10 @@ onMounted(() => {
   }, 600)
 })
 
-// A navigation fades the page out at once, in step with the page transition
-// (0.3s); the spinner only comes for a load slow enough to notice, so a quick
-// one never flickers it. The next page's own enter transition brings it back.
-const FADE_MS = 300
+// A navigation fades the page out at once, in step with the page transition;
+// the spinner only comes for a load slow enough to notice, so a quick one never
+// flickers it. The next page's own enter transition brings it back.
+const FADE_MS = 200 // = --fade-out
 const SPINNER_DELAY_MS = 600
 const nuxtApp = useNuxtApp()
 let spinnerTimer: ReturnType<typeof setTimeout> | undefined
@@ -100,8 +100,8 @@ router.beforeEach(() => {
    script): `main` fades out with the page transition and comes back at once,
    the next page's enter transition doing the fade-in. */
 :root {
-  --fade-out: opacity 0.3s ease;
-  --fade-in: opacity 0.5s ease-in-out;
+  --fade-out: opacity 0.2s ease;
+  --fade-in: opacity 0.35s ease-in-out;
 }
 #__nuxt > :not(.loading-screen),
 main ~ * {
