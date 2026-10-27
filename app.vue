@@ -1,5 +1,5 @@
 <template>
-  <LoadingScreen :is-visible="isVisible" :page-reload="pageReload" />
+  <LoadingScreen :is-visible="isVisible" />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
@@ -21,33 +21,34 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-const isVisible = ref(true) // Force visible on reload
-const pageReload = ref(true) // // Ref for page reload detection
+const isVisible = ref(true) // Shown from the server render until the app is ready
+const pageReload = ref(true)
+
+// Loading hides the page instead of covering it: iOS Safari paints a fixed
+// full-screen layer into its status bar and toolbar. A reload hides the whole
+// app; a navigation hides the page and the footer, so the nav stays.
+useHead({
+  htmlAttrs: {
+    'data-loading': computed(() => isVisible.value ? (pageReload.value ? 'reload' : 'page') : undefined),
+  },
+})
 
 const { isLoading } = useLoadingIndicator({
   throttle: 100,
 })
 
-// Loading screen on reload
 onMounted(() => {
   setTimeout(() => {
-    document.body.style.overflow = 'auto'
     pageReload.value = false
     isVisible.value = false
-  }, 600) // Hide after a delay
+  }, 600)
 })
 
 watch(isLoading, (newVal) => {
-  if (newVal) {
+  if (newVal)
     isVisible.value = true
-    document.body.style.overflow = 'hidden'
-  }
-  else {
-    setTimeout(() => {
-      isVisible.value = false
-      document.body.style.overflow = 'auto'
-    }, 200)
-  }
+  else
+    setTimeout(() => isVisible.value = false, 200)
 })
 
 const router = useRouter()
@@ -59,6 +60,17 @@ router.beforeEach(() => {
 </script>
 
 <style>
+#__nuxt > :not(.loading-screen),
+main,
+main ~ * {
+  transition: opacity 0.25s ease-in;
+}
+html[data-loading='reload'] #__nuxt > :not(.loading-screen),
+html[data-loading='page'] main,
+html[data-loading='page'] main ~ * {
+  opacity: 0;
+}
+
 .page-enter-active,
 .page-leave-active {
   transition: all 0.3s;

@@ -60,7 +60,6 @@
   body {
     @apply text-pink;
 
-    overflow-y: hidden;
     overflow-x: hidden;
 
     /* font-size: clamp(1em, 2vw, 1.25em); */

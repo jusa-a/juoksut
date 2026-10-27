@@ -1,17 +1,11 @@
 <template>
+  <!-- Centred on svh, which holds still while iOS Safari's toolbar grows and shrinks. -->
   <Transition name="fade">
-    <div v-if="isVisible">
-      <div
-        class="fix"
-        :class="{ fullScreen: pageReload }"
-      >
-      </div>
-
-      <Divider class="fixed top-0 mt-[var(--nav-height)] z-[803]" />
-
-      <div class="fixed z-[9999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-        <img src="/logo-circle.svg" alt="" class="spinner w-[7em]" />
-      </div>
+    <div
+      v-if="isVisible"
+      class="loading-screen fixed z-[9999] left-1/2 top-[50svh] -translate-x-1/2 -translate-y-1/2"
+    >
+      <img src="/logo-circle.svg" alt="" class="spinner w-[7em]">
     </div>
   </Transition>
 </template>
@@ -19,26 +13,10 @@
 <script setup>
 defineProps({
   isVisible: Boolean,
-  pageReload: Boolean,
 })
 </script>
 
 <style scoped>
-.fix {
-  position: fixed;
-  inset: 0;
-  /* iOS Safari paints a fixed surface that touches the top edge into its
-     status bar and keeps that colour after the overlay is gone. Starting
-     just below the edge keeps the status bar transparent. */
-  top: 10px;
-  background: rgba(255, 255, 255, 0.998) !important;
-  z-index: 803;
-}
-
-.fullScreen {
-  z-index: 1005;
-}
-
 .fade-enter-active {
   transition: opacity 0.2s ease-out;
 }
