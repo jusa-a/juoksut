@@ -47,6 +47,13 @@ describe('pickSchedulePost', () => {
     expect(pickSchedulePost([post], now)).not.toBeNull()
   })
 
+  it('matches month, months and monthly', () => {
+    for (const caption of ['This month', 'Two months in', 'The MONTHLY plan']) {
+      const post = carousel({ timestamp: '2026-10-08T10:27:00+0000', caption, children: twoImages() })
+      expect(pickSchedulePost([post], now)).not.toBeNull()
+    }
+  })
+
   it('rejects a carousel of three images', () => {
     const post = carousel({
       timestamp: '2026-10-08T10:27:00+0000',

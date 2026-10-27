@@ -110,7 +110,7 @@ export async function getCachedMedia(event) {
   return await refreshCache(D1)
 }
 
-const MONTH_IN_CAPTION = /\b(?:january|february|march|april|may|june|july|august|september|october|november|december|month)\b/i
+const MONTH_IN_CAPTION = /\b(?:january|february|march|april|may|june|july|august|september|october|november|december|month\w*)\b/i
 
 // The monthly schedule is a two-image carousel (cover, then schedule), with a
 // caption that changes every month, so match its shape instead of the text.
