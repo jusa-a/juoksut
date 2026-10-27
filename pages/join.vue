@@ -49,7 +49,7 @@
     </section>
 
     <template v-if="events.length">
-      <Divider />
+      <Divider sticky />
 
       <!--
         Events: the heading and copy pinned on the left, shop-style cards on the
@@ -71,7 +71,7 @@
       </section>
     </template>
 
-    <Divider />
+    <Divider sticky />
 
     <!--
       Safer Space: the text on the left, the values in a card on the right. On
