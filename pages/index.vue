@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img class="fixed selectDisable w-[calc(var(--nav-height)+75vh)] px-[1em] z-50 top-[calc(var(--nav-height)+30vh)] left-1/2 -translate-x-1/2 -translate-y-1/3  mix-blend-plus-lighter blur-[0.5em] opacity-50" src="/logo.svg" alt="">
+    <img class="fixed selectDisable w-[calc(var(--nav-height)+75vh)] px-[1em] z-50 top-[calc(var(--nav-height)+30vh)] left-1/2 -translate-x-1/2 -translate-y-1/3  mix-blend-plus-lighter blur-[0.5em] opacity-50" src="/logo-circle.svg" alt="">
 
     <div>
       <div class="wrapper selectDisable">

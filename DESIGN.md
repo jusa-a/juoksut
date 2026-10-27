@@ -50,7 +50,7 @@ a pink fill. No greys, no second accent. Error text is the only exception (`text
 
 - **Inter** for everything readable: body 400, headings 500, labels and buttons uppercase.
 - **JUOKSUT Garamond** (self-hosted, 500 is the custom cut) only for the wordmark, the footer line
-  and display moments on `/` and `/join`, with tight tracking (-0.03 to -0.04em). The nav wordmark
+  display moments on `/` and `/join`, and event titles (cards and pages), with tight tracking (-0.03 to -0.04em). The nav wordmark
   and the active nav link are skewed (-8° / -10°).
 - Body size scales with the viewport (`calc(0.875em + 0.390625vw)`); sizes elsewhere are in `em`.
 

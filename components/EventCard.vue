@@ -20,7 +20,9 @@
       </div>
 
       <div class="whitespace-nowrap text-[0.95em] py-[0.5em] px-[0.5em]">
-        <div>{{ event.title }}</div>
+        <div class="font-serif font-medium text-[1.3em] tracking-[-0.03em] leading-none">
+          {{ event.title }}
+        </div>
         <div class="uppercase">
           {{ date }}
         </div>
