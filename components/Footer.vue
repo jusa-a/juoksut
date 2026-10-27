@@ -15,7 +15,7 @@
         <img
           class="w-[3.9em]"
           src="/logo-outline.svg"
-          alt="JUOKSUT OUTLINE LOGO" />
+          alt="JUOKSUT home" />
       </NuxtLink>
 
       <div class="flex flex-col items-end self-stretch justify-between flex-1">

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img class="fixed selectDisable w-[calc(var(--nav-height)+75vh)] px-[1em] z-50 top-[calc(var(--nav-height)+30vh)] left-1/2 -translate-x-1/2 -translate-y-1/3  mix-blend-plus-lighter blur-[0.5em] opacity-50" src="/logo.svg" alt="transparent blurred logo overlay">
+    <img class="fixed selectDisable w-[calc(var(--nav-height)+75vh)] px-[1em] z-50 top-[calc(var(--nav-height)+30vh)] left-1/2 -translate-x-1/2 -translate-y-1/3  mix-blend-plus-lighter blur-[0.5em] opacity-50" src="/logo.svg" alt="">
 
     <div>
       <div class="wrapper selectDisable">
@@ -29,24 +29,6 @@
           loop
           muted
         />
-      </div>
-
-      <div
-        class="sticky z-[0] top-[calc(var(--nav-height))] bg-white flex flex-col w-full">
-        <Divider />
-        <section>
-          <p class="m-0">
-            JUOKSUT is a running club for everyone chasing the ultimate
-            feeling of being invincible.
-          </p>
-          <p>
-            Running every Tuesday, Friday and Sunday.
-          </p>
-          <p>
-            Join us by showing up and bring your friends too!
-          </p>
-        </section>
-        <Divider />
       </div>
 
       <div class="h-[calc(100vh-var(--nav-height))]"></div>

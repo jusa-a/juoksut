@@ -10,7 +10,7 @@
       <Divider class="fixed top-0 mt-[var(--nav-height)] z-[803]" />
 
       <div class="fixed z-[9999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-        <img src="/logo-circle.svg" alt="loading spinner logo" class="spinner w-[7em]" />
+        <img src="/logo-circle.svg" alt="" class="spinner w-[7em]" />
       </div>
     </div>
   </Transition>

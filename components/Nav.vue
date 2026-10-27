@@ -7,7 +7,7 @@
         <img
           class="logo py-[0.4em] px-[0.1em]"
           src="/logo.svg"
-          alt="JUOKSUT RUN CLUB LOGO" />
+          alt="" />
       </div>
       <nav class="flex flex-wrap justify-between items-end flex-1">
         <h1
