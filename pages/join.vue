@@ -2,7 +2,7 @@
   <div>
     <!--
       About + this month: product-page split. Cover fills the left half from the
-      nav down at its own ratio; the right half runs copy, schedule, copy.
+      nav down at its own ratio; the right half runs the copy, then the schedule.
     -->
     <section class="flex flex-row flex-wrap w-full p-0 m-0 mx-auto">
       <!--
@@ -28,10 +28,13 @@
         <!-- Copy keeps a reading measure; the schedule below runs the full column. -->
         <div class="px-[1em] pt-[1.4em] pb-[1.5em] min-[900px]:px-[4em]">
           <p class="mt-0">
-            JUOKSUT is a Helsinki run club for every pace and distance. All welcome, always.
+            JUOKSUT is a run club in Helsinki for everyone, from first-timers to marathoners, who want to run together, push themselves and have a blast doing it.
           </p>
           <p>
-            Our weekly runs are free and need no signup, except Fastlane Friday, which opens every Monday. Bring your friends.
+            We run on Tuesdays, Fridays and Sundays, at every pace and distance. Come whenever you like, bring your friends, and meet a fun, friendly and fast crew.
+          </p>
+          <p>
+            We post the details for every run on <a href="https://www.strava.com/clubs/juoksut">Strava</a> and <a href="https://www.instagram.com/juoksut/">Instagram</a>. Follow us there to stay in the loop.
           </p>
         </div>
 
@@ -42,15 +45,6 @@
           loading="lazy"
           class="block w-full h-auto"
         >
-
-        <div class="px-[1em] pt-[1.4em] pb-[1.4em] min-[900px]:px-[4em]">
-          <p v-if="post" class="mt-0">
-            Changes go up on <a href="https://www.instagram.com/juoksut/">Instagram</a> and <a href="https://www.strava.com/clubs/juoksut">Strava</a>.
-          </p>
-          <p v-else class="mt-0">
-            This month's schedule is on our <a href="https://www.instagram.com/juoksut/">Instagram</a>.
-          </p>
-        </div>
       </div>
     </section>
 
@@ -64,7 +58,7 @@
       <section class="flex flex-row flex-wrap w-full p-0 m-0">
         <div class="flex flex-col flex-1 min-w-[300px] px-[1em] py-[1.4em] min-[900px]:px-[4em] min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
           <p class="mt-0">
-            Camps, trips, races and the odd party. Each event page has the details, the dates and signup. If an event is full, join the waitlist.
+            Sessions and events with limited spots. Sign up as fast as you can on each event's page, and if it's full, join the waitlist.
           </p>
         </div>
 
