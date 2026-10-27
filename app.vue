@@ -1,5 +1,5 @@
 <template>
-  <LoadingScreen :is-visible="isVisible" />
+  <LoadingScreen :is-visible="isVisible" :below-nav="!pageReload" />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
