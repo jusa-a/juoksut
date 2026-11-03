@@ -299,6 +299,10 @@ git push -u origin feat/my-change      # check preview at *.juoksut.pages.dev, t
 git checkout main && git merge feat/my-change && git push
 ```
 
+`preview` is the standing staging branch at `preview.juoksut.pages.dev`, the site Lightspeed HQ's
+staging Worker links to in its emails and admin. Point it at the commit under test with
+`git push -f origin <commit>:preview`, and back at `main` afterwards.
+
 ## Project principles
 
 - This is a deliberately hand-rolled Nuxt 4 / Vue webshop and club site on
@@ -340,7 +344,8 @@ git checkout main && git merge feat/my-change && git push
   `test-juoksut-products`. The test database is migrated by hand with `--remote`; it needs the same
   structure as production (apply structural migrations, not the product-data ones).
 - The `HQ` service binding splits the same way: `lightspeed-hq` in production,
-  `lightspeed-hq-preview` for every non-`main` branch.
+  `lightspeed-hq-preview` for every non-`main` branch; that staging Worker's own links go to the
+  `preview` branch.
 - Preview URLs (`<branch>.juoksut.pages.dev`) sit behind Cloudflare Access.
 
 - `d1/schema.sql` drops tables for local development. Never execute the full
