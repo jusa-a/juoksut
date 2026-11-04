@@ -61,17 +61,16 @@ export default defineEventHandler(async (event) => {
 
     // A reserved camp place was already removed from stock at checkout
     // creation. Mark it paid instead of decrementing it a second time.
-    const reservationCompleted = await completeReservationGroup(D1, session.client_reference_id)
-    if (reservationCompleted)
-      return { received: true }
+    const heldSlugs = await completeReservationGroup(D1, session.client_reference_id)
 
     // Fetch line items for the session with expanded product details
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
       expand: ['data.price.product'],
+      limit: 100, // validateCheckoutItems caps a cart at 50 lines, so one page is all of it
     })
 
     // Resolve (slug, size) for every line item, then decrement stock atomically.
-    const updates = await Promise.all(lineItems.data.map(async (item) => {
+    const resolved = await Promise.all(lineItems.data.map(async (item) => {
       const productMeta = item.price.product?.metadata || {}
       const priceMeta = item.price.metadata || {}
 
@@ -98,6 +97,21 @@ export default defineEventHandler(async (event) => {
         quantity,
         size,
       }
+    }))
+
+    // Slug, not size: a pre-created Price resolves to ONE-SIZE whatever size is held.
+    const updates = resolved.filter(update => !heldSlugs.includes(update.productSlug))
+    if (updates.length === 0)
+      return { received: true }
+
+    // The batch commits every row it finds, so a missing row must fail before
+    // any decrement: Stripe's retry would repeat the rows that did apply.
+    await Promise.all(updates.map(async ({ productSlug, size }) => {
+      const stockRow = await D1.prepare(
+        `SELECT 1 FROM stock WHERE product_slug = ? AND size = ?`,
+      ).bind(productSlug, size).first()
+      if (!stockRow)
+        throw new Error(`Stock row is missing for ${productSlug}, size ${size}`)
     }))
 
     // Execute all decrements in a single atomic batch

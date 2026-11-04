@@ -172,8 +172,8 @@ navigation uses `$fetch`/`useFetch` to the real API routes normally.
 Cart (Pinia → localStorage) → `Cart.vue` `useFetch('POST /api/checkout', { items })` →
 server validates stock + **re-reads price from D1** (never trusts client price) → Stripe hosted
 checkout → configured registrations atomically hold a place → `window.location.href = session.url`
-→ `/success?session_id=…` → Stripe fires `checkout.session.completed` → webhook decrements normal
-merch stock or marks the pre-held registration paid.
+→ `/success?session_id=…` → Stripe fires `checkout.session.completed` → webhook marks any pre-held
+registration paid and decrements normal merch stock for the other lines.
 
 **Two pricing paths in `checkout.js`:**
 
