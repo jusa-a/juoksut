@@ -13,6 +13,8 @@ export function validateCheckoutItems(items) {
   if (items.length > MAX_CHECKOUT_ITEMS)
     return { ok: false, message: 'Too many items' }
 
+  const lines = new Set()
+
   for (const item of items) {
     if (!item || typeof item !== 'object')
       return { ok: false, message: 'Invalid item' }
@@ -27,6 +29,12 @@ export function validateCheckoutItems(items) {
 
     if (!Number.isInteger(item.quantity) || item.quantity < 1)
       return { ok: false, message: `Invalid quantity for ${item.slug}` }
+
+    // The cart merges identical lines, so a repeat is never a real order
+    const line = JSON.stringify([item.slug, item.size || ''])
+    if (lines.has(line))
+      return { ok: false, message: `Duplicate item: ${item.slug}` }
+    lines.add(line)
   }
 
   return { ok: true }

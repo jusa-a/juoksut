@@ -4,6 +4,7 @@ import Stripe from 'stripe'
 import { buildRegistrationCustomFields } from '../utils/checkoutFields'
 import {
   CHECKOUT_RESERVATION_SECONDS,
+  isSinglePlacePerProduct,
   releaseExpiredReservations,
   releaseReservationGroup,
   reservationItems,
@@ -102,7 +103,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const reservedItems = reservationItems(registrationItems)
-    if (reservedItems.some(item => item.quantity !== 1)) {
+    if (!isSinglePlacePerProduct(reservedItems)) {
       throw createError({
         statusCode: 400,
         message: 'Limited registrations must be purchased one at a time',

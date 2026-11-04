@@ -16,6 +16,13 @@ export function reservationItems(items) {
     }))
 }
 
+// A limited place is bought once per checkout: one unit, one line per product
+// (whatever the size).
+export function isSinglePlacePerProduct(reservedItems) {
+  return reservedItems.every(item => item.quantity === 1)
+    && new Set(reservedItems.map(item => item.productSlug)).size === reservedItems.length
+}
+
 export async function releaseExpiredReservations(D1, now = unixTime()) {
   return releaseActiveReservations(D1, 'expires_at <= ?', [now], now)
 }
