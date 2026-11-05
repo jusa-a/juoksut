@@ -69,7 +69,7 @@ sequenceDiagram
   A->>S: Create Checkout Session (name, phone, Customer)
   S-->>B: Hosted payment URL
   S->>A: completed or expired webhook
-  A->>D: Finalise/release hold, or decrement normal merch stock
+  A->>D: Finalise/release hold, and decrement normal merch stock
 ```
 
 The browser never controls the charged price. `server/api/checkout.js` validates
@@ -83,8 +83,11 @@ Stripe Customers instead of only anonymous checkout records.
 - Normal merchandise is checked before Checkout and decremented after successful
   payment by the webhook. A rare concurrent last-unit oversell remains possible.
 - A product with `reserve_stock = 1` is intended for limited registrations. Its
-  place is atomically removed before the Checkout URL is returned, held for ten
-  minutes, then marked paid on completion or restored on expiry/fallback cleanup.
+  place is atomically removed before the Checkout URL is returned, held for
+  thirty minutes, then marked paid on completion or restored on expiry. The
+  fallback cleanup waits an hour past expiry. A payment that arrives after a
+  release is honoured: the place comes back out of stock, stopping at 0, and an
+  oversell is logged.
 - Such registrations must be bought one at a time so one Stripe custom-field
   answer belongs to one participant.
 - A limited registration must have a positive price. This prevents accidentally

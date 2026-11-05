@@ -1,7 +1,9 @@
 // Stripe Checkout Sessions cannot expire sooner than 30 minutes. Keep the
-// D1 hold identical to the Stripe session lifetime so a valid payment can
-// never arrive after its capacity has been released.
+// D1 hold identical to the Stripe session lifetime. A payment's webhook can
+// still arrive after that, so the checkout clean-up waits past expiry, and a
+// payment for an already released hold takes its place back from stock.
 export const CHECKOUT_RESERVATION_SECONDS = 60 * 30
+export const EXPIRED_RESERVATION_GRACE_SECONDS = 60 * 60
 
 // Camp places are held in D1 before a Checkout Session URL is returned. The
 // stock decrement is therefore the reservation itself; a paid reservation is
@@ -24,7 +26,7 @@ export function isSinglePlacePerProduct(reservedItems) {
 }
 
 export async function releaseExpiredReservations(D1, now = unixTime()) {
-  return releaseActiveReservations(D1, 'expires_at <= ?', [now], now)
+  return releaseActiveReservations(D1, 'expires_at <= ?', [now - EXPIRED_RESERVATION_GRACE_SECONDS], now)
 }
 
 export async function releaseReservationGroup(D1, groupId, now = unixTime()) {
@@ -85,30 +87,62 @@ export async function reserveItems(D1, groupId, items, expiresAt) {
   }
 }
 
-// Returns true when this Checkout Session had a reservation and its capacity
-// has now been made permanent. A session without a reservation uses the normal
-// merchandise stock-decrement path in the webhook.
+// Makes this Checkout Session's holds permanent and returns the held product
+// slugs, empty for a session without a reservation. Holds already paid stay as
+// they are, so a retried webhook is safe. A released hold takes its place back.
 export async function completeReservationGroup(D1, groupId) {
   if (!groupId)
-    return false
+    return []
 
-  const update = await D1.prepare(`
-    UPDATE checkout_reservations
-    SET status = 'paid', completed_at = ?
-    WHERE group_id = ? AND status = 'active'
-  `).bind(unixTime(), groupId).run()
+  const [{ results: holds }] = await D1.batch([
+    D1.prepare(`
+      SELECT
+        reservation.product_slug,
+        reservation.size,
+        reservation.status,
+        SUM(reservation.quantity) AS quantity,
+        COALESCE(stock.quantity, 0) AS available
+      FROM checkout_reservations reservation
+      LEFT JOIN stock
+        ON stock.product_slug = reservation.product_slug
+        AND stock.size = reservation.size
+      WHERE reservation.group_id = ?
+      GROUP BY reservation.product_slug, reservation.size, reservation.status
+    `).bind(groupId),
+    // A negative quantity means "coming soon", so it is left alone and the
+    // take-back stops at 0.
+    D1.prepare(`
+      UPDATE stock
+      SET quantity = MAX(0, quantity - (
+        SELECT SUM(reservation.quantity)
+        FROM checkout_reservations reservation
+        WHERE reservation.product_slug = stock.product_slug
+          AND reservation.size = stock.size
+          AND reservation.status = 'released'
+          AND reservation.group_id = ?
+      ))
+      WHERE quantity > 0 AND EXISTS (
+        SELECT 1
+        FROM checkout_reservations reservation
+        WHERE reservation.product_slug = stock.product_slug
+          AND reservation.size = stock.size
+          AND reservation.status = 'released'
+          AND reservation.group_id = ?
+      )
+    `).bind(groupId, groupId),
+    D1.prepare(`
+      UPDATE checkout_reservations
+      SET status = 'paid', completed_at = ?
+      WHERE group_id = ? AND status IN ('active', 'released')
+    `).bind(unixTime(), groupId),
+  ])
 
-  if (update.meta?.changes > 0)
-    return true
+  for (const hold of holds) {
+    if (hold.status === 'released' && hold.available < hold.quantity)
+      console.error(`Oversold: reservation ${groupId} was paid after release and ${hold.product_slug} (${hold.size}) was already gone`)
+  }
 
-  const reservation = await D1.prepare(
-    'SELECT status FROM checkout_reservations WHERE group_id = ? LIMIT 1',
-  ).bind(groupId).first()
-
-  if (reservation)
-    throw new Error(`Reservation ${groupId} was no longer active when payment completed`)
-
-  return false
+  return holds.map(hold => hold.product_slug)
 }
 
 export class ReservationUnavailableError extends Error {
