@@ -36,4 +36,28 @@ describe('validateCheckoutItems', () => {
     const many = Array.from({ length: 51 }, () => ({ slug: 'tee', quantity: 1 }))
     expect(validateCheckoutItems(many).ok).toBe(false)
   })
+
+  it('rejects two identical lines', () => {
+    const result = validateCheckoutItems([
+      { slug: 'tee', size: 'M', quantity: 1 },
+      { slug: 'tee', size: 'M', quantity: 2 },
+    ])
+    expect(result).toEqual({ ok: false, message: 'Duplicate item: tee' })
+  })
+
+  it('allows the same product in different sizes', () => {
+    expect(validateCheckoutItems([
+      { slug: 'tee', size: 'M', quantity: 1 },
+      { slug: 'tee', size: 'L', quantity: 1 },
+    ]).ok).toBe(true)
+  })
+
+  it('treats a missing, null or empty size as the same size', () => {
+    for (const other of [{}, { size: null }, { size: '' }]) {
+      expect(validateCheckoutItems([
+        { slug: 'cap', quantity: 1 },
+        { slug: 'cap', quantity: 1, ...other },
+      ]).message).toBe('Duplicate item: cap')
+    }
+  })
 })
