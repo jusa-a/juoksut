@@ -119,6 +119,8 @@ describe('getSignupByToken', () => {
       title: 'FASTLANE FRIDAY',
       startsAt: 1793977200,
       status: 'confirmed',
+      position: null,
+      promoteUntil: 1793959200,
       sessionCancelled: false,
     })
 
@@ -126,11 +128,26 @@ describe('getSignupByToken', () => {
       title: 'FASTLANE FRIDAY',
       startsAt: 1793977200,
       status: 'confirmed',
+      position: null,
+      promoteUntil: 1793959200,
       sessionCancelled: false,
     })
     expect(getSignup).toHaveBeenCalledWith(token)
 
     expect(await getSignupByToken({ getSignup }, token)).not.toHaveProperty('ok')
+  })
+
+  it('passes the current waitlist position and cutoff from HQ', async () => {
+    const status = {
+      title: 'Track session',
+      startsAt: 1793977200,
+      promoteUntil: 1793959200,
+      status: 'waitlist',
+      position: 3,
+      sessionCancelled: false,
+    }
+    const getSignup = vi.fn().mockResolvedValue({ ok: true, ...status })
+    expect(await getSignupByToken({ getSignup }, token)).toEqual(status)
   })
 
   it('a bad token is refused without calling HQ', async () => {

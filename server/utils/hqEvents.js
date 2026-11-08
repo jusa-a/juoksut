@@ -74,7 +74,9 @@ export async function getSignupByToken(HQ, token) {
   return {
     title: result.title,
     startsAt: result.startsAt,
+    promoteUntil: result.promoteUntil,
     status: result.status,
+    position: result.position,
     sessionCancelled: result.sessionCancelled,
   }
 }

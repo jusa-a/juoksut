@@ -1,25 +1,22 @@
 <template>
   <section class="flex flex-col gap-[0.9em] px-[1em] py-[1.4em]">
     <h2 class="uppercase">
-      Cancel your spot
+      Manage signup
     </h2>
 
     <p v-if="loading">
       Loading…
     </p>
 
-    <template v-else-if="prompt">
+    <template v-else-if="signup">
+      <p>{{ signup.title }} · {{ formatStart(signup.startsAt) }}</p>
       <p>{{ prompt }}</p>
-
-      <template v-if="actionable">
-        <p>
-          Opening this link doesn't cancel anything. Press the button to
-          {{ signup.status === 'waitlist' ? 'leave the waitlist.' : 'give up your spot. If someone is on the waitlist, they get your place.' }}
-        </p>
-        <button type="button" :class="buttonClass" :disabled="sending" @click="cancelSpot">
-          {{ sending ? 'Cancelling…' : signup.status === 'waitlist' ? 'Leave waitlist' : 'Cancel my spot' }}
-        </button>
-      </template>
+      <p v-if="actionable && signup.status === 'waitlist'">
+        {{ waitlistClosed ? 'The waitlist is now closed.' : `We’ll email you if a spot opens before ${formatStart(signup.promoteUntil)}.` }}
+      </p>
+      <button v-if="actionable" type="button" :class="buttonClass" :disabled="sending" @click="cancelSpot">
+        {{ sending ? 'Cancelling…' : signup.status === 'waitlist' ? 'Leave waitlist' : 'Cancel my spot' }}
+      </button>
     </template>
 
     <p role="status" aria-live="polite" class="m-0">
@@ -57,24 +54,28 @@ const formatStart = unix => `${dayFormat.format(new Date(unix * 1000))}, ${timeF
 const started = computed(() => !!signup.value && signup.value.startsAt * 1000 <= Date.now())
 const actionable = computed(() => !!signup.value
   && (signup.value.status === 'confirmed' || signup.value.status === 'waitlist')
+  && !signup.value.sessionCancelled
   && !started.value
   && !done.value)
+const waitlistClosed = computed(() => !!signup.value && signup.value.promoteUntil * 1000 <= Date.now())
 
 const prompt = computed(() => {
-  if (!signup.value || done.value)
+  if (!signup.value)
     return ''
-  if (signup.value.status === 'cancelled')
-    return 'This signup is already cancelled.'
+  if (signup.value.sessionCancelled)
+    return 'This session is cancelled.'
+  if (signup.value.status === 'cancelled' || done.value)
+    return 'Your signup is cancelled.'
   if (started.value)
-    return `${signup.value.title} has already started.`
-  return signup.value.status === 'waitlist'
-    ? `Leave the waitlist for ${signup.value.title} on ${formatStart(signup.value.startsAt)}?`
-    : `Cancel your spot for ${signup.value.title} on ${formatStart(signup.value.startsAt)}?`
+    return 'This session has already started.'
+  if (signup.value.status === 'confirmed')
+    return 'Your spot is confirmed.'
+  return signup.value.position == null
+    ? 'You’re on the waitlist.'
+    : `You’re number ${signup.value.position} on the waitlist.`
 })
 
 const message = computed(() => {
-  if (done.value)
-    return 'Done. Thanks for letting us know.'
   if (sendError.value || loadError.value === 'network')
     return 'Couldn\'t reach the server. Try again.'
   if (loadError.value === 'invalid' || !token)
@@ -127,5 +128,5 @@ async function cancelSpot() {
 
 onMounted(load)
 
-useSeoMeta({ title: 'Cancel your spot', robots: 'noindex' })
+useSeoMeta({ title: 'Manage signup', robots: 'noindex' })
 </script>

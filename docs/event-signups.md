@@ -31,7 +31,12 @@ the JSON the pages read.
 - `GET /api/events/<slug>` → the page fields, its sessions and the Turnstile site key.
 - `POST /api/events/signup` `{ eventId, name, email, website, turnstileToken }` → `confirmed`, or
   `waitlist` with a position; `eventId` is the session id.
-- `GET /api/events/signup?token=` → `{ title, startsAt, status, sessionCancelled }`.
+- `GET /api/events/signup?token=` → `{ title, startsAt, promoteUntil, status, position, sessionCancelled }`.
+  Position is current, one-based among people waiting on the same session, and null for confirmed
+  or cancelled signups and cancelled sessions. Responses are not cached.
 - `POST /api/events/cancel` `{ token }` → `{ cancelled }`.
-- `pages/signup/cancel.vue` (`noindex`): shows what the link is for ("your spot" / "your waitlist
-  place" for `<title>` on `<date>`) and a button; a network error says to try again, not "invalid".
+- `pages/signup/cancel.vue` (`noindex`): Manage signup, linked from the single button in confirmed,
+  waitlist and promotion emails. Shows the session and current status or waitlist position, with a
+  separate cancellation button until the start. After the promotion cutoff, it says the waitlist
+  is closed. Opening the link changes nothing. Cancelled or started sessions offer no cancellation;
+  a network error says to try again, not "invalid". Existing email links keep working.
