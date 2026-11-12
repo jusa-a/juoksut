@@ -50,7 +50,7 @@ a pink fill. No greys, no second accent. Error text is the only exception (`text
 
 - **Inter** for everything readable: body 400, headings 500, labels and buttons uppercase.
 - **JUOKSUT Garamond** (self-hosted, 500 is the custom cut) only for the wordmark, the footer line
-  display moments on `/` and `/join`, and event titles (cards and pages), with tight tracking (-0.03 to -0.04em). The nav wordmark
+  display moments on `/`, and event titles (cards and pages), with tight tracking (-0.03 to -0.04em). The nav wordmark
   and the active nav link are skewed (-8° / -10°).
 - Body size scales with the viewport (`calc(0.875em + 0.390625vw)`); sizes elsewhere are in `em`.
 
@@ -61,12 +61,13 @@ a pink fill. No greys, no second accent. Error text is the only exception (`text
   column is sticky below the nav on wider screens.
 - `/join` is built like a product page: half-and-half columns with no gutter, each side running to
   its own edge. The month's cover fills the left half from under the nav, the copy and the schedule
-  fill the right, the copy inset to a reading measure and the schedule full width; the events copy
-  pins on the left with shop-style cards on the right; the Safer Space text runs on the left with
-  the values in a card of the same width as an event card on the right. From 900px up
-  only the events copy and the values box stay put; the dividers between sections stick under the
-  nav's line (`<Divider sticky />`). On phones it is one column, the cover and the
+  fill the right, the copy inset to a reading measure and the schedule full width; the Safer Space
+  text runs on the left with the values in a card of the same width as an event card on the right.
+  From 900px up the cover and the values box stay put; the dividers between sections stick under
+  the nav's line (`<Divider sticky />`). On phones it is one column, the cover and the
   schedule run edge to edge, and nothing is pinned.
+- `/events` (EVENTS in the nav) has the same split: the heading and copy pin on the left from 900px
+  up, with shop-style event cards on the right. On phones the copy comes first, then the cards.
 - The nav is sticky with a 1px pink divider under it; height `--nav-height`.
 - Dividers always run edge to edge of their column or the screen, like the nav's; never inset by
   the side padding. Content inside carries its own padding (list rows, forms).

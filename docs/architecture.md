@@ -20,7 +20,7 @@ matter, and prerenders selected stable pages.
 | Free event signups         | Lightspeed HQ, called over the `HQ` service binding             |
 | Client state               | Pinia; cart persists only in browser localStorage               |
 
-`/` and `/join` are prerendered. `/shop`, `/shop/**`, `/archive` and
+`/` is prerendered. `/join`, `/shop`, `/shop/**`, `/archive`, `/events` and
 `/events/**` render on demand. `/success` is client-only. `/orders` permanently redirects to `/terms-and-conditions`,
 `/fastlane-friday` to `/events/fastlane-friday`.
 

@@ -38,29 +38,6 @@
       </div>
     </section>
 
-    <template v-if="events.length">
-      <Divider sticky />
-
-      <!--
-        Events: the heading and copy pinned on the left, shop-style cards on the
-        right. Same order on phones, so the copy is read before the cards.
-      -->
-      <section class="flex flex-row flex-wrap w-full p-0 m-0">
-        <div class="flex flex-col flex-1 min-w-[300px] px-[1em] py-[1.4em] min-[900px]:px-[4em] min-[900px]:sticky min-[900px]:top-[calc(var(--nav-height)+1px)] min-[900px]:self-start">
-          <h2 class="mt-0">
-            EVENTS
-          </h2>
-          <p>
-            Sessions and events with limited spots. Sign up as fast as you can, and if it's full, join the waitlist.
-          </p>
-        </div>
-
-        <div class="w-full min-[900px]:w-auto min-[900px]:flex-1 flex flex-row flex-wrap justify-around items-center p-[1em] gap-[1em]">
-          <EventCard v-for="event in events" :key="event.slug" :event="event" />
-        </div>
-      </section>
-    </template>
-
     <Divider sticky />
 
     <!--
@@ -131,12 +108,10 @@
 </template>
 
 <script setup>
-// Both endpoints fall back to the copy instead of failing the page.
+// The schedule falls back to the copy instead of failing the page.
 const { data: schedule } = await useFetch('/api/instagram-schedule')
-const { data: eventsData } = await useFetch('/api/events')
 
 const post = computed(() => schedule.value?.post ?? null)
-const events = computed(() => eventsData.value?.events ?? [])
 
 useSeoMeta({
   title: 'Join',

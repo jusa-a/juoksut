@@ -16,8 +16,9 @@
         </h1>
 
         <div
-          class="navLinks flex gap-[4em] flex-1 grow justify-between ml-[auto] text-right pl-[0.5vw] pr-[0.5em]">
+          class="navLinks flex gap-[1em] flex-1 grow justify-between ml-[auto] text-right pl-[0.5vw] pr-[0.5em]">
           <NuxtLink to="/join">JOIN</NuxtLink>
+          <NuxtLink to="/events">EVENTS</NuxtLink>
           <NuxtLink to="/shop">SHOP</NuxtLink>
           <button :class="{ cartActive: cart.isCartOpen }" @click="cart.toggleCart">
             <ClientOnly fallback="CART(0)">
@@ -75,8 +76,16 @@ const cart = useCartStore()
   -webkit-text-stroke-color: #ff639a;
 }
 
+/* keep the links off the wordmark when they share its row */
+@media (min-width: 640px) {
+  .home {
+    margin-right: 2em;
+  }
+}
+
+/* room for four links at the three-link spacing */
 .navLinks {
-  max-width: 18em;
+  max-width: 26em;
 }
 
 .navLinks a,
