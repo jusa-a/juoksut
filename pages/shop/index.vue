@@ -51,7 +51,7 @@ const products = Object.values(productStore.products).sort((a, b) => b.id - a.id
 
 useSeoMeta({
   title: 'Shop',
-  description: 'JUOKSUT Shop — merch, events and trips.',
+  description: 'Juoksut merch, events and trips.',
   ogTitle: 'Shop · JUOKSUT',
   ogDescription: 'JUOKSUT Shop — merch, events and trips.',
   ogImage: 'https://cdn.juoksut.run/og-image.jpg',

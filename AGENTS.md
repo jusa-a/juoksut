@@ -224,12 +224,14 @@ is public-by-design (only public marketing assets). `products/[slug]/images.js` 
 
 ## SEO setup
 
-- `app.vue` sets a global `titleTemplate` appending `· JUOKSUT` — **don't add it manually** in page
-  titles. Homepage overrides with `titleTemplate: null` (plain `JUOKSUT`).
+- `app.vue` sets a global `titleTemplate` appending `· Juoksut` — **don't add it manually** in page
+  titles. Homepage overrides with `titleTemplate: null` (plain `Juoksut`). Search results use
+  "Juoksut"; link previews (`og:*`) keep `JUOKSUT` and the home page's values line.
 - `ogTitle` is separate from `title` and **should** include `· JUOKSUT` explicitly.
 - Canonical `siteUrl` is `https://juoksut.run` (root, no www — Cloudflare redirects www → root).
 - Default social image: `https://cdn.juoksut.run/og-image.jpg` (1200×630).
-- Product pages emit JSON-LD Product schema (`shop/[...slug].vue`).
+- Product pages emit JSON-LD Product schema (`shop/[...slug].vue`). The home page emits `WebSite`
+  (site name) and `Organization` (name variants, Instagram/Strava/LinkedIn as `sameAs`).
 - **Sitemap is the static, hand-maintained `public/sitemap.xml`** (lists `/`, `/shop`, `/join`,
   `/events/fastlane-friday`, `/archive`). The `@nuxtjs/sitemap` module was removed (git history); update
   the file by hand when routes change.

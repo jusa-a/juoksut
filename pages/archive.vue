@@ -149,7 +149,7 @@ onMounted(() => {
 
 useSeoMeta({
   title: 'Archive',
-  description: 'JUOKSUT video archive.',
+  description: 'Lightspeed, on video.',
   ogTitle: 'Archive · JUOKSUT',
   ogDescription: 'JUOKSUT video archive.',
   ogUrl: 'https://juoksut.run/archive',

@@ -10,11 +10,11 @@
 import { useCartStore } from '~/stores/cart'
 
 useHead({
-  titleTemplate: (title?: string) => (title ? `${title} · JUOKSUT` : 'Juoksut Run Club'),
+  titleTemplate: (title?: string) => (title ? `${title} · Juoksut` : 'Juoksut'),
 })
 
 useSeoMeta({
-  description: 'JUOKSUT Run Club.',
+  description: 'Weekly runs in Helsinki, in all paces and distances. All welcome.',
   ogTitle: 'JUOKSUT',
   ogDescription: 'JUOKSUT Run Club.',
   ogImage: 'https://cdn.juoksut.run/og-image.jpg',

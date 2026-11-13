@@ -140,7 +140,7 @@ const events = computed(() => eventsData.value?.events ?? [])
 
 useSeoMeta({
   title: 'Join',
-  description: 'Join JUOKSUT weekly runs in Helsinki. Every pace and distance, all welcome.',
+  description: 'Weekly runs in Helsinki, from first-timers to marathoners. Monthly schedule and events.',
   ogTitle: 'Join JUOKSUT',
   ogDescription: 'Join JUOKSUT weekly runs in Helsinki. Every pace and distance, all welcome.',
   ogImage: 'https://cdn.juoksut.run/og-image.jpg',

@@ -59,8 +59,8 @@ onMounted(async () => {
 watch(heroSrc, () => nextTick(() => video.value?.load()))
 
 useSeoMeta({
-  title: 'JUOKSUT',
-  description: 'JUOKSUT Run Club. Unity in Running, Respect for the Individual, Achievement, Eternal Endurance, Lifelong Wellness.',
+  title: 'Juoksut',
+  description: 'Weekly runs in Helsinki, in all paces and distances. All welcome.',
   ogTitle: 'JUOKSUT',
   ogDescription: 'JUOKSUT Run Club. Unity in Running, Respect for the Individual, Achievement, Eternal Endurance, Lifelong Wellness.',
   ogImage: 'https://cdn.juoksut.run/og-image.jpg',
@@ -70,6 +70,27 @@ useSeoMeta({
 useHead({
   titleTemplate: null,
   link: [{ rel: 'canonical', href: 'https://juoksut.run/' }],
+  // Site name and the club's profiles for Google (home page only)
+  script: [{
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        { '@type': 'WebSite', 'name': 'Juoksut', 'url': 'https://juoksut.run/' },
+        {
+          '@type': 'Organization',
+          'name': 'Juoksut',
+          'alternateName': ['Juoksut Run Club', 'Juoksut ry'],
+          'url': 'https://juoksut.run/',
+          'sameAs': [
+            'https://www.instagram.com/juoksut/',
+            'https://www.strava.com/clubs/juoksut',
+            'https://www.linkedin.com/company/juoksut/',
+          ],
+        },
+      ],
+    }),
+  }],
 })
 </script>
 
