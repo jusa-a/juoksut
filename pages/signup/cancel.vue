@@ -12,7 +12,7 @@
       <p>{{ signup.title }} · {{ formatStart(signup.startsAt) }}</p>
       <p>{{ prompt }}</p>
       <p v-if="actionable && signup.status === 'waitlist'">
-        {{ waitlistClosed ? 'The waitlist is now closed.' : `We’ll email you if a spot opens before ${formatStart(signup.promoteUntil)}.` }}
+        We’ll email you if a spot opens before {{ formatStart(signup.promoteUntil) }}.
       </p>
       <button v-if="actionable" type="button" :class="buttonClass" :disabled="sending" @click="cancelSpot">
         {{ sending ? 'Cancelling…' : signup.status === 'waitlist' ? 'Leave waitlist' : 'Cancel my spot' }}
@@ -52,12 +52,16 @@ const timeFormat = new Intl.DateTimeFormat('en-GB', {
 const formatStart = unix => `${dayFormat.format(new Date(unix * 1000))}, ${timeFormat.format(new Date(unix * 1000))}`
 
 const started = computed(() => !!signup.value && signup.value.startsAt * 1000 <= Date.now())
+// After the promotion cutoff a waitlist place can no longer become a spot: nothing left to manage.
+const waitlistClosed = computed(() => !!signup.value
+  && signup.value.status === 'waitlist'
+  && signup.value.promoteUntil * 1000 <= Date.now())
 const actionable = computed(() => !!signup.value
   && (signup.value.status === 'confirmed' || signup.value.status === 'waitlist')
   && !signup.value.sessionCancelled
   && !started.value
+  && !waitlistClosed.value
   && !done.value)
-const waitlistClosed = computed(() => !!signup.value && signup.value.promoteUntil * 1000 <= Date.now())
 
 const prompt = computed(() => {
   if (!signup.value)
@@ -70,6 +74,8 @@ const prompt = computed(() => {
     return 'This session has already started.'
   if (signup.value.status === 'confirmed')
     return 'Your spot is confirmed.'
+  if (waitlistClosed.value)
+    return 'The waitlist is closed.'
   return signup.value.position == null
     ? 'You’re on the waitlist.'
     : `You’re number ${signup.value.position} on the waitlist.`
