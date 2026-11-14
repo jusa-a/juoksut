@@ -1,5 +1,6 @@
 <template>
   <div
+    data-nosnippet
     class="navContainer flex flex-col sticky top-0 mix-blend-multiply z-[1001] h-[var(--nav-height)]"
     v-on="cart.isCartOpen ? { click: cart.toggleCart } : {}">
     <div class=" flex p-[0.15em] overflow-hidden h-full">

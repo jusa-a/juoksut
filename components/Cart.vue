@@ -1,6 +1,6 @@
 <template>
   <Transition name="cart">
-    <div v-show="cart.isCartOpen" class="fixed top-0 w-full h-full z-[802]">
+    <div v-show="cart.isCartOpen" data-nosnippet class="fixed top-0 w-full h-full z-[802]">
       <div class="navOverlay h-[var(--nav-height)] w-full bg-white" />
       <Divider />
 

@@ -5,7 +5,7 @@
     <!-- flow-root contains the floated values, so the page scrolls as long as they are tall. -->
     <div class="flow-root">
       <div class="wrapper selectDisable">
-        <div class="values">
+        <div class="values" data-nosnippet>
           <div><span>U</span>nity in <span>R</span>unning</div>
           <br />
           <div><span>R</span>espect for the <span>I</span>ndividual</div>

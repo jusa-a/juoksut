@@ -232,6 +232,8 @@ is public-by-design (only public marketing assets). `products/[slug]/images.js` 
 - Default social image: `https://cdn.juoksut.run/og-image.jpg` (1200×630).
 - Product pages emit JSON-LD Product schema (`shop/[...slug].vue`). The home page emits `WebSite`
   (site name) and `Organization` (name variants, Instagram/Strava/LinkedIn as `sameAs`).
+- Nav, cart, footer and the home page's values carry `data-nosnippet` (static, on `div`s only, per
+  Google's rules) so search snippets quote the page description or page content, not chrome.
 - **Sitemap is the static, hand-maintained `public/sitemap.xml`** (lists `/`, `/shop`, `/join`,
   `/events/fastlane-friday`, `/archive`). The `@nuxtjs/sitemap` module was removed (git history); update
   the file by hand when routes change.

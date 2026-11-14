@@ -24,7 +24,7 @@
         <!-- Copy keeps a reading measure; the schedule below runs the full column. -->
         <div class="px-[1em] pt-[1.4em] pb-[1.5em] min-[900px]:px-[4em]">
           <p class="mt-0">
-            JUOKSUT is a run club in Helsinki for everyone, from first-timers to marathoners, who want to run together, push themselves and have a blast doing it.
+            Juoksut is a run club in Helsinki for everyone, from first-timers to marathoners, who want to run together, push themselves and have a blast doing it.
           </p>
           <p>
             We run on Tuesdays, Fridays and Sundays, at every pace and distance. Come whenever you like, bring your friends, and meet a fun, friendly and fast crew.
