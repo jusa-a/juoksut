@@ -1,7 +1,7 @@
 import process from 'node:process'
 import { createError, defineEventHandler, getRequestURL, readBody } from 'h3'
 import Stripe from 'stripe'
-import { buildRegistrationCustomFields } from '../utils/checkoutFields'
+import { buildRegistrationCustomFields, MAX_STRIPE_CUSTOM_FIELDS, registrationSubmitMessage } from '../utils/checkoutFields'
 import {
   CHECKOUT_RESERVATION_SECONDS,
   isSinglePlacePerProduct,
@@ -111,11 +111,12 @@ export default defineEventHandler(async (event) => {
     }
 
     let registrationCustomFields
+    let registrationMessage
     try {
-      // One optional note remains available for general order information.
       // Product-defined fields (such as a camp shirt size) are required
-      // dropdowns in Stripe Checkout instead of free-text notes.
-      registrationCustomFields = buildRegistrationCustomFields(registrationItems, 1)
+      // Stripe Checkout fields; their help is shown above the Pay button.
+      registrationCustomFields = buildRegistrationCustomFields(registrationItems)
+      registrationMessage = registrationSubmitMessage(registrationItems)
     }
     catch (error) {
       throw createError({ statusCode: 400, message: error.message })
@@ -167,13 +168,17 @@ export default defineEventHandler(async (event) => {
         },
         custom_fields: [
           ...registrationCustomFields,
-          {
-            key: 'order_note',
-            label: { type: 'custom', custom: 'Order note' },
-            type: 'text',
-            optional: true,
-          },
+          // The optional order note takes a field only when the registration leaves one free.
+          ...(registrationCustomFields.length < MAX_STRIPE_CUSTOM_FIELDS
+            ? [{
+                key: 'order_note',
+                label: { type: 'custom', custom: 'Order note' },
+                type: 'text',
+                optional: true,
+              }]
+            : []),
         ],
+        ...(registrationMessage ? { custom_text: { submit: { message: registrationMessage } } } : {}),
         expires_at: expiresAt,
         ...(reservationGroupId ? { client_reference_id: reservationGroupId } : {}),
       })

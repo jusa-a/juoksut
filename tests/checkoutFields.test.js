@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildRegistrationCustomFields } from '../server/utils/checkoutFields'
+import { buildRegistrationCustomFields, registrationSubmitMessage } from '../server/utils/checkoutFields'
 
 const camp = {
   title: 'ALL-STARS CAMP ’26',
@@ -51,5 +51,38 @@ describe('buildRegistrationCustomFields', () => {
     }))
 
     expect(() => buildRegistrationCustomFields([{ product: { title: 'Camp', checkoutFields: fields }, quantity: 1 }], 1)).toThrow('at most 2')
+  })
+
+  it('creates a required text field', () => {
+    const fields = [{ key: 'running_fact', label: 'A niche running fact', type: 'text', help: 'Tell us!' }]
+    expect(buildRegistrationCustomFields([{ product: { title: 'Gala', checkoutFields: fields }, quantity: 1 }])).toEqual([{
+      key: 'running_fact',
+      label: { type: 'custom', custom: 'A niche running fact' },
+      type: 'text',
+      optional: false,
+    }])
+  })
+
+  it('rejects a text field with options and a label over 50 characters', () => {
+    const build = field => () => buildRegistrationCustomFields([{ product: { title: 'Gala', checkoutFields: [field] }, quantity: 1 }])
+    expect(build({ key: 'fact', label: 'Fact', type: 'text', options: ['A', 'B'] })).toThrow('Invalid checkout field')
+    expect(build({ key: 'fact', label: 'x'.repeat(51), type: 'text' })).toThrow('Invalid checkout field')
+    expect(build({ key: 'fact', label: 'x'.repeat(50), type: 'text' })).not.toThrow()
+  })
+})
+
+describe('registrationSubmitMessage', () => {
+  it('joins the fields\' help, or is null without any', () => {
+    const fields = [
+      { key: 'diet', label: 'Diet', options: ['None', 'Other'], help: 'Meat free.' },
+      { key: 'fact', label: 'Fact', type: 'text', help: 'Tell us!' },
+    ]
+    expect(registrationSubmitMessage([{ product: { title: 'Gala', checkoutFields: fields }, quantity: 1 }])).toBe('Meat free. Tell us!')
+    expect(registrationSubmitMessage([{ product: camp, quantity: 1 }])).toBeNull()
+  })
+
+  it('rejects help over Stripe\'s 1200 characters', () => {
+    const fields = [{ key: 'fact', label: 'Fact', type: 'text', help: 'x'.repeat(1201) }]
+    expect(() => registrationSubmitMessage([{ product: { title: 'Gala', checkoutFields: fields }, quantity: 1 }])).toThrow('1200')
   })
 })
