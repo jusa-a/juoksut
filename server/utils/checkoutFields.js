@@ -32,7 +32,7 @@ export function buildRegistrationCustomFields(items, reservedFieldCount = 0) {
     label: { type: 'custom', custom: field.label },
     type: 'dropdown',
     dropdown: {
-      options: field.options.map(value => ({ label: value, value })),
+      options: field.options.map(label => ({ label, value: optionValue(label) })),
     },
   }))
 }
@@ -46,6 +46,13 @@ function isValidField(field) {
     && field.label.length > 0
     && Array.isArray(field.options)
     && field.options.length >= 2
-    && field.options.every(option => typeof option === 'string' && option.length > 0),
+    && field.options.every(option => typeof option === 'string' && optionValue(option).length > 0)
+    && new Set(field.options.map(optionValue)).size === field.options.length,
   )
+}
+
+// Stripe requires each dropdown option's value to be alphanumeric; the label
+// keeps the text the buyer sees, such as "Gluten free".
+function optionValue(label) {
+  return label.replace(/[^a-z0-9]/gi, '')
 }

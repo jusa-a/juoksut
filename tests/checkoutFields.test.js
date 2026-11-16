@@ -22,6 +22,19 @@ describe('buildRegistrationCustomFields', () => {
     }])
   })
 
+  it('gives options with spaces or punctuation an alphanumeric value', () => {
+    const gala = { title: 'Gala', checkoutFields: [{ key: 'diet', label: 'Diet', options: ['Gluten free', 'Just water, thanks!'] }] }
+    expect(buildRegistrationCustomFields([{ product: gala, quantity: 1 }], 1)[0].dropdown.options).toEqual([
+      { label: 'Gluten free', value: 'Glutenfree' },
+      { label: 'Just water, thanks!', value: 'Justwaterthanks' },
+    ])
+  })
+
+  it('rejects options whose values would collide', () => {
+    const fields = [{ key: 'diet', label: 'Diet', options: ['Gluten free', 'Gluten-free'] }]
+    expect(() => buildRegistrationCustomFields([{ product: { title: 'Gala', checkoutFields: fields }, quantity: 1 }], 1)).toThrow('Invalid checkout field')
+  })
+
   it('does not add fields for regular merchandise', () => {
     expect(buildRegistrationCustomFields([{ product: { title: 'Tee', checkoutFields: [] }, quantity: 2 }], 1)).toEqual([])
   })
